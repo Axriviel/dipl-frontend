@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #333;
+    color: #fff;
+    height: 10vh;
+}
+
+.logo {
+    height: 100%;
+    width: auto;
+}
+
+.logo img {
+    height: 100%;
+    width: auto;
+}
+
+
+.nav {
+}
+.nav ul li{
+    list-style-type: none;
+}
