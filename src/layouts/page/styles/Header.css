@@ -18,9 +18,30 @@
     width: auto;
 }
 
-
 .nav {
+    display: flex;
 }
-.nav ul li{
+
+.nav ul {
+    gap: 0.5rem; 
+}
+
+.nav ul li {
     list-style-type: none;
+}
+
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        height: auto;
+    }
+    .logo{
+        margin-bottom: 1rem;
+    }
+
+    .nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
 }

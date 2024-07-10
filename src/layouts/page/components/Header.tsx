@@ -7,7 +7,10 @@ export const Header = () => {
 
     return (
         <header className="header">
-            <div className="logo"><Link to="/"><img className="bordered-image" src={logoImage}></img></Link></div>
+            <div className="logo">
+                <Link to="/">
+                    <img className="bordered-image" src={logoImage}></img>
+                </Link></div>
             <Navigation />
         </header>
     );
