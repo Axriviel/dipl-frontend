@@ -1,5 +1,4 @@
-import Tippy from "@tippyjs/react";
-import "./HomePage.css"
+import "./HomePage.css";
 
 export const HomePage = () => {
   return (
