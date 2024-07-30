@@ -20,6 +20,7 @@ export const Register: React.FC = () => {
 
             if (response.ok) {
                 await login(username, password);
+                alert("Successfuly registered")
             } else {
                 console.error('Registration failed');
             }

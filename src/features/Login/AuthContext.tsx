@@ -37,9 +37,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('token', data.access_token);
+                {/*localStorage.setItem('token', data.access_token);
+                console.log(localStorage.getItem('token'))
+                */}
                 setIsAuthenticated(true);
                 await fetchUser();
+                alert("Successfuly logged in")
             } else {
                 throw new Error('Login failed');
             }
@@ -60,6 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 localStorage.removeItem('token');
                 setIsAuthenticated(false);
                 setUser(undefined);
+                alert("Successfuly logged out")
             } else {
                 throw new Error('Logout failed');
             }
