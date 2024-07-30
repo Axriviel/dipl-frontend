@@ -7,6 +7,7 @@ import { AuthProvider } from './features/Login/AuthContext';
 import { Page } from './layouts/page/components/Page';
 import { HomePage } from './pages/HomePage/HomePage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
+import { Register } from './components/user/Register';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/profile" element={<ProfilePage />} />
 

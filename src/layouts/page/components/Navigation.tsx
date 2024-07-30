@@ -9,6 +9,7 @@ export const Navigation = () => {
                 <li><Link to="/"><Button className="nav-button btn-lg mx-1">Home</Button></Link></li>
                 <li><Link to="/login"><Button className="nav-button btn-lg mx-1">Login</Button></Link></li>
                 <li><Link to="/logout"><Button className="nav-button btn-lg mx-1">Logout</Button></Link></li>
+                <li><Link to="/register"><Button className="nav-button btn-lg mx-1">Register</Button></Link></li>
                 <li><Link to="/profile"><Button className="nav-button btn-lg mx-1">Profile</Button></Link></li>
                 <li><Link to="/models"><Button className="nav-button btn-lg mx-1">Models</Button></Link></li>
                 <li><Link to="/t"><Button className="nav-button btn-lg mx-1">test</Button></Link></li>
