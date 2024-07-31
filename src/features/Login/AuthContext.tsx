@@ -1,5 +1,3 @@
-// AuthContext.tsx
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
@@ -18,8 +16,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        setIsAuthenticated(!!token);
         if (token) {
+            setIsAuthenticated(true);
             fetchUser();
         }
     }, []);
@@ -37,12 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             if (response.ok) {
                 const data = await response.json();
-                {/*localStorage.setItem('token', data.access_token);
-                console.log(localStorage.getItem('token'))
-                */}
+                localStorage.setItem('token', data.access_token); // Uložení tokenu do localStorage
                 setIsAuthenticated(true);
                 await fetchUser();
-                alert("Successfuly logged in")
+                alert("Successfully logged in");
             } else {
                 throw new Error('Login failed');
             }
@@ -60,10 +56,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
 
             if (response.ok) {
-                localStorage.removeItem('token');
+                localStorage.removeItem('token'); // Odebrání tokenu z localStorage
                 setIsAuthenticated(false);
                 setUser(undefined);
-                alert("Successfuly logged out")
+                alert("Successfully logged out");
             } else {
                 throw new Error('Logout failed');
             }
