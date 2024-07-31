@@ -1,13 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import "./App.scss";
 import { PrivateRoutes } from './components/PrivateRoutes';
-import { Login } from './components/user/Login';
-import Logout from './components/user/Logout';
+import { Login } from './pages/LoginPage/components/Login';
+import Logout from './pages/LoginPage/components/Logout';
 import { AuthProvider } from './features/Login/AuthContext';
 import { Page } from './layouts/page/components/Page';
 import { HomePage } from './pages/HomePage/HomePage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
-import { Register } from './components/user/Register';
+import { Register } from './pages/LoginPage/components/Register';
+import { LoginPage } from './pages/LoginPage/LoginPage';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/loginpage" element={<LoginPage />} />
             <Route path="/register" element={<Register />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/profile" element={<ProfilePage />} />
