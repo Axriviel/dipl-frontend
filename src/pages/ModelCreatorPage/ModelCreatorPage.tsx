@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNotification } from '../../components/Notifications/NotificationContext';
+import { useAlert } from '../../components/Alerts/AlertContext';
 
 export const ModelCreatorPage: React.FC = () => {
     const [data, setData] = useState({
@@ -8,7 +8,7 @@ export const ModelCreatorPage: React.FC = () => {
         test: "tady jsou random data",
     });
 
-    const { addNotification } = useNotification();
+    const { addAlert } = useAlert();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData({
@@ -29,10 +29,10 @@ export const ModelCreatorPage: React.FC = () => {
             });
 
             const result = await response.json();
-            addNotification('Data sent successfully!', 'success'); // Úspěšná notifikace
+            addAlert('Data sent successfully!', 'success'); // Úspěšná notifikace
             console.log(result);
           } catch (error) {
-            addNotification('Failed to send data.', 'danger'); // Chybová notifikace
+            addAlert('Failed to send data. sadfaf afs daf as fasfd afd asd fas dfa sdf asfd asfd asf asfd afds afsd fsd fasd fasfd asdf adsf asdf asfd fasd', 'danger'); // Chybová notifikace
             console.error('Error:', error);
           }
         };

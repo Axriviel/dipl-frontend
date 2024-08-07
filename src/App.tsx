@@ -1,26 +1,26 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import "./App.scss";
+import { AlertContainer } from './components/Alerts/AlertContainer';
+import { AlertProvider } from './components/Alerts/AlertContext';
 import { PrivateRoutes } from './components/PrivateRoutes';
-import { Login } from './pages/LoginPage/components/Login';
-import Logout from './pages/LoginPage/components/Logout';
 import { AuthProvider } from './features/Login/AuthContext';
 import { Page } from './layouts/page/components/Page';
 import { HomePage } from './pages/HomePage/HomePage';
-import { ProfilePage } from './pages/ProfilePage/ProfilePage';
+import { Login } from './pages/LoginPage/components/Login';
+import Logout from './pages/LoginPage/components/Logout';
 import { Register } from './pages/LoginPage/components/Register';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { ModelCreatorPage } from './pages/ModelCreatorPage/ModelCreatorPage';
-import { NotificationProvider } from './components/Notifications/NotificationContext';
-import { Notification } from './components/Notifications/Notification';
+import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 
 function App() {
 
   return (
     <AuthProvider>
       <BrowserRouter>
-        <NotificationProvider>
-          <Page>
-            <Notification />
+        <Page>
+          <AlertProvider>
+            <AlertContainer />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/modelcreator" element={<ModelCreatorPage />} />
@@ -34,10 +34,10 @@ function App() {
                 <Route path="/t" element={<HomePage />} />
               </Route>
             </Routes>
-          </Page>
-        </NotificationProvider>
+          </AlertProvider>
+        </Page>
       </BrowserRouter>
-    </AuthProvider>
+    </AuthProvider >
   );
 }
 
