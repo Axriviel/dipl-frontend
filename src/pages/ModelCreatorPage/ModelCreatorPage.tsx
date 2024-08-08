@@ -32,7 +32,7 @@ export const ModelCreatorPage: React.FC = () => {
             addAlert('Data sent successfully!', 'success'); // Úspěšná notifikace
             console.log(result);
           } catch (error) {
-            addAlert('Failed to send data. sadfaf afs daf as fasfd afd asd fas dfa sdf asfd asfd asf asfd afds afsd fsd fasd fasfd asdf adsf asdf asfd fasd', 'danger'); // Chybová notifikace
+            addAlert('Failed to send data.', 'error'); // Chybová notifikace
             console.error('Error:', error);
           }
         };

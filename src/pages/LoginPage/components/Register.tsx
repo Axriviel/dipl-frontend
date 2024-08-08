@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../features/Login/AuthContext';
 import { Button } from 'react-bootstrap';
+import { useAlert } from '../../../components/Alerts/AlertContext';
 
 export const Register: React.FC = () => {
+    const { addAlert } = useAlert();
     const { login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -21,11 +23,14 @@ export const Register: React.FC = () => {
 
             if (response.ok) {
                 await login(username, password);
-                alert("Successfuly registered")
+                addAlert("Successfuly registered", "success")
+                //alert("Successfuly registered")
             } else {
+                addAlert("Registration failed", "error")
                 console.error('Registration failed');
             }
         } catch (error) {
+            addAlert(error + "", "error");
             console.error('Error:', error);
         }
     };

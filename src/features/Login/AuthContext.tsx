@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAlert } from '../../components/Alerts/AlertContext';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -22,6 +23,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, []);
 
+    const { addAlert } = useAlert();
+
     const login = async (username: string, password: string) => {
         try {
             const response = await fetch('http://localhost:5000/login', {
@@ -38,12 +41,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 localStorage.setItem('token', data.access_token); // Uložení tokenu do localStorage
                 setIsAuthenticated(true);
                 await fetchUser();
-                alert("Successfully logged in");
+                addAlert('Successfully logged in!', 'success');
+                //alert("Successfully logged in");
             } else {
+                addAlert('Login failed!', 'error'); // 
                 throw new Error('Login failed');
             }
         } catch (error) {
             console.error(error);
+            addAlert(error + "", 'error');
             setIsAuthenticated(false);
         }
     };
@@ -59,11 +65,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 localStorage.removeItem('token'); // Odebrání tokenu z localStorage
                 setIsAuthenticated(false);
                 setUser(undefined);
-                alert("Successfully logged out");
+                addAlert('Successfully logged out!', 'success');
+                //alert("Successfully logged out");
             } else {
+                addAlert('Logout failed', "error");
                 throw new Error('Logout failed');
             }
         } catch (error) {
+            addAlert(error + "", "error");
             console.error(error);
         }
     };
@@ -83,6 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         } catch (error) {
             console.error(error);
+            addAlert(error + "", "error");
             setUser(undefined);
         }
     };
