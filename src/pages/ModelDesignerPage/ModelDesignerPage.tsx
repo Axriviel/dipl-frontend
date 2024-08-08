@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAlert } from '../../components/Alerts/AlertContext';
 
-export const ModelCreatorPage: React.FC = () => {
+export const ModelDesignerPage: React.FC = () => {
     const [data, setData] = useState({
         name: '',
         email: '',

@@ -10,7 +10,7 @@ import { Login } from './pages/LoginPage/components/Login';
 import Logout from './pages/LoginPage/components/Logout';
 import { Register } from './pages/LoginPage/components/Register';
 import { LoginPage } from './pages/LoginPage/LoginPage';
-import { ModelCreatorPage } from './pages/ModelCreatorPage/ModelCreatorPage';
+import { ModelDesignerPage } from './pages/ModelDesignerPage/ModelDesignerPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
             <AlertContainer />
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/modelcreator" element={<ModelCreatorPage />} />
+              <Route path="/modelcreator" element={<ModelDesignerPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/loginpage" element={<LoginPage />} />
               <Route path="/register" element={<Register />} />
