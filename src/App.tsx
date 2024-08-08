@@ -16,10 +16,11 @@ import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 function App() {
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Page>
-          <AlertProvider>
+    <AlertProvider>
+
+      <AuthProvider>
+        <BrowserRouter>
+          <Page>
             <AlertContainer />
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -34,10 +35,11 @@ function App() {
                 <Route path="/t" element={<HomePage />} />
               </Route>
             </Routes>
-          </AlertProvider>
-        </Page>
-      </BrowserRouter>
-    </AuthProvider >
+          </Page>
+        </BrowserRouter>
+      </AuthProvider >
+    </AlertProvider>
+
   );
 }
 

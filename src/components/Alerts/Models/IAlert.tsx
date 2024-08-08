@@ -1,4 +1,4 @@
-export type AlertType = 'success' | 'danger' | 'info' | 'warning';
+export type AlertType = 'success' | 'error' | 'info' | 'warning';
 
 export interface IAlert {
     id: number;
