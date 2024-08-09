@@ -1,16 +1,12 @@
 import { Outlet } from "react-router-dom";
 import { useAuth } from "../features/Login/AuthContext"
 
-interface Props {
-    component: React.ComponentType<any>;
-    path: string;
-    exact?: boolean;
-}
-
 export const PrivateRoutes = () => {
     const { isAuthenticated } = useAuth();
     if(!isAuthenticated){
-        return("nejsi přihlášen")
+        return(
+            <h2 className="text-center p-2">Log in to see this content</h2>
+        )
     }
     return(
         <Outlet />
