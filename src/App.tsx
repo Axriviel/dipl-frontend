@@ -29,10 +29,10 @@ function App() {
               <Route path="/loginpage" element={<LoginPage />} />
               <Route path="/register" element={<Register />} />
               <Route path="/logout" element={<Logout />} />
-              <Route path="/profile" element={<ProfilePage />} />
 
               <Route element={<PrivateRoutes />}>
                 <Route path="/t" element={<HomePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Route>
             </Routes>
           </Page>

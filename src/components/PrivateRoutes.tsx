@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import { useAuth } from "../features/Login/AuthContext"
 
 interface Props {
@@ -12,6 +13,6 @@ export const PrivateRoutes = () => {
         return("nejsi přihlášen")
     }
     return(
-        "test"
+        <Outlet />
     )
 }
