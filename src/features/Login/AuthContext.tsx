@@ -91,9 +91,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 throw new Error('Failed to fetch user');
             }
         } catch (error) {
+            //something went wrong and we were unable to fetch user - user is now logged out
             console.error(error);
-            addAlert(error + "", "error");
+            addAlert(error + "fetchUser", "error");
+            addAlert("Automaticaly logged out due to an error", 'info')
             setUser(undefined);
+            localStorage.removeItem('token');
+            setIsAuthenticated(false);
         }
     };
 
