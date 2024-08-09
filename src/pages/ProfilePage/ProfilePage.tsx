@@ -15,7 +15,7 @@ export const ProfilePage: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className='d-flex flex-column align-items-center'>
             <h2>User Profile</h2>
             <p>Username: {user}</p>
         </div>
