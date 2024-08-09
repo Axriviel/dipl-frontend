@@ -12,6 +12,7 @@ import { Register } from './pages/LoginPage/components/Register';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { ModelDesignerPage } from './pages/ModelDesignerPage/ModelDesignerPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
+import { ModelsPage } from './pages/ModelsPage/ModelsPage';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
               <Route path="/loginpage" element={<LoginPage />} />
               <Route path="/register" element={<Register />} />
               <Route path="/logout" element={<Logout />} />
+              <Route path="/models" element={<ModelsPage />} />
 
               <Route element={<PrivateRoutes />}>
                 <Route path="/t" element={<HomePage />} />
