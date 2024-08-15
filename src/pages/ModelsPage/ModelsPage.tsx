@@ -1,5 +1,8 @@
 import { useState } from "react";
 import "./ModelsPage.css"
+import { DownloadModel } from "../../features/Models/DownloadModel";
+import { Button } from "react-bootstrap";
+import { DeleteModel } from "../../features/Models/DeleteModel";
 
 const modelData = [
     {
@@ -29,6 +32,10 @@ export const ModelsPage = () => {
 
     const [selectedModel, setSelectedModel] = useState(modelData[0]);
 
+    const handleDownload = () =>{
+        DownloadModel(selectedModel.id)
+    }
+
     return (
         <div className="container-fluid">
             <div className="row">
@@ -47,6 +54,13 @@ export const ModelsPage = () => {
                             </li>
                         ))}
                     </ul>
+                    {/* Přidání tlačítka pro stažení modelu */}
+                    <Button onClick={handleDownload} className="m-2">
+                        Download Model
+                    </Button>
+                    <Button onClick={() => DeleteModel(selectedModel.id)} className="m-2">
+                        Delete Model
+                    </Button>
                 </div>
 
                 {/* Prostor vpravo */}
