@@ -46,7 +46,7 @@ export const ModelsPage = () => {
                         {modelData.map((model, index) => (
                             <li
                                 key={index}
-                                className={`list-group-item ${model.modelName === selectedModel.modelName ? 'active' : ''}`}
+                                className={`list-group-item ${model.id === selectedModel.id ? 'active' : ''}`}
                                 onClick={() => setSelectedModel(model)}
                                 style={{ cursor: 'pointer' }}
                             >
