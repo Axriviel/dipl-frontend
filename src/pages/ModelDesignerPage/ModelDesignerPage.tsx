@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAlert } from '../../components/Alerts/AlertContext';
 import { ModelComponentSelector } from '../../features/ModelDesigner/ModelComponentSelector';
+import { configData } from '../../config/config';
 
 export const ModelDesignerPage: React.FC = () => {
     const [data, setData] = useState({
@@ -21,7 +22,7 @@ export const ModelDesignerPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/data', {
+            const response = await fetch(`${configData.API_URL}/api/data`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
