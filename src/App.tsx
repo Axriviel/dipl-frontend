@@ -11,8 +11,9 @@ import Logout from './pages/LoginPage/components/Logout';
 import { Register } from './pages/LoginPage/components/Register';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { ModelDesignerPage } from './pages/ModelDesignerPage/ModelDesignerPage';
-import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { ModelsPage } from './pages/ModelsPage/ModelsPage';
+import { ProfilePage } from './pages/ProfilePage/ProfilePage';
+import { ModelConfig } from './pages/TestPage/ModelConfig';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/models" element={<ModelsPage />} />
+              <Route path="/test" element={<ModelConfig />} />
 
               <Route element={<PrivateRoutes />}>
                 <Route path="/t" element={<HomePage />} />
