@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAlert } from '../../components/Alerts/AlertContext';
+import { configData } from '../../config/config';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -27,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (username: string, password: string) => {
         try {
-            const response = await fetch('http://localhost:5000/login', {
+            const response = await fetch(`${configData.API_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = async () => {
         try {
-            const response = await fetch('http://localhost:5000/logout', {
+            const response = await fetch(`${configData.API_URL}/logout`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -79,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const fetchUser = async () => {
         try {
-            const response = await fetch('http://localhost:5000/user', {
+            const response = await fetch(`${configData.API_URL}/user`, {
                 method: 'GET',
                 credentials: 'include',
             });

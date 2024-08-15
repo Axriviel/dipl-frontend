@@ -1,6 +1,8 @@
+import { configData } from "../../config/config";
+
 export const DownloadModel = async (modelId: number) => {
     try {
-        const response = await fetch(`http://localhost:5000/api/download-model/${modelId}`, {
+        const response = await fetch(`${configData.API_URL}/api/download-model/${modelId}`, {
             method: 'GET',
         });
 

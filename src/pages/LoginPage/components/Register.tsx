@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../../features/Login/AuthContext';
 import { Button } from 'react-bootstrap';
 import { useAlert } from '../../../components/Alerts/AlertContext';
+import { configData } from '../../../config/config';
 
 export const Register: React.FC = () => {
     const { addAlert } = useAlert();
@@ -12,7 +13,7 @@ export const Register: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/register', {
+            const response = await fetch(`${configData.API_URL}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
