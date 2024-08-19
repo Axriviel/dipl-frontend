@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { useAuth } from "../features/Login/AuthContext"
+import { useAuth } from "../features/AuthContext/AuthContext"
 
 export const PrivateRoutes = () => {
     const { isAuthenticated } = useAuth();

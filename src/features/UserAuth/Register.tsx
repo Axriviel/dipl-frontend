@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../../features/Login/AuthContext';
+import { useAuth } from '../AuthContext/AuthContext';
 import { Button } from 'react-bootstrap';
-import { useAlert } from '../../../components/Alerts/AlertContext';
-import { configData } from '../../../config/config';
+import { useAlert } from '../../components/Alerts/AlertContext';
+import { configData } from '../../config/config';
 
 export const Register: React.FC = () => {
     const { addAlert } = useAlert();

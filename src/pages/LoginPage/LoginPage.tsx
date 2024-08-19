@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Login } from "./components/Login";
+import { Login } from "../../features/UserAuth/Login";
 import "./LoginPage.css"
-import { Register } from "./components/Register";
-import { useAuth } from "../../features/Login/AuthContext";
-import Logout from "./components/Logout";
+import { Register } from "../../features/UserAuth/Register";
+import { useAuth } from "../../features/AuthContext/AuthContext";
+import Logout from "../../features/UserAuth/Logout";
 
 export const LoginPage = () => {
     const [isRegistration, setRegistration] = useState<boolean>(false)

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
-import { useAuth } from '../../features/Login/AuthContext.tsx';
+import { useAuth } from '../../features/AuthContext/AuthContext.tsx';
 import { configData } from '../../config/config.tsx';
 
 interface LayerParams {

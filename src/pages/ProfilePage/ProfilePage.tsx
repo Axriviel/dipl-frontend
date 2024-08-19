@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAuth } from '../../features/Login/AuthContext';
+import { useAuth } from '../../features/AuthContext/AuthContext';
 
 export const ProfilePage: React.FC = () => {
     const { user, fetchUser, isAuthenticated } = useAuth();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../../features/Login/AuthContext';
+import { useAuth } from '../AuthContext/AuthContext';
 import { Button } from 'react-bootstrap';
 
 export const Login: React.FC = () => {
