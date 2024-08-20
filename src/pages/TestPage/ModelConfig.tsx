@@ -54,7 +54,8 @@ export const ModelConfig: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className='m-2'>
+      <div className='d-flex flex-column align-items-center'>
       <h2>Model Configuration</h2>
       {modelParams.layers.map((layer, index) => (
         <LayerConfig 
@@ -68,6 +69,7 @@ export const ModelConfig: React.FC = () => {
       <button onClick={handleSubmit}>Submit Model</button>
 
       <h3>Model Visualizer</h3>
+      </div>
       <ModelVisualizer layers={modelParams.layers} />
     </div>
   );
