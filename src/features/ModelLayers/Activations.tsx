@@ -1,0 +1,1 @@
+export const activationFunctions = ['relu', 'sigmoid', 'tanh', 'softmax'];
