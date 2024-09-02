@@ -14,6 +14,7 @@ import { ModelDesignerPage } from './pages/ModelDesignerPage/ModelDesignerPage';
 import { ModelsPage } from './pages/ModelsPage/ModelsPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { ModelConfig } from './pages/TestPage/ModelConfig';
+import { FeedbackPage } from './pages/FeedbackPage/FeedbackPage';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
               <Route element={<PrivateRoutes />}>
                 <Route path="/t" element={<HomePage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/feedback" element={<FeedbackPage />} />
               </Route>
             </Routes>
           </Page>

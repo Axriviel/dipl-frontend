@@ -11,6 +11,7 @@ export const Navigation = () => {
                 <li><Link to="/models"><Button className="nav-button btn-lg mx-1">Models</Button></Link></li>
                 <li><Link to="/modelcreator"><Button className="nav-button btn-lg mx-1">Designer</Button></Link></li>
                 <li><Link to="/test"><Button className="nav-button btn-lg mx-1">test</Button></Link></li>
+                <li><Link to="/feedback"><Button className="nav-button btn-lg mx-1">Feedback</Button></Link></li>
             </ul>
         </nav>
     )
