@@ -1,8 +1,9 @@
+import { configData } from "../../config/config";
 import { FeedbackData } from "./models/FeedbackData";
 
 export const SendFeedback = async (data: FeedbackData): Promise<void> => {
     try {
-        const response = await fetch("http://localhost:5000/feedback", {
+        const response = await fetch(`${configData.API_URL}/feedback`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
