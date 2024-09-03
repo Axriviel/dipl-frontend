@@ -15,6 +15,7 @@ import { ModelsPage } from './pages/ModelsPage/ModelsPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { ModelConfig } from './pages/TestPage/ModelConfig';
 import { FeedbackPage } from './pages/FeedbackPage/FeedbackPage';
+import { ListFeedback } from './pages/ListFeedback/ListFeedback';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
               <Route path="/logout" element={<Logout />} />
               <Route path="/models" element={<ModelsPage />} />
               <Route path="/test" element={<ModelConfig />} />
+              <Route path="/listFeedback" element={<ListFeedback />} />
 
               <Route element={<PrivateRoutes />}>
                 <Route path="/t" element={<HomePage />} />
