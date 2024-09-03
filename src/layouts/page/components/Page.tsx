@@ -5,9 +5,9 @@ interface Props {
 }
 export const Page = (props: Props) => {
     return (
-        <div>
+        <div className="h-100">
             <Header />
-            <div className={""}>
+            <div className={"h-100"}>
                 {props.children}
             </div>
         </div>

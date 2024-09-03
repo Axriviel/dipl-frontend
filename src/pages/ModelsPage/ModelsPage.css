@@ -1,4 +1,21 @@
-.models-panel{
+.models-panel {
     position: sticky;
     top: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    height: 75vh;
+}
+
+.models-container {
+    background-color: aliceblue;
+    border-radius: 10px;
+    border: solid 1px black;
+    margin: 3rem;
+}
+
+@media (max-width: 768px) {
+    .models-panel {
+        border-right: none;
+        width: 100%;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
 }

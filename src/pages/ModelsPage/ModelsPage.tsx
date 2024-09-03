@@ -32,15 +32,15 @@ export const ModelsPage = () => {
 
     const [selectedModel, setSelectedModel] = useState(modelData[0]);
 
-    const handleDownload = () =>{
+    const handleDownload = () => {
         DownloadModel(selectedModel.id)
     }
 
     return (
-        <div className="container-fluid">
-            <div className="row">
+        <div className="models-container">
+            <div className="d-flex flex-row justify-content-center flex-wrap">
                 {/* Postranní panel vlevo */}
-                <div className="col-md-3 p-3 models-panel">
+                <div className="col-md-3 p-3 models-panel overflow-auto">
                     <h4 className="text-center">Models</h4>
                     <ul className="list-group">
                         {modelData.map((model, index) => (
@@ -55,16 +55,18 @@ export const ModelsPage = () => {
                         ))}
                     </ul>
                     {/* Přidání tlačítka pro stažení modelu */}
-                    <Button onClick={handleDownload} className="m-2">
-                        Download Model
-                    </Button>
-                    <Button onClick={() => DeleteModel(selectedModel.id)} className="m-2">
-                        Delete Model
-                    </Button>
+                    <div className="d-flex justify-content-center flex-wrap">
+                        <Button onClick={handleDownload} className="m-2">
+                            Download Model
+                        </Button>
+                        <Button onClick={() => DeleteModel(selectedModel.id)} className="m-2">
+                            Delete Model
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Prostor vpravo */}
-                <div className="col-md-9 p-3">
+                <div className="col-md-9 p-3 px-5">
                     <h4>{selectedModel.modelName}</h4>
                     <p><strong>Accuracy:</strong> {selectedModel.accuracy}</p>
                     <p><strong>Error:</strong> {selectedModel.error}</p>
