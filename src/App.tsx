@@ -4,18 +4,19 @@ import { AlertContainer } from './components/Alerts/AlertContainer';
 import { AlertProvider } from './components/Alerts/AlertContext';
 import { PrivateRoutes } from './components/PrivateRoutes';
 import { AuthProvider } from './features/AuthContext/AuthContext';
-import { Page } from './layouts/page/components/Page';
-import { HomePage } from './pages/HomePage/HomePage';
 import { Login } from './features/UserAuth/Login';
 import Logout from './features/UserAuth/Logout';
 import { Register } from './features/UserAuth/Register';
+import { Page } from './layouts/page/components/Page';
+import { FeedbackPage } from './pages/FeedbackPage/FeedbackPage';
+import { HomePage } from './pages/HomePage/HomePage';
+import { ListFeedback } from './pages/ListFeedback/ListFeedback';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { ModelDesignerPage } from './pages/ModelDesignerPage/ModelDesignerPage';
 import { ModelsPage } from './pages/ModelsPage/ModelsPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { ModelConfig } from './pages/TestPage/ModelConfig';
-import { FeedbackPage } from './pages/FeedbackPage/FeedbackPage';
-import { ListFeedback } from './pages/ListFeedback/ListFeedback';
+import { ListNotifications } from './pages/ListNotifications/ListNotifications';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/models" element={<ModelsPage />} />
               <Route path="/test" element={<ModelConfig />} />
               <Route path="/listFeedback" element={<ListFeedback />} />
+              <Route path="/listNotifications" element={<ListNotifications />} />
 
               <Route element={<PrivateRoutes />}>
                 <Route path="/t" element={<HomePage />} />

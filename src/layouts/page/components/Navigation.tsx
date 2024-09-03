@@ -13,6 +13,7 @@ export const Navigation = () => {
                 <li><Link to="/test"><Button className="nav-button btn-lg mx-1">test</Button></Link></li>
                 <li><Link to="/feedback"><Button className="nav-button btn-lg mx-1">Feedback</Button></Link></li>
                 <li><Link to="/listFeedback"><Button className="nav-button btn-lg mx-1">List Feedback</Button></Link></li>
+                <li><Link to="/listNotifications"><Button className="nav-button btn-lg mx-1">List Notifications</Button></Link></li>
             </ul>
         </nav>
     )
