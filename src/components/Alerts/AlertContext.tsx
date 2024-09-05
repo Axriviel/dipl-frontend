@@ -23,7 +23,7 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const addAlert = (message: string, type: AlertType) => {
         const newAlert: IAlert = {
-            id: Date.now(),
+            id: Date.now() - Math.random(), 
             message,
             type
         };
