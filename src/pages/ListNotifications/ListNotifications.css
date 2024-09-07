@@ -1,0 +1,22 @@
+.notification {
+    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 16px 2px var(--neutral-100);
+    background-color: rgb(250, 250, 250);
+
+}
+
+.notification-unread {
+    border-left: solid var(--primary-400);
+    border-width: 25px;
+
+}
+
+.notification-read {
+    border-left: solid var(--neutral-100);
+    border-width: 25px;
+}
+
+.notification-title {
+    border-bottom: solid black 1px;
+}

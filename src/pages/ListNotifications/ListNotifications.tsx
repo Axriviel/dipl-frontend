@@ -1,12 +1,13 @@
 // src/components/NotificationList.tsx
 import React, { useState, useEffect } from 'react';
-import { Notification } from '../../features/Notifications/models/Notification';
 import { useAuth } from '../../features/AuthContext/AuthContext';
 import { useLocation } from 'react-router-dom';
+import { INotification } from '../../features/Notifications/models/Notification';
+import "./ListNotifications.css"
 
 export const ListNotifications: React.FC = () => {
     const { user } = useAuth();
-    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [notifications, setNotifications] = useState<INotification[]>([]);
     const location = useLocation(); // Získání aktuální cesty
 
     useEffect(() => {
@@ -25,7 +26,7 @@ export const ListNotifications: React.FC = () => {
                     console.error("Error fetching notifications:", error);
                 });
         }
-    }, [user, location.pathname]); // Aktualizace při změně user
+    }, [user, location.pathname]); //update notifications list
 
     return (
         <div>
