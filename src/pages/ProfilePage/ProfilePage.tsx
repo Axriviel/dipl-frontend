@@ -1,14 +1,7 @@
-import React, { useEffect } from 'react';
 import { useAuth } from '../../features/AuthContext/AuthContext';
 
 export const ProfilePage: React.FC = () => {
-    const { user, fetchUser, isAuthenticated } = useAuth();
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            fetchUser();
-        }
-    }, [isAuthenticated, fetchUser]);
+    const { user, isAuthenticated } = useAuth();
 
     if (!isAuthenticated) {
         return <div>Please log in to view your profile.</div>;
@@ -17,7 +10,8 @@ export const ProfilePage: React.FC = () => {
     return (
         <div className='d-flex flex-column align-items-center'>
             <h2>User Profile</h2>
-            <p>Username: {user}</p>
+            <p>Id: {user?.id}</p>
+            <p>Username: {user?.username}</p>
         </div>
     );
 };

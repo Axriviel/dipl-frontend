@@ -17,10 +17,11 @@ export const ListNotifications: React.FC = () => {
         }
         else {
             // Fetch data from the Flask backend
-            fetch(`http://localhost:5000/notifications?user=${encodeURIComponent(user)}`)
+            fetch(`http://localhost:5000/notifications?user=${encodeURIComponent(user.id)}`)
                 .then(response => response.json())
                 .then(data => {
                     setNotifications(data);
+                    console.log(data)
                 })
                 .catch(error => {
                     console.error("Error fetching notifications:", error);
@@ -30,7 +31,7 @@ export const ListNotifications: React.FC = () => {
 
     return (
         <div>
-            <h1>Notifications for {user}</h1>
+            <h1>Notifications for {user?.username}</h1>
             <ul>
                 {notifications.map(notification => (
                     <li key={notification.id}>

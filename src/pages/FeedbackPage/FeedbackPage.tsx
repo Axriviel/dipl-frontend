@@ -11,7 +11,7 @@ export const FeedbackPage = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const data: FeedbackData = { feedback, user };
+        const data: FeedbackData = { feedback, user: user?.username };
         console.log(data)
 
 
@@ -31,7 +31,7 @@ export const FeedbackPage = () => {
                     disabled
                     type="text"
                     id="user"
-                    value={user}
+                    value={user?.username}
                     required
                 />
             </div>

@@ -71,7 +71,8 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
                 />
                 :
                 <>
-                  <Form.Control type="string"
+                  <Form.Control
+                   type="string"
                     value={currentLayer.unitsRandom.type}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('unitsRandom.type', (e.target.value))}
                   />
