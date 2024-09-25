@@ -34,7 +34,8 @@ export const FullAutoDesign = () => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ ...newTask, "user": user!.username }),
+            credentials: 'include',
+            body: JSON.stringify({ ...newTask }),
           });
     
           if (!response.ok) {

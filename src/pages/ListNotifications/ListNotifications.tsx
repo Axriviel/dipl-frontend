@@ -16,7 +16,6 @@ export const ListNotifications: React.FC = () => {
             return;
         }
         else {
-            // Fetch data from the Flask backend
             fetch(`http://localhost:5000/notifications?user=${encodeURIComponent(user.id)}`)
                 .then(response => response.json())
                 .then(data => {
@@ -33,14 +32,16 @@ export const ListNotifications: React.FC = () => {
         <div>
             <h1>Notifications for {user?.username}</h1>
             <ul>
-                {notifications.map(notification => (
-                    <li key={notification.id}>
-                        <p>{notification.message}</p>
-                        <small>{new Date(notification.timestamp).toLocaleString()}</small>
-                        <p>Read: {notification.was_read ? "Yes" : "No"}</p>
-                        <p>User: {notification.user}</p>
-                    </li>
-                ))}
+                {notifications
+                    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())  // Seřadí od nejnovější po nejstarší
+                    .map(notification => (
+                        <li key={notification.id}>
+                            <p>{notification.message}</p>
+                            <small>{new Date(notification.timestamp).toLocaleString()}</small>
+                            <p>Read: {notification.was_read ? "Yes" : "No"}</p>
+                            <p>User: {notification.user}</p>
+                        </li>
+                    ))}
             </ul>
         </div>
     );

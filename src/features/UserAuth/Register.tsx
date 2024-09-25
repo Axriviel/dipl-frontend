@@ -13,7 +13,7 @@ export const Register: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await fetch(`${configData.API_URL}/register`, {
+            const response = await fetch(`${configData.API_URL}/api/user/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

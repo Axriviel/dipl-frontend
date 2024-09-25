@@ -85,7 +85,8 @@ export const ModelConfig: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...modelParams, "user": user!.username }),
+        credentials: 'include',
+        body: JSON.stringify({ ...modelParams }),
       });
 
       if (!response.ok) {
