@@ -2,16 +2,16 @@ import { ChangeEventHandler, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { taskTypes } from "../../features/ModelLayers/TaskTypes";
 import { configData } from "../../config/config";
-import { useAuth } from "../../features/AuthContext/AuthContext";
+import { AutoOptMethods } from "../../features/ModelDesigner/AutoOptMethods";
 
-interface TaskState {
+interface ITaskState {
     dataset: string;
     taskType: string;
+    optMethod: string;
 }
 
 export const FullAutoDesign = () => {
-    const [newTask, setNewTask] = useState<TaskState>({ dataset: "Diabetes", taskType: "" });
-    const { user } = useAuth();
+    const [newTask, setNewTask] = useState<ITaskState>({ dataset: "Diabetes", taskType: "classification", optMethod: "random"});
 
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -61,6 +61,17 @@ export const FullAutoDesign = () => {
                 >
                     {taskTypes.map(tt => (
                         <option key={tt} value={tt}>{tt}</option>
+                    ))}
+                </Form.Control>
+                <Form.Label>Opt method:</Form.Label>
+                <Form.Control
+                    as="select"
+                    name="optMethod"
+                    value={newTask.optMethod || ''}
+                    onChange={handleInputChange}
+                >
+                    {AutoOptMethods.map(method => (
+                        <option key={method} value={method}>{method}</option>
                     ))}
                 </Form.Control>
             </Form.Group>
