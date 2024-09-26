@@ -6,6 +6,13 @@
     background-color: #333;
     color: #fff;
     height: 10vh;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+body{
+    margin-top: 10vh;
 }
 
 .logo {
@@ -23,7 +30,7 @@
 }
 
 .nav ul {
-    gap: 0.5rem; 
+    gap: 0.5rem;
 }
 
 .nav ul li {
@@ -36,7 +43,8 @@
         flex-direction: column;
         height: auto;
     }
-    .logo{
+
+    .logo {
         margin-bottom: 1rem;
     }
 

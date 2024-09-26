@@ -17,6 +17,7 @@ import { ModelsPage } from './pages/ModelsPage/ModelsPage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { ModelConfig } from './pages/TestPage/ModelConfig';
 import { ListNotifications } from './pages/ListNotifications/ListNotifications';
+import { NotificationProvider } from './features/Notifications/NotificationsContext';
 
 function App() {
 
@@ -24,29 +25,31 @@ function App() {
     <AlertProvider>
 
       <AuthProvider>
-        <BrowserRouter>
-          <Page>
-            <AlertContainer />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/modelcreator" element={<ModelDesignerPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/loginpage" element={<LoginPage />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/models" element={<ModelsPage />} />
-              <Route path="/test" element={<ModelConfig />} />
-              <Route path="/listFeedback" element={<ListFeedback />} />
-              <Route path="/listNotifications" element={<ListNotifications />} />
+        <NotificationProvider>
+          <BrowserRouter>
+            <Page>
+              <AlertContainer />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/modelcreator" element={<ModelDesignerPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/loginpage" element={<LoginPage />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/models" element={<ModelsPage />} />
+                <Route path="/test" element={<ModelConfig />} />
+                <Route path="/listFeedback" element={<ListFeedback />} />
+                <Route path="/listNotifications" element={<ListNotifications />} />
 
-              <Route element={<PrivateRoutes />}>
-                <Route path="/t" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/feedback" element={<FeedbackPage />} />
-              </Route>
-            </Routes>
-          </Page>
-        </BrowserRouter>
+                <Route element={<PrivateRoutes />}>
+                  <Route path="/t" element={<HomePage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/feedback" element={<FeedbackPage />} />
+                </Route>
+              </Routes>
+            </Page>
+          </BrowserRouter>
+        </NotificationProvider>
       </AuthProvider >
     </AlertProvider>
 

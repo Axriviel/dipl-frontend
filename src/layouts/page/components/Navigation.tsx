@@ -1,8 +1,10 @@
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useNotification } from "../../../features/Notifications/NotificationsContext";
 
 export const Navigation = () => {
-
+    const { hasNewNotification } = useNotification();
+    
     return (
         <nav className="nav">
             <ul className="d-flex flex-row flex-wrap m-0">
@@ -13,7 +15,10 @@ export const Navigation = () => {
                 <li><Link to="/test"><Button className="nav-button btn-lg mx-1">test</Button></Link></li>
                 <li><Link to="/feedback"><Button className="nav-button btn-lg mx-1">Feedback</Button></Link></li>
                 <li><Link to="/listFeedback"><Button className="nav-button btn-lg mx-1">List Feedback</Button></Link></li>
-                <li><Link to="/listNotifications"><Button className="nav-button btn-lg mx-1">List Notifications</Button></Link></li>
+                {hasNewNotification ?
+                    <li><Link to="/listNotifications"><Button className="nav-button btn-lg mx-1">New Notifications</Button></Link></li> :
+                    <li><Link to="/listNotifications"><Button className="nav-button btn-lg mx-1">List Notifications</Button></Link></li>
+                }
             </ul>
         </nav>
     )
