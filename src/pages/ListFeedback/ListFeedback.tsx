@@ -1,13 +1,14 @@
 // src/components/FeedbackList.tsx
 import React, { useState, useEffect } from 'react';
 import { Feedback } from '../../features/Feedback/models/Feedback';
+import { configData } from '../../config/config';
 
 export const ListFeedback = () => {
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
 
     useEffect(() => {
         // Fetch data from the Flask backend
-        fetch('http://localhost:5000/getfeedback')
+        fetch(`${configData.API_URL}/getfeedback`)
             .then(response => response.json())
             .then(data => {
                 setFeedbacks(data);
