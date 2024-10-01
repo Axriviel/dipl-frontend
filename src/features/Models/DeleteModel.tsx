@@ -10,10 +10,9 @@ export const DeleteModel = async (modelId: number) => {
             throw new Error(`Failed to delete the model: ${response.statusText}`);
         }
 
-        alert('Model successfully deleted',);
-        return true;
+        return { success: true, message: 'Model successfully deleted' };
     } catch (error) {
         console.error('Failed to delete the model:', error);
-        alert('Failed to delete the model');
+        return { success: false, message: (error as Error).message }; 
     }
 };

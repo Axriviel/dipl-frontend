@@ -5,39 +5,28 @@ import { Button } from "react-bootstrap";
 import { DeleteModel } from "../../features/Models/DeleteModel";
 import { Model } from "../../features/Models/models/Model";
 import { configData } from "../../config/config";
-
-const modelData = [
-    {
-        "id": 1,
-        "modelName": "Model A",
-        "accuracy": 0.95,
-        "error": 0.05,
-        "dataset": "Dataset 1"
-    },
-    {
-        "id": 2,
-        "modelName": "Model B",
-        "accuracy": 0.89,
-        "error": 0.11,
-        "dataset": "Dataset 2"
-    },
-    {
-        "id": 3,
-        "modelName": "Model C",
-        "accuracy": 0.92,
-        "error": 0.08,
-        "dataset": "Dataset 3"
-    }
-];
+import { useAlert } from "../../components/Alerts/AlertContext";
 
 export const ModelsPage = () => {
     const [models, setModels] = useState<Model[]>([]);
     const [selectedModel, setSelectedModel] = useState<Model | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true)
+    const [refetch, setRefetch] = useState<boolean>(true)
+    const { addAlert } = useAlert()
 
     const handleDownload = () => {
         DownloadModel(selectedModel!.id)
     }
+
+    const handleDeleteModel = async (modelId: number) => {
+        const result = await DeleteModel(modelId);
+        if (result.success) {
+            addAlert(result.message || 'Model successfully deleted', "success");
+            setRefetch(!refetch)
+        } else {
+            addAlert(result.message || 'Failed to delete the model', "error");
+        }
+    };
 
     useEffect(() => {
         // Fetch data from the Flask backend
@@ -51,20 +40,19 @@ export const ModelsPage = () => {
             .catch(error => {
                 console.error("Error fetching feedback:", error);
             });
-    }, []);
+    }, [refetch]);
 
     useEffect(() => {
         if (models.length > 0) {
             setSelectedModel(models[0])
-            console.log("jsem tady" + models)
         }
-        else{
+        else {
             setSelectedModel(undefined)
         }
     }, [models])
 
     return (
-        <>{loading ? "loading" : selectedModel === undefined?"Zatím nemáte modely":
+        <>{loading ? "loading" : selectedModel === undefined ? "Zatím nemáte modely" :
             <div className="models-container">
 
                 <div className="d-flex flex-row justify-content-center flex-wrap">
@@ -88,7 +76,10 @@ export const ModelsPage = () => {
                             <Button onClick={handleDownload} className="m-2">
                                 Download Model
                             </Button>
-                            <Button onClick={() => DeleteModel(selectedModel!.id)} className="m-2">
+                            <Button className="m-2" onClick={async () => {
+                                await handleDeleteModel(selectedModel!.id);
+                            }
+                            }>
                                 Delete Model
                             </Button>
                         </div>
@@ -102,7 +93,7 @@ export const ModelsPage = () => {
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
                     </div>
                 </div>
-            </div>
+            </div >
         }</>
     );
 };
