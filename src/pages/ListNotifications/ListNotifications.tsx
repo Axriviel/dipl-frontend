@@ -58,19 +58,16 @@ export const ListNotifications: React.FC = () => {
                         ))}
                 </ul>
                 {/* Ovládací prvky pro stránkování */}
-                <div className="m-2">
+                <div className="my-1">
                     <button onClick={prevPage} disabled={currentPage === 1}>
                         Previous
                     </button>
-                    <span>Page {currentPage} of {totalPages}</span>
+                    <span className='mx-1'>Page {currentPage} of {totalPages}</span>
                     <button onClick={nextPage} disabled={currentPage === totalPages}>
                         Next
                     </button>
                 </div>
             </div>
-
-
-
 
         </div>
     );

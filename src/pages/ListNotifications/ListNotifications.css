@@ -1,4 +1,5 @@
 .notification {
+    position: relative;
     padding: 0.5rem 1.5rem 0.5rem 1.5rem;
     border-radius: 5px;
     /* box-shadow: 0px 0px 16px 2px var(--neutral-100); */
@@ -6,9 +7,17 @@
     width: 50vw;
 }
 
+.notification .test1 {
+    position: absolute; /*notification musí mít pos relative, aby to fungovalo*/
+    right: 0.5rem;
+    top: 0.5rem;
+    cursor: pointer;
+}
+
 /* mírné posunutí, aby byla nějaká interakce s tím, že jsme ji vybrali */
 .notification:hover{
-
+    transform: translateY(-5px);  
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1); 
 }
 
 li{
@@ -28,10 +37,4 @@ li{
 
 .notification-title {
     border-bottom: solid black 1px;
-}
-
-/* doladit, aby byla v rámci kontejneru */
-.test1{ 
-    position: absolute;
-    right: 0;
 }
