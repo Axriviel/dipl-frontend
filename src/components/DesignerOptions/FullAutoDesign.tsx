@@ -49,6 +49,7 @@ export const FullAutoDesign = () => {
 
             const result = await response.json();
             console.log('Model successfully sent to backend:', result);
+            addAlert(result.message, "success")
         } catch (error: any) {
             if (error instanceof Error) {
                 addAlert("" + error.message, "error");

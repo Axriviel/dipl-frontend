@@ -6,6 +6,7 @@ import { DeleteModel } from "../../features/Models/DeleteModel";
 import { Model } from "../../features/Models/models/Model";
 import { configData } from "../../config/config";
 import { useAlert } from "../../components/Alerts/AlertContext";
+import { GetModels } from "../../features/Models/GetModels";
 
 export const ModelsPage = () => {
     const [models, setModels] = useState<Model[]>([]);
@@ -29,18 +30,21 @@ export const ModelsPage = () => {
     };
 
     useEffect(() => {
-        // Fetch data from the Flask backend
-        fetch(`${configData.API_URL}/api/getmodels`)
-            .then(response => response.json())
-            .then(data => {
-                setModels(data);
-                setLoading(false);
+        const fetchData = async () => {
+            const result = await GetModels();
 
-            })
-            .catch(error => {
-                console.error("Error fetching feedback:", error);
-            });
-    }, [refetch]);
+            if (result.success) {
+                setModels(result.data); 
+            } else {
+                addAlert(""+ result.message, "error");
+                console.error(result.message); 
+            }
+
+            setLoading(false);
+        };
+
+        fetchData();
+    }, [refetch]); 
 
     useEffect(() => {
         if (models.length > 0) {
