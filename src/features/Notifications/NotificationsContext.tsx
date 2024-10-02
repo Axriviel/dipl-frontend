@@ -31,7 +31,7 @@ export const useNotification = () => {
 };
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
-    const { user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
     const [notifications, setNotifications] = useState<INotification[]>([]);
     const [hasNewNotification, setHasNewNotification] = useState(false);
     const [currentPage, setCurrentPage] = useState(1); // Aktuální stránka
@@ -39,7 +39,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     const [limit, setLimit] = useState(5); // Počet notifikací na stránku
 
     const fetchNotifications = () => {
-        if (user) {
+        if (user && isAuthenticated) {
             fetch(`${configData.API_URL}/notifications?user=${user.id}&page=${currentPage}&limit=${limit}`, {
                 method: "GET",
                 credentials: 'include'
