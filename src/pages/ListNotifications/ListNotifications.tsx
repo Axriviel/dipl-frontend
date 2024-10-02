@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import "./ListNotifications.css";
 import { useNotification } from '../../features/Notifications/NotificationsContext';
+import { markNotificationAsRead } from '../../features/Notifications/markNotificationAsRead';
+import { useAlert } from '../../components/Alerts/AlertContext';
 
 export const ListNotifications: React.FC = () => {
-    const { notifications, setHasNewNotification, currentPage, setCurrentPage, totalPages, setLimit } = useNotification();
+    const { notifications, setHasNewNotification, currentPage, setCurrentPage, totalPages, setLimit, fetchNotifications } = useNotification();
     const [isHovered, setIsHovered] = useState<number>(-1)
+    const { addAlert } = useAlert()
 
     useEffect(() => {
         setHasNewNotification(false);
@@ -27,7 +30,30 @@ export const ListNotifications: React.FC = () => {
         setLimit(Number(event.target.value)); // Změní limit na hodnotu zvolené v selectu
         setCurrentPage(1); // Vrátí se na první stránku při změně limitu
     };
-    
+
+    const handleMarkAsRead = async (notificationId: number, notificationWasRead: boolean) => {
+        if (notificationWasRead === false) {
+            const result = await markNotificationAsRead(notificationId);
+
+            if (result.success) {
+                addAlert(result.message, "success");
+                fetchNotifications();
+                // Aktualizace seznamu notifikací (např. refetch nebo ruční úprava)
+                // setNotifications(prevNotifications =>
+                //     prevNotifications.map(notification =>
+                //         notification.id === notificationId ? { ...notification, was_read: true } : notification
+                //     )
+                // );
+            } else {
+                addAlert(result.message, "error");
+            }
+        }
+        else{
+            addAlert("Already marked as read", 'warning')
+        }
+    };
+
+
 
     return (
         <div className='m-2'>
@@ -52,7 +78,7 @@ export const ListNotifications: React.FC = () => {
                                     <small>{new Date(notification.timestamp).toLocaleString()}</small>
                                     <p>Read: {notification.was_read ? "Yes" : "No"}</p>
                                     <p>User: {notification.user}</p>
-                                    {isHovered === notification.id ? <div className='mark-as-read'>Označit jako přečtené</div> : undefined}
+                                    {isHovered === notification.id ? <div onClick={() => handleMarkAsRead(notification.id, notification.was_read)} className='mark-as-read'>Označit jako přečtené</div> : undefined}
                                 </div>
                             </li>
 
