@@ -4,6 +4,7 @@ export const DeleteModel = async (modelId: number) => {
     try {
         const response = await fetch(`${configData.API_URL}/api/delete-model/${modelId}`, {
             method: 'DELETE',
+            credentials: "include",
         });
 
         if (!response.ok) {

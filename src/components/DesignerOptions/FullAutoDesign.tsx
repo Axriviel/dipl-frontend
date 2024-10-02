@@ -3,6 +3,7 @@ import { Button, Form } from "react-bootstrap";
 import { taskTypes } from "../../features/ModelLayers/TaskTypes";
 import { configData } from "../../config/config";
 import { AutoOptMethods } from "../../features/ModelDesigner/AutoOptMethods";
+import { useAlert } from "../Alerts/AlertContext";
 
 interface ITaskState {
     dataset: string;
@@ -11,7 +12,8 @@ interface ITaskState {
 }
 
 export const FullAutoDesign = () => {
-    const [newTask, setNewTask] = useState<ITaskState>({ dataset: "Diabetes", taskType: "classification", optMethod: "random"});
+    const [newTask, setNewTask] = useState<ITaskState>({ dataset: "Diabetes", taskType: "classification", optMethod: "random" });
+    const { addAlert } = useAlert()
 
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -27,27 +29,36 @@ export const FullAutoDesign = () => {
 
     const handleSubmit = async () => {
         try {
-          console.log(JSON.stringify(newTask))
+            console.log(JSON.stringify(newTask))
 
-          const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ ...newTask }),
-          });
-    
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-    
-          const result = await response.json();
-          console.log('Model successfully sent to backend:', result);
-        } catch (error) {
-          console.error('Error sending model to backend:', error);
+            const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ ...newTask }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.log(errorData)
+                console.log(errorData.error)
+                throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Model successfully sent to backend:', result);
+        } catch (error: any) {
+            if (error instanceof Error) {
+                addAlert("" + error.message, "error");
+                console.error('Error sending model to backend:', error);
+            } else {
+                console.error('Unexpected error', error);
+                addAlert("Unexpected error", "error");
+            }
         }
-      };
+    };
 
     return (
         <div className="d-flex flex-column align-items-center">

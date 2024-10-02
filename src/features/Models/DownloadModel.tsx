@@ -4,6 +4,7 @@ export const DownloadModel = async (modelId: number) => {
     try {
         const response = await fetch(`${configData.API_URL}/api/download-model/${modelId}`, {
             method: 'GET',
+            credentials: "include",
         });
 
         if (!response.ok) {

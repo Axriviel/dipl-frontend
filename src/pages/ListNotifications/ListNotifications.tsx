@@ -27,6 +27,7 @@ export const ListNotifications: React.FC = () => {
         setLimit(Number(event.target.value)); // Změní limit na hodnotu zvolené v selectu
         setCurrentPage(1); // Vrátí se na první stránku při změně limitu
     };
+    
 
     return (
         <div className='m-2'>
@@ -51,7 +52,7 @@ export const ListNotifications: React.FC = () => {
                                     <small>{new Date(notification.timestamp).toLocaleString()}</small>
                                     <p>Read: {notification.was_read ? "Yes" : "No"}</p>
                                     <p>User: {notification.user}</p>
-                                    {isHovered === notification.id ? <div className='test1'>Označit jako přečtené</div> : undefined}
+                                    {isHovered === notification.id ? <div className='mark-as-read'>Označit jako přečtené</div> : undefined}
                                 </div>
                             </li>
 
