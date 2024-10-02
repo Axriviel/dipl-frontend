@@ -10,7 +10,7 @@ export const Alert = ({ alert, removeAlert }: Props) => {
 
     return (
         <div key={alert.id} className={`alert alert-${alert.type} alert-dismissible fade show`} role="alert">
-            {alert.message + alert.id}
+            {alert.message}
             <button type="button" className="btn-close" onClick={() => removeAlert(alert.id)}></button>
         </div>
     );
