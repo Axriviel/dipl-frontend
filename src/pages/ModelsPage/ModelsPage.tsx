@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import "./ModelsPage.css"
-import { DownloadModel } from "../../features/Models/DownloadModel";
 import { Button } from "react-bootstrap";
-import { DeleteModel } from "../../features/Models/DeleteModel";
-import { Model } from "../../features/Models/models/Model";
-import { configData } from "../../config/config";
 import { useAlert } from "../../components/Alerts/AlertContext";
+import { DeleteModel } from "../../features/Models/DeleteModel";
+import { DownloadModel } from "../../features/Models/DownloadModel";
 import { GetModels } from "../../features/Models/GetModels";
+import { Model } from "../../features/Models/models/Model";
+import "./ModelsPage.css";
 
 export const ModelsPage = () => {
     const [models, setModels] = useState<Model[]>([]);

@@ -1,12 +1,17 @@
 /* The following line can be included in a src/App.scss */
 @import 'bootstrap/scss/bootstrap.scss';
 
+:root{
+  --nav-background-white:  rgba(245, 245, 245, 0.90);
+  //--nav-background-white: #f3f4f6;
+}
+
 .h-100{
   height: 100%;
 }
 
 body {
-  background-color: rgb(248, 248, 248);
+  background-color: var(--nav-background-white);
 }
 
 .cute-button {
@@ -32,14 +37,14 @@ body {
   }
 }
 
-.nav-button {
-  @extend .cute-button;
-  background-color: rgb(218, 30, 61);
+// .nav-button {
+//   @extend .cute-button;
+//   background-color: rgb(218, 30, 61);
 
-  &:hover {
-    text-decoration: underline;
-  }
-}
+//   &:hover {
+//     text-decoration: underline;
+//   }
+// }
 
 .cursor-pointer {
   cursor: pointer;
