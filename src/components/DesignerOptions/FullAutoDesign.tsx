@@ -13,7 +13,8 @@ interface ITaskState {
 
 export const FullAutoDesign = () => {
     const [newTask, setNewTask] = useState<ITaskState>({ dataset: "Diabetes", taskType: "classification", optMethod: "random" });
-    const { addAlert } = useAlert()
+    const [file, setFile] = useState<File | null>(null);  // Přidáme stav pro soubor
+    const { addAlert } = useAlert();
 
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -23,33 +24,38 @@ export const FullAutoDesign = () => {
         }));
     };
 
-    // const handleSubmit = async () => {
-    //     console.log(JSON.stringify(newTask))
-    // }
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setFile(e.target.files[0]);  // Uložíme soubor do stavu
+        }
+    };
 
     const handleSubmit = async () => {
         try {
-            console.log(JSON.stringify(newTask))
+            if (!file) {
+                addAlert("Please select a file before submitting", "error");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("datasetFile", file);  // Přidáme soubor do FormData
+            formData.append("taskType", newTask.taskType);
+            formData.append("optMethod", newTask.optMethod);
 
             const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 credentials: 'include',
-                body: JSON.stringify({ ...newTask }),
+                body: formData,  // Odesíláme FormData místo JSON
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.log(errorData)
-                console.log(errorData.error)
                 throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
             }
 
             const result = await response.json();
             console.log('Model successfully sent to backend:', result);
-            addAlert(result.message, "success")
+            addAlert(result.message, "success");
         } catch (error: any) {
             if (error instanceof Error) {
                 addAlert("" + error.message, "error");
@@ -86,10 +92,17 @@ export const FullAutoDesign = () => {
                         <option key={method} value={method}>{method}</option>
                     ))}
                 </Form.Control>
+
+                {/* Přidání souborového inputu */}
+                <Form.Label>Upload Dataset:</Form.Label>
+                <Form.Control
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileChange}  // Nastavíme soubor do stavu
+                />
             </Form.Group>
 
             <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
-
         </div>
     )
 }

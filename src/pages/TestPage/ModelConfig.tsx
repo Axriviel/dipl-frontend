@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import ModelVisualizer from './ModelVisualiser.tsx';
-import { LayerConfig } from './LayerConfig.tsx';
-import { useAuth } from '../../features/AuthContext/AuthContext.tsx';
-import { configData } from '../../config/config.tsx';
 import { Button } from 'react-bootstrap';
+import { configData } from '../../config/config.tsx';
+import { LayerConfig } from './LayerConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
-
+import ModelVisualizer from './ModelVisualiser.tsx';
 
 interface ModelParams {
   layers: LayerParams[];
 }
 
 export const ModelConfig: React.FC = () => {
-  const { user } = useAuth();
   const [modelParams, setModelParams] = useState<ModelParams>({ layers: [] });
   const [newLayerType, setNewLayerType] = useState<string>('Dense');
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);  // Přidáno pro nahrání souboru
 
   const addLayer = () => {
     let newLayer: LayerParams;
@@ -28,7 +26,7 @@ export const ModelConfig: React.FC = () => {
           name: "dense",
           type: 'Dense',
           units: 32,
-          unitsRandom:{
+          unitsRandom: {
             min: 0,
             max: 0,
             type: "normal",
@@ -42,7 +40,7 @@ export const ModelConfig: React.FC = () => {
           id: Date.now().toString(),
           name: "conv2d",
           type: 'Conv2D',
-          unitsRandom:{
+          unitsRandom: {
             min: 0,
             max: 0,
             type: "normal",
@@ -53,7 +51,6 @@ export const ModelConfig: React.FC = () => {
           inputs: []
         };
         break;
-      // Přidávej další typy vrstev zde
       default:
         return;
     }
@@ -77,16 +74,27 @@ export const ModelConfig: React.FC = () => {
     setSelectedLayer(null);
   };
 
+  // Přidání handleru pro výběr souboru
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async () => {
     try {
-      console.log(JSON.stringify({...modelParams, user}))
+      if (!file) {
+        console.error("No dataset file selected");
+        return;
+      }
+      const formData = new FormData();
+      formData.append('datasetFile', file);  // Přidání souboru do FormData
+      formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
+
       const response = await fetch(`${configData.API_URL}/api/save-model`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         credentials: 'include',
-        body: JSON.stringify({ ...modelParams }),
+        body: formData,  // Odeslání FormData
       });
 
       if (!response.ok) {
@@ -103,13 +111,17 @@ export const ModelConfig: React.FC = () => {
   return (
     <div className='m-2'>
       <div className='d-flex flex-column align-items-center'>
+        {/* Přidání nahrání datasetu */}
+        <input type="file" accept=".csv" onChange={handleFileChange} />
         <h2>Model Configuration</h2>
+
 
         <select value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
           <option value="Dense">Dense</option>
           <option value="Conv2D">Conv2D</option>
-          {/* Přidej další typy vrstev zde */}
         </select>
+
+
 
         <Button onClick={addLayer}>Add Layer</Button>
 
