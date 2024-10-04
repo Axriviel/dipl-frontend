@@ -3,10 +3,15 @@ import React, { useState } from "react";
 import { FeedbackData } from "../../features/Feedback/models/FeedbackData";
 import { SendFeedback } from "../../features/Feedback/SendFeedback";
 import { useAuth } from "../../features/AuthContext/AuthContext";
+import { useAlert } from "../../components/Alerts/AlertContext";
+import { Button, Form } from "react-bootstrap";
+import "./FeedbackPage.css"
 
 export const FeedbackPage = () => {
     const [feedback, setFeedback] = useState<string>("");
     const { user } = useAuth();
+    const { addAlert } = useAlert();
+    const [isSent, setIsSent] = useState<boolean>(false);
 
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -18,34 +23,46 @@ export const FeedbackPage = () => {
         try {
             await SendFeedback(data);
             //console.log("Feedback successfully sent");
+            setIsSent(true);
+            addAlert("Feedback successfuly sent", "success");
         } catch (error) {
+            addAlert("" + error, "error");
             console.error("Error sending feedback:", error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="user">User:</label>
-                <input
-                    disabled
-                    type="text"
-                    id="user"
-                    value={user?.username}
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="feedback">Feedback:</label>
-                <textarea
-                    id="feedback"
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    required
-                ></textarea>
-            </div>
-            <button type="submit">Send</button>
-        </form>
+        <div className="feedback-container mx-auto my-5 p-5 d-flex justify-content-center">
+            <Form onSubmit={handleSubmit} className="d-flex flex-column align-items-center w-50">
+                <Form.Label><h2 className="">Provide feedback</h2></Form.Label>
+                <Form.Group className="mb-3 w-100" controlId="user">
+                    <Form.Label>User:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={user?.username}
+                        disabled
+                        required
+                        className="w-50"
+                    />
+                </Form.Group>
+
+                <Form.Group className="mb-3 w-100" controlId="feedback">
+                    <Form.Label>Feedback:</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                        disabled={isSent ? true : false}
+                        required
+                        className="w-100"
+                    />
+                </Form.Group>
+
+                <Button variant="primary" type="submit" disabled={isSent}>
+                    Send
+                </Button>
+            </Form>
+        </div>
     );
 };
 
