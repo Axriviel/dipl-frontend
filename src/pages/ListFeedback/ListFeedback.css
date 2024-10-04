@@ -1,0 +1,9 @@
+.feedback-list-item {
+    border-radius: 20px;
+    background-color: var(--random-background);
+    width: 25vw;
+}
+
+.feedback-list-item:hover {
+    transform: scale(1.03);
+}

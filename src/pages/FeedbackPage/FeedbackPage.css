@@ -1,5 +1,5 @@
 .feedback-container {
-    background-color: rgb(184, 222, 255);
+    background-color: var(--random-background);
     width: 40vw;
     border-radius: 20px;
 }
