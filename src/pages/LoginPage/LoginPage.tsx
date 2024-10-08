@@ -15,7 +15,7 @@ export const LoginPage = () => {
 
     return (
         <div className="d-flex justify-content-center m-2">
-            {isAuthenticated + "xd"}
+            {/* {isAuthenticated + "xd"} */}
             {!isRegistration ?
                 !isAuthenticated ?
                     <div>
