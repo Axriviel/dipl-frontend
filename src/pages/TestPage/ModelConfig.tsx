@@ -4,6 +4,9 @@ import { configData } from '../../config/config.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
+import { RandomConfig } from './LayerConfig.tsx';
+import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
+import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 
 interface ModelParams {
   layers: LayerParams[];
@@ -21,35 +24,11 @@ export const ModelConfig: React.FC = () => {
 
     switch (newLayerType) {
       case 'Dense':
-        newLayer = {
-          id: Date.now().toString(),
-          name: "dense",
-          type: 'Dense',
-          units: 32,
-          unitsRandom: {
-            min: 0,
-            max: 0,
-            type: "normal",
-          },
-          activation: 'relu',
-          inputs: []
-        };
+        newLayer = createDenseLayer();
+        console.log(newLayer)
         break;
       case 'Conv2D':
-        newLayer = {
-          id: Date.now().toString(),
-          name: "conv2d",
-          type: 'Conv2D',
-          unitsRandom: {
-            min: 0,
-            max: 0,
-            type: "normal",
-          },
-          filters: 64,
-          kernel_size: [3, 3],
-          activation: 'relu',
-          inputs: []
-        };
+        newLayer = createConv2DLayer();
         break;
       default:
         return;
@@ -82,30 +61,32 @@ export const ModelConfig: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      if (!file) {
-        console.error("No dataset file selected");
-        return;
-      }
-      const formData = new FormData();
-      formData.append('datasetFile', file);  // Přidání souboru do FormData
-      formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
+    console.log(JSON.stringify(modelParams.layers))
 
-      const response = await fetch(`${configData.API_URL}/api/save-model`, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,  // Odeslání FormData
-      });
+    // try {
+    //   if (!file) {
+    //     console.error("No dataset file selected");
+    //     return;
+    //   }
+    //   const formData = new FormData();
+    //   formData.append('datasetFile', file);  // Přidání souboru do FormData
+    //   formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+    //   const response = await fetch(`${configData.API_URL}/api/save-model`, {
+    //     method: 'POST',
+    //     credentials: 'include',
+    //     body: formData,  // Odeslání FormData
+    //   });
 
-      const result = await response.json();
-      console.log('Model successfully sent to backend:', result);
-    } catch (error) {
-      console.error('Error sending model to backend:', error);
-    }
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! Status: ${response.status}`);
+    //   }
+
+    //   const result = await response.json();
+    //   console.log('Model successfully sent to backend:', result);
+    // } catch (error) {
+    //   console.error('Error sending model to backend:', error);
+    // }
   };
 
   return (

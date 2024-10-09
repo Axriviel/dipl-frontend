@@ -1,7 +1,39 @@
-import React, { ChangeEventHandler, useEffect, useState } from 'react';
-import { Modal, Button, Form, FormGroup, FormControl } from 'react-bootstrap';
-import { activationFunctions } from '../../features/ModelLayers/Activations';
+import React, { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
+import { Button, Form, FormGroup, Modal } from 'react-bootstrap';
+import { Conv2DLayerForm } from './Features/FormLayers/Conv2DLayerForm';
+import { DenseLayerForm } from './Features/FormLayers/DenseLayerForm';
 import { LayerParams } from './Models/LayerParams';
+import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextInput';
+
+
+//upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
+// Definice struktur pro náhodnost
+interface IRandomConfigBase {
+  type: 'numeric' | 'text' | "numeric-test";
+}
+
+interface INumericRandomConfig extends IRandomConfigBase {
+  type: 'numeric';
+  min: number;
+  max: number;
+  step?: number; // Volitelný parametr
+}
+
+interface ITestNumericRandomConfig extends IRandomConfigBase {
+  type: "numeric-test";
+  min: number;
+  max: number;
+}
+
+
+interface ITextRandomConfig extends IRandomConfigBase {
+  type: 'text';
+  options: string[];
+}
+
+export type RandomConfig = INumericRandomConfig | ITextRandomConfig | ITestNumericRandomConfig;
+export const NumericRandomizers = ["value", "numeric", "numeric-test"];
+export const TextRandomizers = ["value", "text"];
 
 interface LayerConfigProps {
   layer: LayerParams;
@@ -19,23 +51,195 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
   }, [layer]);
 
   const handleSave = () => {
-    updateLayer(currentLayer)
-    handleClose()
-  }
+    updateLayer(currentLayer);
+    handleClose();
+  };
+
   const handleChange = (key: string, value: any) => {
-    setCurrentLayer(prevLayer => ({ ...prevLayer, [key]: value }));
-    //updateLayer({ ...currentLayer, [key]: value });
+    console.log(`Updating ${key} to`, value);
+
+    setCurrentLayer((prevLayer) => {
+      if (key.includes("Random")) {
+        const [randomKey, property] = key.split('.'); // Např. 'activationRandom.options'
+
+        const randomConfig = prevLayer[randomKey] || {}; // Inicializace randomConfig, pokud neexistuje
+
+        // Vytvoř nový objekt randomConfig s novou hodnotou
+        const updatedRandomConfig = {
+          ...randomConfig,
+          [property]: value, // Aktualizuj specifickou vlastnost (např. options)
+        };
+
+        const updatedLayer = {
+          ...prevLayer,
+          [randomKey]: updatedRandomConfig, // Aktualizuj celou část randomizeru
+        };
+
+        console.log("Updated layer:", updatedLayer); // Debugging - ukazuje nový stav layeru
+        return updatedLayer; // Vracíme aktualizovaný stav
+      }
+
+      // Normální aktualizace mimo random config
+      return { ...prevLayer, [key]: value };
+    });
+  };
+
+  //toggle random for a parameter and creates default values based on randomization type
+  const handleRandomToggle = (key: string, type: string) => {
+    setCurrentLayer((prevLayer) => {
+      // Ověření, zda klíč existuje v aktuální vrstvě
+      const randomEnabled = prevLayer.hasOwnProperty(`${key}Random`) && !prevLayer[`${key}Random`];
+      console.log("Current randomEnabled:", randomEnabled);  // Debugging
+
+      console.log("nastavuji " + key + " na " + type)
+
+      if (type === 'value') {
+        // Vypnutí náhodnosti
+        return {
+
+          ...prevLayer,
+          [`${key}Random`]: undefined,
+        };
+      }
+
+      return {
+        ...prevLayer,
+        [`${key}Random`]: randomEnabled
+          ? (() => {   // Inline funkce pro přiřazení podle typu
+            switch (type) {
+              case 'numeric':
+                return { type: 'numeric', min: 0, max: 100, step: 1 };  // Výchozí hodnoty pro 'numeric'
+
+              case 'numeric-test':
+                return { type: 'numeric-test', min: 0, max: 100 };  // Výchozí hodnoty pro 'numeric-test'
+
+              case 'text':
+                return { type: 'text', options: ['option1', 'option2'] };  // Výchozí hodnoty pro 'text'
+
+              default:
+                throw new Error(`Unsupported type: ${type}`);  // Ošetření neznámého typu
+            }
+          })() //závorky způsobí vyhodnocení funkce, musí zde být
+          : undefined  // Pokud se vypne náhodnost, odstraní konfiguraci
+      };
+    });
+  };
+
+
+  //returns form options for selected randomness
+  const renderRandomConfig = (key: string, randomConfig: RandomConfig | undefined) => {
+    if (!randomConfig) return null;  // Pokud není náhodnost aktivovaná, nic se nezobrazí
+    console.log(randomConfig)
+
+    switch (randomConfig.type) {
+      case 'numeric':
+        return (
+          <>
+            <Form.Group controlId={`${key}-min`}>
+              <Form.Label>Min Value:</Form.Label>
+              <Form.Control
+                type="number"
+                value={(randomConfig as INumericRandomConfig).min}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(`${key}Random.min`, parseFloat(e.target.value))
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId={`${key}-max`}>
+              <Form.Label>Max Value:</Form.Label>
+              <Form.Control
+                type="number"
+                value={(randomConfig as INumericRandomConfig).max}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(`${key}Random.max`, parseFloat(e.target.value))
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId={`${key}-step`}>
+              <Form.Label>Step (Optional):</Form.Label>
+              <Form.Control
+                type="number"
+                value={(randomConfig as INumericRandomConfig).step || 1}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(`${key}Random.step`, parseFloat(e.target.value))
+                }
+              />
+            </Form.Group>
+          </>
+        );
+
+      case "numeric-test":
+        return (
+          <>
+            <Form.Group controlId={`${key}-min`}>
+              <Form.Label>Min Value:</Form.Label>
+              <Form.Control
+                type="number"
+                value={(randomConfig as ITestNumericRandomConfig).min}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(`${key}Random.min`, parseFloat(e.target.value))
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId={`${key}-max`}>
+              <Form.Label>Max Value:</Form.Label>
+              <Form.Control
+                type="number"
+                value={(randomConfig as ITestNumericRandomConfig).max}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(`${key}Random.max`, parseFloat(e.target.value))
+                }
+              />
+            </Form.Group>
+          </>
+
+        )
+      case 'text':
+        const handleDebouncedChange = useCallback((value: string) => {
+          const newOptions = value ? value.split(',').map(option => option.trim()).filter(option => option !== '') : [];
+          handleChange(`${key}Random.options`, newOptions); // Volání handleChange s novými options
+        }, [key, handleChange]); // Závislosti zůstávají stejné, pokud se nemění key nebo handleChange
+
+        return (
+          <>
+            <Form.Group controlId={`${key}-options`}>
+              <Form.Label>Options:</Form.Label>
+
+              <DebouncedTextInput
+                onChange={handleDebouncedChange} // Použití stabilizované verze onChange
+                value={(randomConfig as ITextRandomConfig).options.join(', ')} // Zobrazení pole jako čárkou oddělený řetězec
+              />
+              
+            </Form.Group>
+
+            {/* stará verze, ještě před debounced inputem */}
+            {/* <Form.Group controlId={`${key}-options`}>
+              <Form.Label>Options:</Form.Label>
+              <Form.Control
+                type="text"
+                value={(randomConfig as ITextRandomConfig).options.join(', ')}  // Zobrazení pole jako čárkou oddělený řetězec
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const newOptions = e.target.value ? e.target.value.split(',').map(option => option.trim()).filter(option => option !== '') : [];
+                  //console.log("toto jsou nove options:", newOptions)
+                  handleChange(`${key}Random.options`, newOptions);
+                }}
+              />
+
+            </Form.Group> */}
+          </>
+        );
+      default:
+        return null;
+    }
   };
 
   const handleInputsChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-    setCurrentLayer(prevLayer => ({ ...prevLayer, inputs: selectedOptions }));
-    //updateLayer({ ...currentLayer, inputs: selectedOptions });
+    const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+    setCurrentLayer((prevLayer) => ({ ...prevLayer, inputs: selectedOptions }));
   };
 
   const handleActivationChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentLayer(prevLayer => ({ ...prevLayer, activation: e.target.value }));
-    //updateLayer({ ...layer, activation: e.target.value });
+    setCurrentLayer((prevLayer) => ({ ...prevLayer, activation: e.target.value }));
   };
 
   const InputsConst = (
@@ -58,73 +262,24 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
     switch (currentLayer.type) {
       case 'Dense':
         return (
-          <>
-            <Form.Group controlId={`units-${currentLayer.id}`}>
-              <Form.Label>Units:</Form.Label>
-              {/* tohle není asi úplně správná cesta */}
-              {currentLayer.units}
-              {currentLayer.units !== 0 ?
-                <Form.Control
-                  type="number"
-                  value={currentLayer.units || 0}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('units', parseInt(e.target.value))}
-                />
-                :
-                <>
-                  <Form.Control
-                   type="string"
-                    value={currentLayer.unitsRandom.type}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('unitsRandom.type', (e.target.value))}
-                  />
-                  <Form.Control type="number"
-                    value={currentLayer.unitsRandom.min}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('unitsRandom.min', (e.target.value))}
-                  />
-                  <Form.Control type="number"
-                    value={currentLayer.unitsRandom.max}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('unitsRandom.max', (e.target.value))}
-                  />
-                </>
-              }
-            </Form.Group>
-
-            <Form.Group controlId={`activation-${currentLayer.id}`}>
-              <Form.Label>Activation:</Form.Label>
-              <Form.Control
-                as="select"
-                value={currentLayer.activation || ''}
-                onChange={handleActivationChange}
-              >
-                {activationFunctions.map(fn => (
-                  <option key={fn} value={fn}>{fn}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-            {InputsConst}
-          </>
+          <DenseLayerForm
+            currentLayer={currentLayer}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
+            renderRandomConfig={renderRandomConfig}
+            InputsConst={InputsConst}
+            handleActivationChange={handleActivationChange} //tady by mohl být ten problém. Používám handleActivationChange, ale úpravu tam má jen handlechange
+          />
         );
       case 'Conv2D':
         return (
-          <>
-            <Form.Group controlId={`filters-${currentLayer.id}`}>
-              <Form.Label>Filters:</Form.Label>
-              <Form.Control
-                type="number"
-                value={currentLayer.filters || 0}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('filters', parseInt(e.target.value))}
-              />
-            </Form.Group>
-
-            <Form.Group controlId={`kernelSize-${currentLayer.id}`}>
-              <Form.Label>Kernel Size:</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentLayer.kernel_size ? currentLayer.kernel_size.join(',') : ''}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('kernel_size', e.target.value.split(',').map(Number))}
-              />
-            </Form.Group>
-            {InputsConst}
-          </>
+          <Conv2DLayerForm
+            currentLayer={currentLayer}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
+            renderRandomConfig={renderRandomConfig}
+            InputsConst={InputsConst}
+          />
         );
       default:
         return null;
@@ -132,7 +287,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal size='lg' show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>{currentLayer.type} Layer (ID: {currentLayer.id})</Modal.Title>
       </Modal.Header>
@@ -141,14 +296,16 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
-            value={currentLayer.name || ""}
+            value={currentLayer.name || ''}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('name', e.target.value)}
           />
         </FormGroup>
         {renderLayerSpecificFields()}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={handleSave}>Save</Button>
+        <Button variant="secondary" onClick={handleSave}>
+          Save
+        </Button>
         <Button variant="secondary" onClick={handleClose}>
           Exit
         </Button>
