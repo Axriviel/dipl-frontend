@@ -1,13 +1,11 @@
+import { RandomConfig } from "../LayerConfig";
+
 export interface LayerParams {
     id: string;
     name: string;
     type: string;
     units?: number;
-    unitsRandom:{
-        type: string;
-        min: number;
-        max: number;
-    };
+    unitsRandom?: RandomConfig;
     activation?: string;
     filters?: number;
     kernel_size?: number[];
