@@ -6,6 +6,7 @@ import { useAuth } from "../../features/AuthContext/AuthContext";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { Button, Form } from "react-bootstrap";
 import "./FeedbackPage.css"
+import { DebouncedTextArea } from "../../components/FormElements/DebouncedTextArea";
 
 export const FeedbackPage = () => {
     const [feedback, setFeedback] = useState<string>("");
@@ -48,14 +49,18 @@ export const FeedbackPage = () => {
 
                 <Form.Group className="mb-3 w-100" controlId="feedback">
                     <Form.Label>Feedback:</Form.Label>
-                    <Form.Control
+
+                    <DebouncedTextArea value={feedback} disabled={isSent} className="w-100"
+                        onChange={(value: string) => setFeedback(value)} // Callback, když se změna potvrzuje po debounce
+                    />
+                    {/* <Form.Control
                         as="textarea"
                         value={feedback}
-                        onChange={(e) => setFeedback(e.target.value)}
+                        onChange={(e) => { setFeedback(e.target.value); console.log(feedback) }}
                         disabled={isSent ? true : false}
                         required
                         className="w-100"
-                    />
+                    /> */}
                 </Form.Group>
 
                 <Button variant="primary" type="submit" disabled={isSent}>
