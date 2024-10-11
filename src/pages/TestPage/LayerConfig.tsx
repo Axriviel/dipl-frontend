@@ -4,6 +4,8 @@ import { Conv2DLayerForm } from './Features/FormLayers/Conv2DLayerForm';
 import { DenseLayerForm } from './Features/FormLayers/DenseLayerForm';
 import { LayerParams } from './Models/LayerParams';
 import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextInput';
+import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
+import { IInputLayer } from './Models/InputLayer';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
@@ -209,7 +211,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
                 onChange={handleDebouncedChange} // Použití stabilizované verze onChange
                 value={(randomConfig as ITextRandomConfig).options.join(', ')} // Zobrazení pole jako čárkou oddělený řetězec
               />
-              
+
             </Form.Group>
 
             {/* stará verze, ještě před debounced inputem */}
@@ -279,6 +281,13 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
             handleRandomToggle={handleRandomToggle}
             renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
+          />
+        );
+      case "Input":
+        return (
+          <InputLayerForm
+            currentLayer={currentLayer as IInputLayer}
+            handleChange={handleChange}
           />
         );
       default:

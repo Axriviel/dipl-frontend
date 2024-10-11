@@ -1,28 +1,35 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { configData } from '../../config/config.tsx';
+import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
+import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
+import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { RandomConfig } from './LayerConfig.tsx';
-import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
-import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 
 interface ModelParams {
   layers: LayerParams[];
 }
 
 export const ModelConfig: React.FC = () => {
-  const [modelParams, setModelParams] = useState<ModelParams>({ layers: [] });
+  const [modelParams, setModelParams] = useState<ModelParams>({ layers: [createInputLayer()] });
   const [newLayerType, setNewLayerType] = useState<string>('Dense');
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);  // Přidáno pro nahrání souboru
-
+  const selectableLayers = [
+    { id: 1, name: 'Dense' },
+    { id: 2, name: 'Conv2D' },
+    { id: 3, name: 'Input' }
+  ];
   const addLayer = () => {
     let newLayer: LayerParams;
 
     switch (newLayerType) {
+      case "Input":
+        newLayer = createInputLayer();
+        break;
       case 'Dense':
         newLayer = createDenseLayer();
         console.log(newLayer)
@@ -63,30 +70,30 @@ export const ModelConfig: React.FC = () => {
   const handleSubmit = async () => {
     console.log(JSON.stringify(modelParams.layers))
 
-    // try {
-    //   if (!file) {
-    //     console.error("No dataset file selected");
-    //     return;
-    //   }
-    //   const formData = new FormData();
-    //   formData.append('datasetFile', file);  // Přidání souboru do FormData
-    //   formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
+    try {
+      if (!file) {
+        console.error("No dataset file selected");
+        return;
+      }
+      const formData = new FormData();
+      formData.append('datasetFile', file);  // Přidání souboru do FormData
+      formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
 
-    //   const response = await fetch(`${configData.API_URL}/api/save-model`, {
-    //     method: 'POST',
-    //     credentials: 'include',
-    //     body: formData,  // Odeslání FormData
-    //   });
+      const response = await fetch(`${configData.API_URL}/api/save-model`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,  // Odeslání FormData
+      });
 
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! Status: ${response.status}`);
-    //   }
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-    //   const result = await response.json();
-    //   console.log('Model successfully sent to backend:', result);
-    // } catch (error) {
-    //   console.error('Error sending model to backend:', error);
-    // }
+      const result = await response.json();
+      console.log('Model successfully sent to backend:', result);
+    } catch (error) {
+      console.error('Error sending model to backend:', error);
+    }
   };
 
   return (
@@ -98,8 +105,11 @@ export const ModelConfig: React.FC = () => {
 
 
         <select value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
-          <option value="Dense">Dense</option>
-          <option value="Conv2D">Conv2D</option>
+          {selectableLayers.map((layer) => (
+            <option key={layer.id} value={layer.name}>
+              {layer.name}
+            </option>
+          ))}
         </select>
 
 
