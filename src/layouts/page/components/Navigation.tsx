@@ -21,6 +21,7 @@ export const Navigation = () => {
             </div>
             <ul className={`${menuOpen ? "show" : ""}`}>
                 <li><NavLink to="/loginPage" className="nav-button">Login</NavLink></li>
+                <li><NavLink to="/listFeedback" className="nav-button">List Feedback</NavLink></li>
                 {isAuthenticated ?
                     <>
                         <li><NavLink to="/profile" className="nav-button">Profile</NavLink></li>
@@ -28,13 +29,13 @@ export const Navigation = () => {
                         <li><NavLink to="/modelcreator" className="nav-button">Designer</NavLink></li>
                         {/* <li><NavLink to="/test"> className="nav-button mx-1">test</NavLink></li> */}
                         <li><NavLink to="/feedback" className="nav-button">Feedback</NavLink></li>
+                        {hasNewNotification ?
+                            <li><NavLink to="/listNotifications" className="nav-button">New Notifications</NavLink></li> :
+                            <li><NavLink to="/listNotifications" className="nav-button">List Notifications</NavLink></li>
+                        }
                     </>
                     : undefined}
-                <li><NavLink to="/listFeedback" className="nav-button">List Feedback</NavLink></li>
-                {hasNewNotification ?
-                    <li><NavLink to="/listNotifications" className="nav-button">New Notifications</NavLink></li> :
-                    <li><NavLink to="/listNotifications" className="nav-button">List Notifications</NavLink></li>
-                }
+
             </ul>
         </nav>
     )
