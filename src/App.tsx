@@ -31,17 +31,17 @@ function App() {
               <AlertContainer />
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/modelcreator" element={<ModelDesignerPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/loginpage" element={<LoginPage />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/models" element={<ModelsPage />} />
-                <Route path="/test" element={<ModelConfig />} />
                 <Route path="/listFeedback" element={<ListFeedback />} />
-                <Route path="/listNotifications" element={<ListNotifications />} />
+                <Route path="/logout" element={<Logout />} />
 
                 <Route element={<PrivateRoutes />}>
+                  <Route path="/modelcreator" element={<ModelDesignerPage />} />
+                  <Route path="/models" element={<ModelsPage />} />
+                  <Route path="/test" element={<ModelConfig />} />
+                  <Route path="/listNotifications" element={<ListNotifications />} />
                   <Route path="/t" element={<HomePage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/feedback" element={<FeedbackPage />} />
