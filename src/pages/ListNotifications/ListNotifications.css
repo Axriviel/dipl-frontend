@@ -17,6 +17,7 @@
 /* mírné posunutí, aby byla nějaká interakce s tím, že jsme ji vybrali */
 .notification:hover{
     transform: translateY(-5px);  
+    transform: scale(1.05);
     box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1); 
 }
 
