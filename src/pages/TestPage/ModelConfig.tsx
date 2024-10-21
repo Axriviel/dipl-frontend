@@ -8,6 +8,7 @@ import { LayerConfig } from './LayerConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { createGeneratorLayer } from './Features/Layers/CreateGeneratorLayer.tsx';
+import "./ModelConfig.css"
 
 interface ModelParams {
   layers: LayerParams[];
@@ -65,6 +66,20 @@ export const ModelConfig: React.FC = () => {
     setSelectedLayer(null);
   };
 
+  // Handler pro kliknutí na uzel v ModelVisualizer
+  const handleNodeClick = (node: any) => {
+    const layer = modelParams.layers.find(l => l.id === node.id);
+    if (layer) {
+      setSelectedLayer(layer);
+      setShowModal(true);
+    }
+  };
+
+    // Funkce pro aktualizaci vrstev z ModelVisualizer - přidání propojení mezi vrstvami
+    const handleLayersChange = (updatedLayers: LayerParams[]) => {
+      setModelParams((prev) => ({ ...prev, layers: updatedLayers }));
+    };
+
   // Přidání handleru pro výběr souboru
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -102,8 +117,14 @@ export const ModelConfig: React.FC = () => {
   };
 
   return (
-    <div className='m-2'>
-      <div className='d-flex flex-column align-items-center'>
+    <div className='m-2 d-flex flex-row flex-wrap'>
+      <div className='model-visualizer'>
+      {/* <h3>Model Visualizer</h3> */}
+
+        <ModelVisualizer layers={modelParams.layers} onNodeClick={handleNodeClick} onLayersChange={handleLayersChange} />
+      </div>
+
+      <div className='d-flex flex-column align-items-center flex-fill layer-list'>
         {/* Přidání nahrání datasetu */}
         <input type="file" accept=".csv" onChange={handleFileChange} />
         <h2>Model Configuration</h2>
@@ -133,11 +154,8 @@ export const ModelConfig: React.FC = () => {
         ))}
 
         <Button onClick={handleSubmit}>Submit Model</Button>
-
-        <h3>Model Visualizer</h3>
       </div>
 
-      <ModelVisualizer layers={modelParams.layers} />
 
       {selectedLayer && (
         <LayerConfig

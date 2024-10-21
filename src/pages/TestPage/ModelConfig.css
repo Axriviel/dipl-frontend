@@ -1,0 +1,18 @@
+.model-visualizer {
+    height: 75vh;
+    width: 70vw;
+}
+
+.layer-list {
+    height: 75vh;
+    border-left: 1px red solid;
+    overflow: auto;
+}
+
+@media (max-width: 1000px) {
+    .layer-list {
+        height: auto;
+        border: none;
+        overflow: visible;
+    }
+}
