@@ -7,6 +7,7 @@ import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
+import { createGeneratorLayer } from './Features/Layers/CreateGeneratorLayer.tsx';
 
 interface ModelParams {
   layers: LayerParams[];
@@ -21,7 +22,8 @@ export const ModelConfig: React.FC = () => {
   const selectableLayers = [
     { id: 1, name: 'Dense' },
     { id: 2, name: 'Conv2D' },
-    { id: 3, name: 'Input' }
+    { id: 3, name: 'Input' },
+    { id: 4, name: 'Generator' }
   ];
   const addLayer = () => {
     let newLayer: LayerParams;
@@ -36,6 +38,9 @@ export const ModelConfig: React.FC = () => {
         break;
       case 'Conv2D':
         newLayer = createConv2DLayer();
+        break;
+      case 'Generator':
+        newLayer = createGeneratorLayer();
         break;
       default:
         return;

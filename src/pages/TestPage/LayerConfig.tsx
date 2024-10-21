@@ -6,6 +6,7 @@ import { LayerParams } from './Models/LayerParams';
 import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextInput';
 import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
 import { IInputLayer } from './Models/InputLayer';
+import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
@@ -289,6 +290,16 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
             currentLayer={currentLayer as IInputLayer}
             handleChange={handleChange}
           />
+        );
+      case 'Generator':
+        return (
+          <>
+            <GeneratorLayerForm
+              currentLayer={currentLayer}
+              handleChange={handleChange}
+            />
+            {InputsConst}
+          </>
         );
       default:
         return null;
