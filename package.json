@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tippyjs/react": "^4.2.6",
-    "@xyflow/react": "^12.0.4",
+    "@xyflow/react": "^12.3.2",
     "bootstrap": "^5.3.3",
     "install": "^0.13.0",
     "jwt-decode": "^4.0.0",
