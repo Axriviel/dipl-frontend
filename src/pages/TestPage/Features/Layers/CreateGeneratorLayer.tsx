@@ -1,9 +1,14 @@
 import { IGeneratorLayer } from "../../Models/GeneratorLayers";
 
-export const createGeneratorLayer = (): IGeneratorLayer => ({
-    id: Date.now().toString(),
-    name: "generator",
-    type: 'Generator',
-    possibleLayers: [],
-    inputs: [],
-})
+let layerCounter = 0;
+
+export const createGeneratorLayer = (): IGeneratorLayer => {
+    layerCounter++;
+    return {
+        id: Date.now().toString(),
+        name: `generator_${layerCounter}`,
+        type: 'Generator',
+        possibleLayers: [],
+        inputs: [],
+    };
+};
