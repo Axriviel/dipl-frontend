@@ -3,22 +3,37 @@ import { Button } from 'react-bootstrap';
 import { configData } from '../../config/config.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
-import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
-import { LayerConfig } from './LayerConfig.tsx';
-import { LayerParams } from './Models/LayerParams.tsx';
-import ModelVisualizer from './ModelVisualiser.tsx';
 import { createGeneratorLayer } from './Features/Layers/CreateGeneratorLayer.tsx';
-import "./ModelConfig.css"
+import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
+import { ModelConfigForm } from './Features/ModelConfigFormModal.tsx';
+import { LayerConfig } from './LayerConfig.tsx';
+import "./ModelConfig.css";
+import { LayerParams } from './Models/LayerParams.tsx';
+import { IModelSettings } from './Models/ModelSettings.tsx';
+import ModelVisualizer from './ModelVisualiser.tsx';
 
-interface ModelParams {
+export interface ModelParams {
   layers: LayerParams[];
+  settings: IModelSettings;
 }
 
 export const ModelConfig: React.FC = () => {
-  const [modelParams, setModelParams] = useState<ModelParams>({ layers: [createInputLayer()] });
+  // init modelParams object with one input layer and default settings
+  const [modelParams, setModelParams] = useState<ModelParams>({
+    layers: [createInputLayer()], settings: {
+      opt_algorithm: "random",
+      optimizer: 'adam',
+      loss: 'binary_crossentropy',
+      metrics: ['accuracy'],
+      epochs: 10,
+      batch_size: 32,
+    }
+  });
+
   const [newLayerType, setNewLayerType] = useState<string>('Dense');
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);  // Přidáno pro nahrání souboru
   const selectableLayers = [
     { id: 1, name: 'Dense' },
@@ -66,6 +81,9 @@ export const ModelConfig: React.FC = () => {
     setSelectedLayer(null);
   };
 
+  const handleOpenSettingsModal = () => setShowSettingsModal(true);
+  const handleCloseSettingsModal = () => setShowSettingsModal(false);
+
   // Handler pro kliknutí na uzel v ModelVisualizer
   const handleNodeClick = (node: any) => {
     const layer = modelParams.layers.find(l => l.id === node.id);
@@ -75,10 +93,10 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
-    // Funkce pro aktualizaci vrstev z ModelVisualizer - přidání propojení mezi vrstvami
-    const handleLayersChange = (updatedLayers: LayerParams[]) => {
-      setModelParams((prev) => ({ ...prev, layers: updatedLayers }));
-    };
+  // Funkce pro aktualizaci vrstev z ModelVisualizer - přidání propojení mezi vrstvami
+  const handleLayersChange = (updatedLayers: LayerParams[]) => {
+    setModelParams((prev) => ({ ...prev, layers: updatedLayers }));
+  };
 
   // Přidání handleru pro výběr souboru
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +107,7 @@ export const ModelConfig: React.FC = () => {
 
   const handleSubmit = async () => {
     console.log(JSON.stringify(modelParams.layers))
+    console.log(JSON.stringify(modelParams.settings))
 
     try {
       if (!file) {
@@ -98,6 +117,7 @@ export const ModelConfig: React.FC = () => {
       const formData = new FormData();
       formData.append('datasetFile', file);  // Přidání souboru do FormData
       formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
+      formData.append("settings", JSON.stringify(modelParams.settings)) //add settings to form
 
       const response = await fetch(`${configData.API_URL}/api/save-model`, {
         method: 'POST',
@@ -119,16 +139,27 @@ export const ModelConfig: React.FC = () => {
   return (
     <div className='m-2 d-flex flex-row flex-wrap'>
       <div className='model-visualizer'>
-      {/* <h3>Model Visualizer</h3> */}
+        {/* <h3>Model Visualizer</h3> */}
 
         <ModelVisualizer layers={modelParams.layers} onNodeClick={handleNodeClick} onLayersChange={handleLayersChange} />
       </div>
 
+      {/* right pannel for layer selection etc. */}
       <div className='d-flex flex-column align-items-center flex-fill layer-list'>
-        {/* Přidání nahrání datasetu */}
-        <input type="file" accept=".csv" onChange={handleFileChange} />
         <h2>Model Configuration</h2>
 
+        {/* Přidání nahrání datasetu */}
+        <input type="file" accept=".csv" onChange={handleFileChange} />
+
+        <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
+
+        {/* Modální okno pro úpravu nastavení modelu */}
+        <ModelConfigForm
+          modelParams={modelParams}
+          setModelParams={setModelParams}
+          show={showSettingsModal}
+          handleClose={handleCloseSettingsModal}
+        />
 
         <select value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
           {selectableLayers.map((layer) => (
@@ -137,8 +168,6 @@ export const ModelConfig: React.FC = () => {
             </option>
           ))}
         </select>
-
-
 
         <Button onClick={addLayer}>Add Layer</Button>
 
