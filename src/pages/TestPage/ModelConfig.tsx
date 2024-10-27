@@ -25,6 +25,7 @@ export const ModelConfig: React.FC = () => {
       optimizer: 'adam',
       loss: 'binary_crossentropy',
       metrics: ['accuracy'],
+      monitor_metric: "val_accuracy",
       epochs: 10,
       batch_size: 32,
     }
@@ -69,6 +70,16 @@ export const ModelConfig: React.FC = () => {
     const newLayers = [...modelParams.layers];
     newLayers[index] = updatedLayer;
     setModelParams({ ...modelParams, layers: newLayers });
+  };
+
+  // set model params - layers or settings if provided 
+  // created mainly to allow safely deleting from the LayerConfig component
+  const handleUpdateModelParams = (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => {
+    setModelParams(prevParams => ({
+      ...prevParams,
+      layers: updatedLayers ?? prevParams.layers,
+      settings: updatedSettings ?? prevParams.settings
+    }));
   };
 
   const handleLayerClick = (layer: LayerParams) => {
@@ -126,13 +137,18 @@ export const ModelConfig: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`Error ${response.status}: ${errorData.error}`);
       }
 
       const result = await response.json();
       console.log('Model successfully sent to backend:', result);
     } catch (error) {
-      console.error('Error sending model to backend:', error);
+      if (error instanceof Error) {
+        console.error('Error sending model to backend:', error.message);
+      } else {
+        console.error('Unknown error', error);
+      }
     }
   };
 
@@ -192,6 +208,7 @@ export const ModelConfig: React.FC = () => {
           updateLayer={(updatedLayer) => updateLayer(modelParams.layers.findIndex(l => l.id === updatedLayer.id), updatedLayer)}
           allLayers={modelParams.layers}
           show={showModal}
+          updateModelParams={handleUpdateModelParams}
           handleClose={handleCloseModal}
         />
       )}

@@ -19,8 +19,12 @@ const optimizerOptions = [
 
 const lossFunctionOptions = [
     "binary_crossentropy", "categorical_crossentropy", "mean_squared_error",
-
 ]
+
+const availableMonitorMetrics = [
+    'accuracy', 'val_accuracy', 'precision', 'val_precision',
+    'recall', 'val_recall', 'AUC', 'val_AUC', 'mean_squared_error', 'val_mean_squared_error'
+];
 
 const availableMetrics = [
     'accuracy', 'precision', 'recall', 'f1-score', 'AUC', 'mean_squared_error'
@@ -123,6 +127,27 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                                 onChange={handleMetricsChange}
                             />
                         ))}
+                    </Form.Group>
+                    {/* Výběr monitorovací metriky */}
+                    <Form.Group controlId="formMonitorMetric">
+                        <Form.Label>Monitor Metric</Form.Label>
+                        <Form.Control
+                            as="select"
+                            name="monitor_metric"
+                            value={modelParams.settings.monitor_metric}
+                            onChange={updateSettings}
+                        >
+                            {/* filter the options for the metric needs to be selected in compile to be usable here */}
+                            {availableMonitorMetrics
+                                .filter(metric =>
+                                    modelParams.settings.metrics.includes(metric.replace("val_", "")) ||
+                                    modelParams.settings.metrics.includes(metric)
+                                )
+                                .map(metric => (
+                                    <option key={metric} value={metric}>{metric}</option>
+                                ))
+                            }
+                        </Form.Control>
                     </Form.Group>
 
                     {/* Nastavení epoch a batch size */}

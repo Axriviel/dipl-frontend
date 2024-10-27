@@ -3,6 +3,7 @@ export interface IModelSettings{
     optimizer: string,
     loss: string,
     metrics: string[],
+    monitor_metric: string,
     epochs: number,
     batch_size: number,
 }

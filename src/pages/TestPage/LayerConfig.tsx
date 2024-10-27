@@ -7,6 +7,7 @@ import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextI
 import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
 import { IInputLayer } from './Models/InputLayer';
 import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
+import { IModelSettings } from './Models/ModelSettings';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
@@ -43,10 +44,11 @@ interface LayerConfigProps {
   updateLayer: (updatedLayer: LayerParams) => void;
   allLayers: LayerParams[];
   show: boolean;
+  updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
   handleClose: () => void;
 }
 
-export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, allLayers, show, handleClose }) => {
+export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, allLayers, show, updateModelParams, handleClose }) => {
   const [currentLayer, setCurrentLayer] = useState<LayerParams>(layer);
 
   useEffect(() => {
@@ -55,6 +57,22 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
 
   const handleSave = () => {
     updateLayer(currentLayer);
+    handleClose();
+  };
+
+  const handleDelete = () => {
+    const idToDelete = currentLayer.id;
+
+    // Filtruje vrstvy a odstraní aktuální vrstvu
+    const updatedLayers = allLayers.filter(layer => layer.id !== idToDelete);
+
+    // remove deleted layer id from inputs of other layers
+    const cleanedLayers = updatedLayers.map(layer => ({
+      ...layer,
+      inputs: layer.inputs.filter(inputId => inputId !== idToDelete)
+    }));
+
+    updateModelParams(cleanedLayers);
     handleClose();
   };
 
@@ -325,6 +343,10 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
       <Modal.Footer>
         <Button variant="secondary" onClick={handleSave}>
           Save
+        </Button>
+        {/* replace with icon */}
+        <Button variant='secondary' onClick={handleDelete}>
+          Delete
         </Button>
         <Button variant="secondary" onClick={handleClose}>
           Exit
