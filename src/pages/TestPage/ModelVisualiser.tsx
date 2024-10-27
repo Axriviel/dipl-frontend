@@ -78,28 +78,29 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
       }))
     );
 
-    // Aktualizace uzlů - přidání nových uzlů, které ještě neexistují
+
+    // Aktualizace uzlů – přidá nové uzly a odebere ty, které už neexistují v `layers`
     setNodes(prevNodes => {
-      // Vytvoření množiny ID stávajících uzlů
-      const existingNodeIds = new Set(prevNodes.map(node => node.id));
+      // Získání ID všech existujících uzlů
+      const newNodeIds = new Set(newNodes.map(node => node.id));
 
-      // Filtrace nových uzlů, které ještě nejsou ve stavu
-      const nodesToAdd = newNodes.filter(node => !existingNodeIds.has(node.id));
-
-      // Přidání nových uzlů ke stávajícím
-      return [...prevNodes, ...nodesToAdd];
+      // Aktualizace stavu uzlů
+      return [
+        ...prevNodes.filter(node => newNodeIds.has(node.id)), // zachová pouze uzly, které jsou v `layers`
+        ...newNodes.filter(node => !prevNodes.some(prevNode => prevNode.id === node.id)), // přidá nové uzly
+      ];
     });
 
-    // Aktualizace hran - přidání nových hran, které ještě neexistují
+    // Aktualizace hran – přidá nové hrany a odebere ty, které už neexistují v `layers`
     setEdges(prevEdges => {
-      // Vytvoření množiny ID stávajících hran
-      const existingEdgeIds = new Set(prevEdges.map(edge => edge.id));
+      // Získání ID všech nových hran
+      const newEdgeIds = new Set(newEdges.map(edge => edge.id));
 
-      // Filtrace nových hran, které ještě nejsou ve stavu
-      const edgesToAdd = newEdges.filter(edge => !existingEdgeIds.has(edge.id));
-
-      // Přidání nových hran ke stávajícím
-      return [...prevEdges, ...edgesToAdd];
+      // Aktualizace stavu hran
+      return [
+        ...prevEdges.filter(edge => newEdgeIds.has(edge.id)), // zachová pouze existující hrany
+        ...newEdges.filter(edge => !prevEdges.some(prevEdge => prevEdge.id === edge.id)), // přidá nové hrany
+      ];
     });
   }, [layers]);
 
