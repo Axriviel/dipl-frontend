@@ -6,6 +6,28 @@ import { DownloadModel } from "../../features/Models/DownloadModel";
 import { GetModels } from "../../features/Models/GetModels";
 import { Model } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
+import { MetricLineChart } from "../../components/Charts/MetricLineChart";
+import Tippy from "@tippyjs/react";
+
+
+const mockTrainingData = [
+    { epoch: 1, value: 0.5 },
+    { epoch: 2, value: 0.65 },
+    { epoch: 3, value: 0.78 },
+    { epoch: 4, value: 0.8 },
+    { epoch: 5, value: 0.86 },
+    { epoch: 6, value: 0.91 },
+    { epoch: 7, value: 0.93 },
+    { epoch: 8, value: 0.935 },
+    { epoch: 9, value: 0.94 },
+    { epoch: 10, value: 0.945 },
+    { epoch: 11, value: 0.948 },
+    { epoch: 12, value: 0.95 },
+    { epoch: 13, value: 0.951 },
+    { epoch: 14, value: 0.953 },
+    { epoch: 15, value: 0.955 },
+];
+
 
 export const ModelsPage = () => {
     const [models, setModels] = useState<Model[]>([]);
@@ -33,17 +55,17 @@ export const ModelsPage = () => {
             const result = await GetModels();
 
             if (result.success) {
-                setModels(result.data); 
+                setModels(result.data);
             } else {
-                addAlert(""+ result.message, "error");
-                console.error(result.message); 
+                addAlert("" + result.message, "error");
+                console.error(result.message);
             }
 
             setLoading(false);
         };
 
         fetchData();
-    }, [refetch]); 
+    }, [refetch]);
 
     useEffect(() => {
         if (models.length > 0) {
@@ -60,7 +82,7 @@ export const ModelsPage = () => {
 
                 <div className="d-flex flex-row justify-content-center flex-wrap">
                     {/* Postranní panel vlevo */}
-                    <div className="col-md-3 p-3 models-panel overflow-auto">
+                    <div className="col-md-3 p-3 px-5 models-panel overflow-auto">
                         <h4 className="text-center">Models</h4>
                         <ul className="list-group">
                             {models.map(model => (
@@ -88,13 +110,21 @@ export const ModelsPage = () => {
                         </div>
                     </div>
 
-                    {/* Prostor vpravo */}
-                    <div className="col-md-9 p-3 px-5">
+                    {/* chart section */}
+                    <div className="metric-chart col-md-6 col-lg-6 p-3 section-border">
+                        <h4 className="text-center">Graf něčeho</h4>
+                        <MetricLineChart metricValues={mockTrainingData} metric="accuracy" />
+                    </div>
+
+                    {/* right section */}
+                    <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-center">
                         <h4>{selectedModel?.name}</h4>
                         <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p>
                         <p><strong>Error:</strong> {selectedModel?.error}</p>
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
                     </div>
+
+
                 </div>
             </div >
         }</>
