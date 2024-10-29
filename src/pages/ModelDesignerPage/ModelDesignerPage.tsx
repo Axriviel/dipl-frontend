@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useAlert } from '../../components/Alerts/AlertContext';
 //import { ModelComponentSelector } from '../../features/ModelDesigner/ModelComponentSelector';
 //import { configData } from '../../config/config';
-import { FullAutoDesign } from '../../components/DesignerOptions/FullAutoDesign';
-import { CustomizableDesign } from '../../components/DesignerOptions/CustomizableDesign';
 import { Button } from 'react-bootstrap';
-import "./ModelDesignerPage.css"
+import { CustomizableDesign } from '../../components/DesignerOptions/CustomizableDesign';
+import { FullAutoDesign } from '../../components/DesignerOptions/FullAutoDesign';
+import "./ModelDesignerPage.css";
 
 export const ModelDesignerPage: React.FC = () => {
     const [selectedDesigner, handleSelectDesigner] = useState(false)
@@ -17,7 +16,7 @@ export const ModelDesignerPage: React.FC = () => {
     //     test: "tady jsou random data",
     // });
 
-    const { addAlert } = useAlert();
+    // const { addAlert } = useAlert();
 
     const handleDesignerChange = () => {
         handleSelectDesigner(!selectedDesigner)

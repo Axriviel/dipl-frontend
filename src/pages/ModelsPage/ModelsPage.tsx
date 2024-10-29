@@ -7,7 +7,7 @@ import { GetModels } from "../../features/Models/GetModels";
 import { Model } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
 import { MetricLineChart } from "../../components/Charts/MetricLineChart";
-import Tippy from "@tippyjs/react";
+// import Tippy from "@tippyjs/react";
 
 
 const mockTrainingData = [

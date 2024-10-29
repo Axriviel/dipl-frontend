@@ -4,15 +4,18 @@ import { LayerParams } from '../../Models/LayerParams';
 import { createDenseLayer } from '../Layers/CreateDenseLayer';
 import { createConv2DLayer } from '../Layers/CreateConv2DLayer';
 import { LayerConfig } from '../../LayerConfig';
+import { IModelSettings } from '../../Models/ModelSettings';
 
 interface GeneratorLayerFormProps {
   currentLayer: any;
   handleChange: (key: string, value: any) => void;
+  updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
 }
 
 export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
   currentLayer,
   handleChange,
+  updateModelParams,
 }) => {
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
   const [showLayerConfig, setShowLayerConfig] = useState<boolean>(false);
@@ -87,6 +90,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
             setShowLayerConfig(false);
           }}
           allLayers={currentLayer.possibleLayers}
+          updateModelParams={updateModelParams}
           show={showLayerConfig}
           handleClose={() => setShowLayerConfig(false)}
         />

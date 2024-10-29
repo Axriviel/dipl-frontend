@@ -315,6 +315,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
             <GeneratorLayerForm
               currentLayer={currentLayer}
               handleChange={handleChange}
+              updateModelParams={updateModelParams}
             />
             {InputsConst}
           </>

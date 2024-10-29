@@ -187,7 +187,7 @@ export const ModelConfig: React.FC = () => {
 
         <Button onClick={addLayer}>Add Layer</Button>
 
-        {modelParams.layers.map((layer, index) => (
+        {modelParams.layers.map((layer) => (
           <Button
             key={layer.id}
             onClick={() => handleLayerClick(layer)}

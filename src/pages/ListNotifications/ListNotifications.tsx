@@ -72,7 +72,7 @@ export const ListNotifications: React.FC = () => {
                         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())  // Seřadí od nejnovější po nejstarší
                         .map(notification => (
 
-                            <li key={notification.id} onMouseEnter={(e) => setIsHovered(notification.id)} onMouseLeave={(e) => setIsHovered(-1)} className={`notification m-4 ${!notification.was_read ? "notification-read" : "notification-unread"}`}>
+                            <li key={notification.id} onMouseEnter={() => setIsHovered(notification.id)} onMouseLeave={() => setIsHovered(-1)} className={`notification m-4 ${!notification.was_read ? "notification-read" : "notification-unread"}`}>
                                 <div className='d-flex flex-column flex-wrap'>
                                     <p className=''>{notification.message}</p>
                                     <small>{new Date(notification.timestamp).toLocaleString()}</small>
