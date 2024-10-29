@@ -3,4 +3,4 @@ services:
     build: .
     ports:
     #host:container
-      - "5173:80"
+      - "80:80"
