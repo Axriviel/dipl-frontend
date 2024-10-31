@@ -7,6 +7,8 @@ import { GetModels } from "../../features/Models/GetModels";
 import { Model } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
 import { MetricLineChart } from "../../components/Charts/MetricLineChart";
+import { DataNeededInfo } from "../../components/DataNeededInfo/DataNeededInfo";
+import imgUrl from "../../assets/bj.jpeg"
 // import Tippy from "@tippyjs/react";
 
 
@@ -55,7 +57,7 @@ export const ModelsPage = () => {
             const result = await GetModels();
 
             if (result.success) {
-                setModels(result.data);
+                //setModels(result.data);
             } else {
                 addAlert("" + result.message, "error");
                 console.error(result.message);
@@ -77,7 +79,12 @@ export const ModelsPage = () => {
     }, [models])
 
     return (
-        <>{loading ? "loading" : selectedModel === undefined ? "Zatím nemáte modely" :
+        <>{loading ? "loading" : selectedModel === undefined ?
+            <DataNeededInfo
+                content="You dont have any models yet"
+                imageUrl={imgUrl} /> :
+
+
             <div className="models-container">
 
                 <div className="d-flex flex-row justify-content-center flex-wrap">
@@ -112,7 +119,7 @@ export const ModelsPage = () => {
 
                     {/* chart section */}
                     <div className="metric-chart col-md-6 col-lg-6 p-3 section-border">
-                        <h4 className="text-center">Graf něčeho</h4>
+                        <h4 className="text-center">Graf metriky</h4>
                         <MetricLineChart metricValues={mockTrainingData} metric="accuracy" />
                     </div>
 
