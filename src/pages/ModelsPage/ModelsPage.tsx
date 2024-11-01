@@ -4,7 +4,7 @@ import { useAlert } from "../../components/Alerts/AlertContext";
 import { DeleteModel } from "../../features/Models/DeleteModel";
 import { DownloadModel } from "../../features/Models/DownloadModel";
 import { GetModels } from "../../features/Models/GetModels";
-import { Model } from "../../features/Models/models/Model";
+import { IModel } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
 import { MetricLineChart } from "../../components/Charts/MetricLineChart";
 import { DataNeededInfo } from "../../components/DataNeededInfo/DataNeededInfo";
@@ -32,8 +32,8 @@ const mockTrainingData = [
 
 
 export const ModelsPage = () => {
-    const [models, setModels] = useState<Model[]>([]);
-    const [selectedModel, setSelectedModel] = useState<Model | undefined>(undefined);
+    const [models, setModels] = useState<IModel[]>([]);
+    const [selectedModel, setSelectedModel] = useState<IModel | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true)
     const [refetch, setRefetch] = useState<boolean>(true)
     const { addAlert } = useAlert()
@@ -57,7 +57,7 @@ export const ModelsPage = () => {
             const result = await GetModels();
 
             if (result.success) {
-                //setModels(result.data);
+                setModels(result.data);
             } else {
                 addAlert("" + result.message, "error");
                 console.error(result.message);
@@ -120,13 +120,16 @@ export const ModelsPage = () => {
                     {/* chart section */}
                     <div className="metric-chart col-md-6 col-lg-6 p-3 section-border">
                         <h4 className="text-center">Graf metriky</h4>
-                        <MetricLineChart metricValues={mockTrainingData} metric="accuracy" />
+                        {/* <MetricLineChart metricValues={mockTrainingData} metric="accuracy" /> */}
+                        <MetricLineChart metricValues={selectedModel.metric_values_history} metric={selectedModel.watched_metric} />
                     </div>
 
                     {/* right section */}
                     <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-center">
                         <h4>{selectedModel?.name}</h4>
                         <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p>
+                        <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
+                        <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
                         <p><strong>Error:</strong> {selectedModel?.error}</p>
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
                     </div>
