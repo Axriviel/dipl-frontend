@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAlert } from '../../components/Alerts/AlertContext';
-import { configData } from '../../config/config';
+import { API_KEY, configData } from '../../config/config';
 import { IUser } from './models/User';
 
 interface AuthContextType {
@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    "X-API-KEY": API_KEY
                 },
                 body: JSON.stringify({ username, password }),
                 credentials: 'include',

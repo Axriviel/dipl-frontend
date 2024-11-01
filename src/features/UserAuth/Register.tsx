@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../AuthContext/AuthContext';
 import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext';
-import { configData } from '../../config/config';
+import { API_KEY, configData } from '../../config/config';
 
 export const Register: React.FC = () => {
     const { addAlert } = useAlert();
@@ -17,6 +17,7 @@ export const Register: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    "X-API-KEY": API_KEY
                 },
                 body: JSON.stringify({ username, password }),
                 credentials: 'include',
