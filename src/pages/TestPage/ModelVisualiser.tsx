@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { ReactFlow, Node, Edge, MiniMap, Controls, Background, useNodesState, useEdgesState, MarkerType, OnConnect } from '@xyflow/react';
+import { ReactFlow, Node, Edge, MiniMap, Controls, Background, useNodesState, useEdgesState, MarkerType, OnConnect, ReactFlowInstance, OnEdgesDelete } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
-import { OnEdgesDelete } from 'react-flow-renderer';
 
 interface LayerParams {
   id: string;
@@ -165,6 +164,8 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
         onConnect={onConnect}
         onEdgesDelete={onEdgesDelete}
         deleteKeyCode={['Backspace', 'Delete']}
+        // fitView={true}
+        // fitViewOptions={{minZoom: 1.2, maxZoom: 1.2}}
       >
         <MiniMap position='top-right' />
         <Background />

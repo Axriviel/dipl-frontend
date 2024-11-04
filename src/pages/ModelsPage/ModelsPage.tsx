@@ -12,23 +12,23 @@ import imgUrl from "../../assets/bj.jpeg"
 // import Tippy from "@tippyjs/react";
 
 
-const mockTrainingData = [
-    { epoch: 1, value: 0.5 },
-    { epoch: 2, value: 0.65 },
-    { epoch: 3, value: 0.78 },
-    { epoch: 4, value: 0.8 },
-    { epoch: 5, value: 0.86 },
-    { epoch: 6, value: 0.91 },
-    { epoch: 7, value: 0.93 },
-    { epoch: 8, value: 0.935 },
-    { epoch: 9, value: 0.94 },
-    { epoch: 10, value: 0.945 },
-    { epoch: 11, value: 0.948 },
-    { epoch: 12, value: 0.95 },
-    { epoch: 13, value: 0.951 },
-    { epoch: 14, value: 0.953 },
-    { epoch: 15, value: 0.955 },
-];
+// const mockTrainingData = [
+//     { epoch: 1, value: 0.5 },
+//     { epoch: 2, value: 0.65 },
+//     { epoch: 3, value: 0.78 },
+//     { epoch: 4, value: 0.8 },
+//     { epoch: 5, value: 0.86 },
+//     { epoch: 6, value: 0.91 },
+//     { epoch: 7, value: 0.93 },
+//     { epoch: 8, value: 0.935 },
+//     { epoch: 9, value: 0.94 },
+//     { epoch: 10, value: 0.945 },
+//     { epoch: 11, value: 0.948 },
+//     { epoch: 12, value: 0.95 },
+//     { epoch: 13, value: 0.951 },
+//     { epoch: 14, value: 0.953 },
+//     { epoch: 15, value: 0.955 },
+// ];
 
 
 export const ModelsPage = () => {
