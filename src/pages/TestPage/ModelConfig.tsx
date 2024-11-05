@@ -11,6 +11,7 @@ import "./ModelConfig.css";
 import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
+import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 
 export interface ModelParams {
   layers: LayerParams[];
@@ -18,6 +19,9 @@ export interface ModelParams {
 }
 
 export const ModelConfig: React.FC = () => {
+  const { addAlert } = useAlert();
+
+
   // init modelParams object with one input layer and default settings
   const [modelParams, setModelParams] = useState<ModelParams>({
     layers: [createInputLayer()], settings: {
@@ -142,11 +146,14 @@ export const ModelConfig: React.FC = () => {
       }
 
       const result = await response.json();
+      addAlert(result.message, "success")
       console.log('Model successfully sent to backend:', result);
     } catch (error) {
       if (error instanceof Error) {
+        addAlert(error.message, "error");
         console.error('Error sending model to backend:', error.message);
       } else {
+        addAlert("" + error, "error");
         console.error('Unknown error', error);
       }
     }
