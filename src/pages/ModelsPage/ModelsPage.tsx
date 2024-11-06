@@ -42,6 +42,11 @@ export const ModelsPage = () => {
         DownloadModel(selectedModel!.id)
     }
 
+    const handleShowDetails = () => {
+        //tba - zobrazit to v rámci modálu, nebo nějak lépe.
+        window.location.href = `http://localhost:5000/api/get-details/${selectedModel!.id}`
+    }
+
     const handleDeleteModel = async (modelId: number) => {
         const result = await DeleteModel(modelId);
         if (result.success) {
@@ -127,11 +132,16 @@ export const ModelsPage = () => {
                     {/* right section */}
                     <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-center">
                         <h4>{selectedModel?.name}</h4>
+                        {/* {selectedModel.id} */}
                         <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p>
                         <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
                         <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
                         <p><strong>Error:</strong> {selectedModel?.error}</p>
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
+
+                        <Button onClick={handleShowDetails} className="m-2">
+                            Details
+                        </Button>
                     </div>
 
 
