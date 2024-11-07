@@ -109,7 +109,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
   const handleRandomToggle = (key: string, type: string) => {
     setCurrentLayer((prevLayer) => {
       // Ověření, zda klíč existuje v aktuální vrstvě
-      const randomEnabled = prevLayer.hasOwnProperty(`${key}Random`) && !prevLayer[`${key}Random`];
+      const randomEnabled = prevLayer.hasOwnProperty(`${key}Random`) ;
       console.log("Current randomEnabled:", randomEnabled);  // Debugging
 
       console.log("nastavuji " + key + " na " + type)
@@ -315,6 +315,8 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
             <GeneratorLayerForm
               currentLayer={currentLayer}
               handleChange={handleChange}
+              handleRandomToggle={handleRandomToggle}
+              renderRandomConfig={renderRandomConfig}
               updateModelParams={updateModelParams}
             />
             {InputsConst}
