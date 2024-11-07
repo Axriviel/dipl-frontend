@@ -9,6 +9,7 @@ import "./ModelsPage.css";
 import { MetricLineChart } from "../../components/Charts/MetricLineChart";
 import { DataNeededInfo } from "../../components/DataNeededInfo/DataNeededInfo";
 import imgUrl from "../../assets/bj.jpeg"
+import { configData } from "../../config/config";
 // import Tippy from "@tippyjs/react";
 
 
@@ -44,7 +45,7 @@ export const ModelsPage = () => {
 
     const handleShowDetails = () => {
         //tba - zobrazit to v rámci modálu, nebo nějak lépe.
-        window.location.href = `http://localhost:5000/api/get-details/${selectedModel!.id}`
+        window.location.href = `${configData.API_URL}/api/get-details/${selectedModel!.id}`
     }
 
     const handleDeleteModel = async (modelId: number) => {
