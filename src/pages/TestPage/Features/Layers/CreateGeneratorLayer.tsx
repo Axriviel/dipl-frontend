@@ -8,6 +8,10 @@ export const createGeneratorLayer = (): IGeneratorLayer => {
         id: Date.now().toString(),
         name: `generator_${layerCounter}`,
         type: 'Generator',
+        size: 1,
+        firstLayer: 0,
+        firstLayerRandom: undefined,
+        sizeRandom: undefined,
         possibleLayers: [],
         inputs: [],
     };

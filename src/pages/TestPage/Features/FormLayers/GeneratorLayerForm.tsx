@@ -3,18 +3,23 @@ import { Button, Form } from 'react-bootstrap';
 import { LayerParams } from '../../Models/LayerParams';
 import { createDenseLayer } from '../Layers/CreateDenseLayer';
 import { createConv2DLayer } from '../Layers/CreateConv2DLayer';
-import { LayerConfig } from '../../LayerConfig';
+import { LayerConfig, NumericRandomizers, RandomConfig } from '../../LayerConfig';
 import { IModelSettings } from '../../Models/ModelSettings';
+import { RandomizerSelect } from '../RandomizerSelect';
 
 interface GeneratorLayerFormProps {
   currentLayer: any;
   handleChange: (key: string, value: any) => void;
+  handleRandomToggle: (key: string, type: string) => void;
+  renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
   updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
 }
 
 export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
   currentLayer,
   handleChange,
+  handleRandomToggle,
+  renderRandomConfig,
   updateModelParams,
 }) => {
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
@@ -47,6 +52,23 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
 
   return (
     <>
+      <Form.Group>
+        <Form.Label>Number of generated layers</Form.Label>
+        <RandomizerSelect
+          value={currentLayer.sizeRandom ? currentLayer.sizeRandom.type : 'value'}
+          onChange={(selectedType: string) => handleRandomToggle('size', selectedType)}
+          options={NumericRandomizers} // Můžeš předat jakýkoliv seznam možností
+        />
+        {renderRandomConfig('size', currentLayer.sizeRandom)}
+        {!currentLayer.sizeRandom && (
+          <Form.Control
+            type="number"
+            value={currentLayer.size || 1}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('size', parseInt(e.target.value))}
+          />
+        )}
+      </Form.Group>
+
       <h4>Define possible layers for generator</h4>
 
       {/* Seznam vrstev v generátoru */}
@@ -77,6 +99,25 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
       </Form.Group>
 
       <Button onClick={addLayerToGenerator}>Add Layer</Button>
+
+      {/* přidat možnost náhodnosti */}
+      {/* Výběr první vrstvy */}
+      <Form.Group>
+        <Form.Label>Set first layer</Form.Label>
+        <Form.Control
+          as="select"
+          value={currentLayer.firstLayer || ""}
+          onChange={(e) => handleChange('firstLayer', e.target.value)}
+        >
+          <option value="">Select a layer</option>
+          {currentLayer.possibleLayers.map((layer: LayerParams) => (
+            <option key={layer.id} value={layer.id}>
+              {layer.name} (ID: {layer.id})
+            </option>
+          ))}
+        </Form.Control>
+      </Form.Group>
+
 
       {/* Pokud je vybraná vrstva, zobrazíme modální okno s LayerConfig */}
       {selectedLayer && (
