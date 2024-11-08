@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { configData } from '../../config/config.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
@@ -12,10 +12,13 @@ import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
+import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
+import { IDatasetConfig } from './Models/DatasetConfig.tsx';
 
 export interface ModelParams {
   layers: LayerParams[];
   settings: IModelSettings;
+  datasetConfig: IDatasetConfig;
 }
 
 export const ModelConfig: React.FC = () => {
@@ -32,6 +35,14 @@ export const ModelConfig: React.FC = () => {
       monitor_metric: "val_accuracy",
       epochs: 10,
       batch_size: 32,
+    },
+    datasetConfig: {
+      x_columns: [],          // Výchozí prázdný seznam
+      x_num: 8,
+      y_column: "",
+      y_num: 9,
+      test_size: 0.2,         // Výchozí hodnota pro testovací sadu
+      // file: null,             // Výchozí hodnota pro soubor
     }
   });
 
@@ -39,6 +50,7 @@ export const ModelConfig: React.FC = () => {
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+  const [showDatasetSettingsModal, setShowDatasetSettingsModal] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);  // Přidáno pro nahrání souboru
   const selectableLayers = [
     { id: 1, name: 'Dense' },
@@ -99,6 +111,11 @@ export const ModelConfig: React.FC = () => {
   const handleOpenSettingsModal = () => setShowSettingsModal(true);
   const handleCloseSettingsModal = () => setShowSettingsModal(false);
 
+
+  const handleOpenDatasetSettingsModal = () => setShowDatasetSettingsModal(true);
+  const handleCloseDatasetModal = () => setShowDatasetSettingsModal(false);  // Zavření modálního okna datasetu
+
+
   // Handler pro kliknutí na uzel v ModelVisualizer
   const handleNodeClick = (node: any) => {
     const layer = modelParams.layers.find(l => l.id === node.id);
@@ -120,9 +137,20 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    fetch('/pima-indians-diabetes.csv')
+      .then(response => response.blob())
+      .then(blob => {
+        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+        setFile(defaultFile);
+      })
+      .catch(error => console.error("Chyba při načítání souboru:", error));
+  }, []);
+
   const handleSubmit = async () => {
     console.log(JSON.stringify(modelParams.layers))
     console.log(JSON.stringify(modelParams.settings))
+    console.log(JSON.stringify(modelParams.datasetConfig))
 
     try {
       if (!file) {
@@ -133,6 +161,7 @@ export const ModelConfig: React.FC = () => {
       formData.append('datasetFile', file);  // Přidání souboru do FormData
       formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
       formData.append("settings", JSON.stringify(modelParams.settings)) //add settings to form
+      formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig))
 
       const response = await fetch(`${configData.API_URL}/api/save-model`, {
         method: 'POST',
@@ -172,9 +201,24 @@ export const ModelConfig: React.FC = () => {
         <h2>Model Configuration</h2>
 
         {/* Přidání nahrání datasetu */}
-        <input type="file" accept=".csv" onChange={handleFileChange} />
+        <input type="file" accept=".csv,.tsv,.npy,.npz,.h5" onChange={handleFileChange} />
+        {file ? (
+          <p>Výchozí soubor: {file.name}</p>
+        ) : (
+          <p>Žádný soubor nebyl vybrán</p>
+        )}
 
-        <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
+
+        <div className='d-flex flex-row flex-wrap'>
+          <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
+          <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
+        </div>
+
+        <DatasetConfigModal
+          modelParams={modelParams}
+          setModelParams={setModelParams}
+          show={showDatasetSettingsModal}
+          handleClose={handleCloseDatasetModal} />
 
         {/* Modální okno pro úpravu nastavení modelu */}
         <ModelConfigForm
@@ -184,7 +228,7 @@ export const ModelConfig: React.FC = () => {
           handleClose={handleCloseSettingsModal}
         />
 
-        <select value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
+        <select className='p-1 m-1' value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
           {selectableLayers.map((layer) => (
             <option key={layer.id} value={layer.name}>
               {layer.name}
