@@ -1,35 +1,18 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import imgUrl from "../../assets/bj.jpeg";
 import { useAlert } from "../../components/Alerts/AlertContext";
+import { MetricLineChart } from "../../components/Charts/MetricLineChart";
+import { DataNeededInfo } from "../../components/DataNeededInfo/DataNeededInfo";
+import { GetStructureDetails } from "../../components/ModelStructure/GetStructureDetails";
+import { IModelStructureData } from "../../components/ModelStructure/Models/ModelStructureData";
+import { ModelStructureModal } from "../../components/ModelStructure/ModelStructureModal";
 import { DeleteModel } from "../../features/Models/DeleteModel";
 import { DownloadModel } from "../../features/Models/DownloadModel";
 import { GetModels } from "../../features/Models/GetModels";
 import { IModel } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
-import { MetricLineChart } from "../../components/Charts/MetricLineChart";
-import { DataNeededInfo } from "../../components/DataNeededInfo/DataNeededInfo";
-import imgUrl from "../../assets/bj.jpeg"
-import { configData } from "../../config/config";
 // import Tippy from "@tippyjs/react";
-
-
-// const mockTrainingData = [
-//     { epoch: 1, value: 0.5 },
-//     { epoch: 2, value: 0.65 },
-//     { epoch: 3, value: 0.78 },
-//     { epoch: 4, value: 0.8 },
-//     { epoch: 5, value: 0.86 },
-//     { epoch: 6, value: 0.91 },
-//     { epoch: 7, value: 0.93 },
-//     { epoch: 8, value: 0.935 },
-//     { epoch: 9, value: 0.94 },
-//     { epoch: 10, value: 0.945 },
-//     { epoch: 11, value: 0.948 },
-//     { epoch: 12, value: 0.95 },
-//     { epoch: 13, value: 0.951 },
-//     { epoch: 14, value: 0.953 },
-//     { epoch: 15, value: 0.955 },
-// ];
 
 
 export const ModelsPage = () => {
@@ -38,15 +21,36 @@ export const ModelsPage = () => {
     const [loading, setLoading] = useState<boolean>(true)
     const [refetch, setRefetch] = useState<boolean>(true)
     const { addAlert } = useAlert()
+    const [modelStructureData, setModelStructureData] = useState<IModelStructureData | null>(null);
+
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+    const handleClose = () => setShowDetailsModal(false);
 
     const handleDownload = () => {
         DownloadModel(selectedModel!.id)
     }
 
-    const handleShowDetails = () => {
-        //tba - zobrazit to v rámci modálu, nebo nějak lépe.
-        window.location.href = `${configData.API_URL}/api/get-details/${selectedModel!.id}`
-    }
+    const handleShowDetails = async () => {
+        try {
+            if (selectedModel !== undefined) {
+                const result = await GetStructureDetails(selectedModel.id);
+
+                if (result.success) {
+                    setModelStructureData(result.data);
+                    setShowDetailsModal(true)
+                } else {
+                    addAlert("" + result.message, "error");
+                    console.error(result.message);
+                }
+            }
+            else {
+                console.log("model undefined")
+            }
+        } catch (error) {
+            console.error("Error fetching model details:", error);
+        }
+    };
 
     const handleDeleteModel = async (modelId: number) => {
         const result = await DeleteModel(modelId);
@@ -143,6 +147,16 @@ export const ModelsPage = () => {
                         <Button onClick={handleShowDetails} className="m-2">
                             Details
                         </Button>
+
+                        {/* show modal only when data exist */}
+                        {modelStructureData && (
+                            <ModelStructureModal
+                                modelName={selectedModel.name}
+                                data={modelStructureData}
+                                show={showDetailsModal}
+                                onClose={handleClose}
+                            />
+                        )}
                     </div>
 
 
