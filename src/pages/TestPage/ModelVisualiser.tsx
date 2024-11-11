@@ -1,5 +1,5 @@
+import { Background, Controls, Edge, MarkerType, MiniMap, Node, OnConnect, OnEdgesDelete, ReactFlow, useEdgesState, useNodesState } from '@xyflow/react';
 import React, { useEffect } from 'react';
-import { ReactFlow, Node, Edge, MiniMap, Controls, Background, useNodesState, useEdgesState, MarkerType, OnConnect, ReactFlowInstance, OnEdgesDelete } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 
