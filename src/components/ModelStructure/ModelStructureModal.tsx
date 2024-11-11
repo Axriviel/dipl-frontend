@@ -31,7 +31,7 @@ export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, on
                 <td>{layer.layer_name}</td>
                 <td>{layer.layer_type}</td>
                 <td>{layer.num_params}</td>
-                <td>{layer.trainable ? 'Ano' : 'Ne'}</td>
+                <td>{layer.trainable ? 'Yes' : 'No'}</td>
               </tr>
             ))}
           </tbody>
@@ -39,7 +39,7 @@ export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, on
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
-          Zavřít
+          Close
         </Button>
       </Modal.Footer>
     </Modal>
