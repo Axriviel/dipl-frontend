@@ -8,6 +8,11 @@ import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
 import { IInputLayer } from './Models/InputLayer';
 import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
 import { IModelSettings } from './Models/ModelSettings';
+import { DropoutLayerForm } from './Features/FormLayers/DropoutLayerForm';
+import { IDropoutLayer } from './Models/DropoutLayer';
+import { IGeneratorLayer } from './Models/GeneratorLayers';
+import { IConv2DLayer } from './Models/Conv2dLayer';
+import { IDenseLayer } from './Models/DenseLayer';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
@@ -39,9 +44,10 @@ export type RandomConfig = INumericRandomConfig | ITextRandomConfig | ITestNumer
 export const NumericRandomizers = ["value", "numeric", "numeric-test"];
 export const TextRandomizers = ["value", "text"];
 
-interface LayerConfigProps {
-  layer: LayerParams;
-  updateLayer: (updatedLayer: LayerParams) => void;
+//using generic type T so i can work with interfaces for specific layers. If not defined, use LayerParams
+interface LayerConfigProps<T extends LayerParams = LayerParams> {
+  layer: T;
+  updateLayer: (updatedLayer: T) => void;
   allLayers: LayerParams[];
   show: boolean;
   updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
@@ -109,7 +115,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
   const handleRandomToggle = (key: string, type: string) => {
     setCurrentLayer((prevLayer) => {
       // Ověření, zda klíč existuje v aktuální vrstvě
-      const randomEnabled = prevLayer.hasOwnProperty(`${key}Random`) ;
+      const randomEnabled = prevLayer.hasOwnProperty(`${key}Random`);
       console.log("Current randomEnabled:", randomEnabled);  // Debugging
 
       console.log("nastavuji " + key + " na " + type)
@@ -284,7 +290,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
       case 'Dense':
         return (
           <DenseLayerForm
-            currentLayer={currentLayer}
+            currentLayer={currentLayer as IDenseLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
             renderRandomConfig={renderRandomConfig}
@@ -295,7 +301,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
       case 'Conv2D':
         return (
           <Conv2DLayerForm
-            currentLayer={currentLayer}
+            currentLayer={currentLayer as IConv2DLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
             renderRandomConfig={renderRandomConfig}
@@ -313,7 +319,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
         return (
           <>
             <GeneratorLayerForm
-              currentLayer={currentLayer}
+              currentLayer={currentLayer as IGeneratorLayer}
               handleChange={handleChange}
               handleRandomToggle={handleRandomToggle}
               renderRandomConfig={renderRandomConfig}
@@ -321,6 +327,16 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
             />
             {InputsConst}
           </>
+        );
+      case 'Dropout':
+        return (
+          <DropoutLayerForm
+            currentLayer={currentLayer as IDropoutLayer}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
+            renderRandomConfig={renderRandomConfig}
+            InputsConst={InputsConst}
+          />
         );
       default:
         return null;

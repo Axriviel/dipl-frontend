@@ -6,9 +6,10 @@ import { createConv2DLayer } from '../Layers/CreateConv2DLayer';
 import { LayerConfig, NumericRandomizers, RandomConfig } from '../../LayerConfig';
 import { IModelSettings } from '../../Models/ModelSettings';
 import { RandomizerSelect } from '../RandomizerSelect';
+import { IGeneratorLayer } from '../../Models/GeneratorLayers';
 
 interface GeneratorLayerFormProps {
-  currentLayer: any;
+  currentLayer: IGeneratorLayer;
   handleChange: (key: string, value: any) => void;
   handleRandomToggle: (key: string, type: string) => void;
   renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;

@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { configData } from '../../config/config.tsx';
+import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
 import { createGeneratorLayer } from './Features/Layers/CreateGeneratorLayer.tsx';
@@ -8,12 +10,11 @@ import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
 import { ModelConfigForm } from './Features/ModelConfigFormModal.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import "./ModelConfig.css";
+import { IDatasetConfig } from './Models/DatasetConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { useAlert } from '../../components/Alerts/AlertContext.tsx';
-import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
-import { IDatasetConfig } from './Models/DatasetConfig.tsx';
+import { createDropoutLayer } from './Features/Layers/CreateDropoutLayer.tsx';
 
 export interface ModelParams {
   layers: LayerParams[];
@@ -51,12 +52,13 @@ export const ModelConfig: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [showDatasetSettingsModal, setShowDatasetSettingsModal] = useState<boolean>(false);
-  const [file, setFile] = useState<File | null>(null);  // Přidáno pro nahrání souboru
+  const [file, setFile] = useState<File | null>(null);  // dataset upload
   const selectableLayers = [
     { id: 1, name: 'Dense' },
     { id: 2, name: 'Conv2D' },
     { id: 3, name: 'Input' },
-    { id: 4, name: 'Generator' }
+    { id: 4, name: 'Generator' },
+    { id: 5, name: 'Dropout' }
   ];
   const addLayer = () => {
     let newLayer: LayerParams;
@@ -74,6 +76,9 @@ export const ModelConfig: React.FC = () => {
         break;
       case 'Generator':
         newLayer = createGeneratorLayer();
+        break;
+      case 'Dropout':
+        newLayer = createDropoutLayer();
         break;
       default:
         return;
@@ -137,15 +142,16 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetch('/pima-indians-diabetes.csv')
-      .then(response => response.blob())
-      .then(blob => {
-        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-        setFile(defaultFile);
-      })
-      .catch(error => console.error("Chyba při načítání souboru:", error));
-  }, []);
+  // set default dataset
+  // useEffect(() => {
+  //   fetch('/pima-indians-diabetes.csv')
+  //     .then(response => response.blob())
+  //     .then(blob => {
+  //       const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+  //       setFile(defaultFile);
+  //     })
+  //     .catch(error => console.error("Chyba při načítání souboru:", error));
+  // }, []);
 
   const handleSubmit = async () => {
     console.log(JSON.stringify(modelParams.layers))

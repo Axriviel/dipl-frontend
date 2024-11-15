@@ -3,9 +3,10 @@ import { Form } from 'react-bootstrap';
 import { activationFunctions } from '../../../../features/ModelLayers/Activations';
 import { NumericRandomizers, RandomConfig, TextRandomizers } from '../../LayerConfig';
 import { RandomizerSelect } from '../RandomizerSelect';
+import { IDenseLayer } from '../../Models/DenseLayer';
 
 interface Props {
-    currentLayer: any; // můžeš použít přesnější typ, pokud potřebuješ
+    currentLayer: IDenseLayer;
     handleChange: (key: string, value: any) => void;
     handleRandomToggle: (key: string, type: string) => void;
     renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;

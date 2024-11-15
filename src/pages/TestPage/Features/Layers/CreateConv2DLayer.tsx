@@ -1,8 +1,8 @@
-import { LayerParams } from "../../Models/LayerParams";
+import { IConv2DLayer } from "../../Models/Conv2dLayer";
 
 let layerCounter = 0;
 
-export const createConv2DLayer = (): LayerParams => {
+export const createConv2DLayer = (): IConv2DLayer => {
   layerCounter++;
   return {
     id: Date.now().toString(),

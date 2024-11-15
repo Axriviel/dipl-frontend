@@ -1,9 +1,10 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { NumericRandomizers, RandomConfig } from '../../LayerConfig';
+import { IConv2DLayer } from '../../Models/Conv2dLayer';
 
 interface Conv2DLayerFormProps {
-    currentLayer: any; // můžeš použít přesnější typ, pokud potřebuješ
+    currentLayer: IConv2DLayer;
     handleChange: (key: string, value: any) => void;
     handleRandomToggle: (key: string, type: string) => void;
     renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
