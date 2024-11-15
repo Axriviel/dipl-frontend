@@ -13,3 +13,9 @@
     padding-bottom: 0.3rem;
     border-radius: 5px;
 }
+
+@media(max-width: 768px){
+    .feedback-container{
+        width: 80vw;
+    }
+}
