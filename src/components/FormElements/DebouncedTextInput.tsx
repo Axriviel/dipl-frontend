@@ -3,10 +3,12 @@ import { Form } from 'react-bootstrap';
 
 interface Props {
     value: string;
+    timeout?: number;
     onChange: (value: string) => void;
 }
 
-export const DebouncedTextInput: React.FC<Props> = ({ value, onChange }) => {
+// default timeout 300 ms
+export const DebouncedTextInput: React.FC<Props> = ({ value, onChange, timeout = 300 }) => {
     const [inputValue, setInputValue] = useState(value); // Dočasná hodnota pro input
     const [isInitialRender, setIsInitialRender] = useState(true); // Stav pro sledování prvního renderu
 
@@ -18,17 +20,17 @@ export const DebouncedTextInput: React.FC<Props> = ({ value, onChange }) => {
 
         } const timer = setTimeout(() => {
             onChange(inputValue); // Zavoláme onChange až po 300 ms neaktivity
-        }, 300);
+        }, timeout);
 
         // Zrušíme timeout při každé změně inputu, dokud uživatel nepřestane psát
         return () => clearTimeout(timer);
     }, [inputValue]);
 
     return (
-            <Form.Control
-                type="text"
-                value={inputValue}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)} // Lokální změna inputu
-            />
+        <Form.Control
+            type="text"
+            value={inputValue}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)} // Lokální změna inputu
+        />
     );
 };
