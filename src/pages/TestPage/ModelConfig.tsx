@@ -30,7 +30,7 @@ export const ModelConfig: React.FC = () => {
 
   // init modelParams object with one input layer and default settings
   const [modelParams, setModelParams] = useState<ModelParams>(() => ({
-    layers: [createInputLayer({ id: "1" }), createDenseLayer({ id: "2", units: 1, activation: "sigmoid", inputs: ["1"] })], settings: {
+    layers: [createInputLayer({ id: "1732203259530" }), createDenseLayer({ id: "1732203259531", units: 1, activation: "sigmoid", inputs: ["1732203259530"] })], settings: {
       opt_algorithm: "random",
       optimizer: 'adam',
       loss: 'binary_crossentropy',
