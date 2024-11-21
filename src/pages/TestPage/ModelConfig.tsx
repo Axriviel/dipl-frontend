@@ -29,8 +29,8 @@ export const ModelConfig: React.FC = () => {
 
 
   // init modelParams object with one input layer and default settings
-  const [modelParams, setModelParams] = useState<ModelParams>({
-    layers: [createInputLayer()], settings: {
+  const [modelParams, setModelParams] = useState<ModelParams>(() => ({
+    layers: [createInputLayer({ id: "1" }), createDenseLayer({ id: "2", units: 1, activation: "sigmoid", inputs: ["1"] })], settings: {
       opt_algorithm: "random",
       optimizer: 'adam',
       loss: 'binary_crossentropy',
@@ -52,7 +52,7 @@ export const ModelConfig: React.FC = () => {
       test_size: 0.2,         // Výchozí hodnota pro testovací sadu
       // file: null,             // Výchozí hodnota pro soubor
     }
-  });
+  }));
 
   const [newLayerType, setNewLayerType] = useState<string>('Dense');
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
@@ -101,6 +101,33 @@ export const ModelConfig: React.FC = () => {
 
     setModelParams({ ...modelParams, layers: [...modelParams.layers, newLayer] });
   };
+
+  const handleResetAll = () => {
+    setModelParams({
+      layers: [createInputLayer()], settings: {
+        opt_algorithm: "random",
+        optimizer: 'adam',
+        loss: 'binary_crossentropy',
+        metrics: ['accuracy'],
+        monitor_metric: "val_accuracy",
+        epochs: 10,
+        batch_size: 32,
+        NNI: {
+          nni_concurrency: 1,
+          nni_max_trials: 5,
+          nni_tuner: "Evolution"
+        }
+      },
+      datasetConfig: {
+        x_columns: [],          // Výchozí prázdný seznam
+        x_num: 8,
+        y_column: "",
+        y_num: 9,
+        test_size: 0.2,         // Výchozí hodnota pro testovací sadu
+        // file: null,             // Výchozí hodnota pro soubor
+      }
+    })
+  }
 
   const updateLayer = (index: number, updatedLayer: LayerParams) => {
     const newLayers = [...modelParams.layers];
@@ -220,6 +247,7 @@ export const ModelConfig: React.FC = () => {
       {/* right pannel for layer selection etc. */}
       <div className='d-flex flex-column align-items-center flex-fill layer-list'>
         <h2>Model Configuration</h2>
+        <Button onClick={handleResetAll} className='reset-button'>Reset</Button>
 
         {/* Přidání nahrání datasetu */}
         <input type="file" accept=".csv,.tsv,.npy,.npz,.h5" onChange={handleFileChange} />

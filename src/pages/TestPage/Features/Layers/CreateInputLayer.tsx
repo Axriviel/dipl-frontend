@@ -2,13 +2,15 @@ import { IInputLayer } from "../../Models/InputLayer";
 
 let layerCounter = 0;
 
-export const createInputLayer = (): IInputLayer => {
+export const createInputLayer = (customParams: Partial<IInputLayer> = {}): IInputLayer => {
     layerCounter++;
-    return {
+    const defaultParams: IInputLayer = {
         id: Date.now().toString(),
         name: `input_${layerCounter}`,
         type: 'Input',
-        shape: [8],  // Výchozí tvar vstupu (např. obrázek 64x64 s 3 kanály)
+        shape: [8], // Výchozí tvar vstupu
         inputs: []
     };
+
+    return { ...defaultParams, ...customParams };
 };
