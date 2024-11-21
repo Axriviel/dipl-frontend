@@ -6,3 +6,9 @@
     padding-right: 1rem;
     padding-bottom: 0.5rem;
 }
+
+/* to look visualy the same as reset button */
+.switch-button{
+    margin-top: 1vh;
+    margin-left: 1rem;
+}

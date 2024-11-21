@@ -70,7 +70,7 @@ export const ModelDesignerPage: React.FC = () => {
                 </div>
                 :
                 <>
-                    <Button className='m-2' onClick={handleDesignerChange}>Switch</Button>
+                    <Button className='switch-button' onClick={handleDesignerChange}>Switch</Button>
                     {selectedDesigner !== false ?
                         <FullAutoDesign /> :
                         <CustomizableDesign />
