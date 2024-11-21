@@ -9,7 +9,17 @@
     overflow: auto;
 }
 
-@media (max-width: 1000px) {
+.reset-button{
+    position: fixed;
+    right: 1rem;
+    top: 11vh;
+    z-index: 1000;
+}
+
+@media (max-width: 1100px) {
+    .model-visualizer{
+        width: 100vh;
+    }
     .layer-list {
         height: auto;
         border: none;
