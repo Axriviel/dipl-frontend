@@ -1,6 +1,7 @@
 import { Button, Form, Modal } from "react-bootstrap";
 import { ModelParams } from "../ModelConfig";
 import { ChangeEvent } from "react";
+import { NNISettingsForm } from "./Components/NNISettingsForm";
 
 interface Props {
     modelParams: ModelParams;
@@ -9,7 +10,7 @@ interface Props {
     handleClose: () => void;
 }
 
-const optAlgorithmOptions = ["random", "genetic"];
+const optAlgorithmOptions = ["random", "genetic", "nni"];
 
 const optimizerOptions = [
     'SGD', 'RMSprop', 'Adam', 'AdamW', 'Adadelta',
@@ -44,6 +45,21 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
         }));
     };
 
+    // Funkce pro aktualizaci specifických NNI nastavení
+    const updateNNISettings = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setModelParams(prev => ({
+            ...prev,
+            settings: {
+                ...prev.settings,
+                NNI: {
+                    ...prev.settings.NNI,
+                    [name]: value
+                }
+            }
+        }));
+    };
+
     // Funkce pro výběr metrik pomocí checkboxů
     const handleMetricsChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
@@ -61,7 +77,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
     };
 
     return (
-        <Modal show={show} onHide={handleClose} centered>
+        <Modal show={show} onHide={handleClose} centered size="lg">
             <Modal.Header closeButton>
                 <Modal.Title>Model Settings</Modal.Title>
             </Modal.Header>
@@ -82,6 +98,14 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             ))}
                         </Form.Control>
                     </Form.Group>
+
+                    {/* Specifická sekce pro NNI */}
+                    {modelParams.settings.opt_algorithm === "nni" && (
+                        <NNISettingsForm
+                            nniSettings={modelParams.settings.NNI}
+                            updateNNISettings={updateNNISettings}
+                        />
+                    )}
 
                     {/* Výběr optimalizátoru */}
                     <Form.Group controlId="formOptimizer">

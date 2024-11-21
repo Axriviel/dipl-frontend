@@ -15,6 +15,8 @@ import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { createDropoutLayer } from './Features/Layers/CreateDropoutLayer.tsx';
+import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLayer.tsx';
+import { createLSTMLayer } from './Features/Layers/CreateLSTMLayer.tsx';
 
 export interface ModelParams {
   layers: LayerParams[];
@@ -36,6 +38,11 @@ export const ModelConfig: React.FC = () => {
       monitor_metric: "val_accuracy",
       epochs: 10,
       batch_size: 32,
+      NNI: {
+        nni_concurrency: 1,
+        nni_max_trials: 5,
+        nni_tuner: "Evolution"
+      }
     },
     datasetConfig: {
       x_columns: [],          // Výchozí prázdný seznam
@@ -58,7 +65,9 @@ export const ModelConfig: React.FC = () => {
     { id: 2, name: 'Conv2D' },
     { id: 3, name: 'Input' },
     { id: 4, name: 'Generator' },
-    { id: 5, name: 'Dropout' }
+    { id: 5, name: 'Dropout' },
+    { id: 6, name: 'MaxPooling2D' },
+    { id: 7, name: "LSTM" }
   ];
   const addLayer = () => {
     let newLayer: LayerParams;
@@ -79,6 +88,12 @@ export const ModelConfig: React.FC = () => {
         break;
       case 'Dropout':
         newLayer = createDropoutLayer();
+        break;
+      case 'MaxPooling2D':
+        newLayer = createMaxPooling2DLayer();
+        break;
+      case 'LSTM':
+        newLayer = createLSTMLayer();
         break;
       default:
         return;

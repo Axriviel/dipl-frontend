@@ -13,6 +13,10 @@ import { IDropoutLayer } from './Models/DropoutLayer';
 import { IGeneratorLayer } from './Models/GeneratorLayers';
 import { IConv2DLayer } from './Models/Conv2dLayer';
 import { IDenseLayer } from './Models/DenseLayer';
+import { MaxPooling2DLayerForm } from './Features/FormLayers/MaxPooling2DLayerForm';
+import { IMaxPooling2D } from './Models/MaxPooling2D';
+import { LSTMLayerForm } from './Features/FormLayers/LSTMLayerForm';
+import { ILSTM } from './Models/LSTM';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
@@ -338,6 +342,25 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
             InputsConst={InputsConst}
           />
         );
+      case 'MaxPooling2D':
+        return (
+          <MaxPooling2DLayerForm
+            currentLayer={currentLayer as IMaxPooling2D}
+            handleChange={handleChange}
+            InputsConst={InputsConst}
+          />
+        );
+      case 'LSTM':
+        return (
+          <LSTMLayerForm
+            currentLayer={currentLayer as ILSTM}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
+            renderRandomConfig={renderRandomConfig}
+            InputsConst={InputsConst}
+          />
+        );
+
       default:
         return null;
     }
