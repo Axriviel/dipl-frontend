@@ -167,7 +167,7 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
         // fitView={true}
         // fitViewOptions={{minZoom: 1.2, maxZoom: 1.2}}
       >
-        <MiniMap position='top-right' />
+        <MiniMap className={"mini-map"} position='top-right' />
         <Background />
         <Controls />
       </ReactFlow>

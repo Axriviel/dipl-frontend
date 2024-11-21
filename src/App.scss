@@ -50,6 +50,10 @@ body {
 //   }
 // }
 
+.mini-map{
+
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -66,4 +70,10 @@ body {
 .basic-card {
   background-color: pink;
   border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .mini-map {
+    display:none;
+  }
 }
