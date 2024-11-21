@@ -1,4 +1,4 @@
-import { IConv2DLayer } from "../../Models/Conv2dLayer";
+import { IConv2DLayer } from "../../Models/Conv2DLayer";
 
 let layerCounter = 0;
 

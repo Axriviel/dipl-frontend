@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { NumericRandomizers, RandomConfig } from '../../LayerConfig';
-import { IConv2DLayer } from '../../Models/Conv2dLayer';
+import { IConv2DLayer } from '../../Models/Conv2DLayer';
 
 interface Conv2DLayerFormProps {
     currentLayer: IConv2DLayer;

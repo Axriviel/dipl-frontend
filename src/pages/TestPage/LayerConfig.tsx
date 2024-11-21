@@ -1,22 +1,22 @@
 import React, { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Modal } from 'react-bootstrap';
+import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextInput';
 import { Conv2DLayerForm } from './Features/FormLayers/Conv2DLayerForm';
 import { DenseLayerForm } from './Features/FormLayers/DenseLayerForm';
-import { LayerParams } from './Models/LayerParams';
-import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextInput';
-import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
-import { IInputLayer } from './Models/InputLayer';
-import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
-import { IModelSettings } from './Models/ModelSettings';
 import { DropoutLayerForm } from './Features/FormLayers/DropoutLayerForm';
+import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
+import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
+import { LSTMLayerForm } from './Features/FormLayers/LSTMLayerForm';
+import { MaxPooling2DLayerForm } from './Features/FormLayers/MaxPooling2DLayerForm';
+import { IConv2DLayer } from './Models/Conv2DLayer';
+import { IDenseLayer } from './Models/DenseLayer';
 import { IDropoutLayer } from './Models/DropoutLayer';
 import { IGeneratorLayer } from './Models/GeneratorLayers';
-import { IConv2DLayer } from './Models/Conv2dLayer';
-import { IDenseLayer } from './Models/DenseLayer';
-import { MaxPooling2DLayerForm } from './Features/FormLayers/MaxPooling2DLayerForm';
-import { IMaxPooling2D } from './Models/MaxPooling2D';
-import { LSTMLayerForm } from './Features/FormLayers/LSTMLayerForm';
+import { IInputLayer } from './Models/InputLayer';
+import { LayerParams } from './Models/LayerParams';
 import { ILSTM } from './Models/LSTM';
+import { IMaxPooling2D } from './Models/MaxPooling2D';
+import { IModelSettings } from './Models/ModelSettings';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
