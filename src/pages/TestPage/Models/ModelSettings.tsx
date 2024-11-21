@@ -1,3 +1,5 @@
+import { IModelSettingsNNI } from "./ModelSettingsNNI";
+
 export interface IModelSettings{
     opt_algorithm: string,
     optimizer: string,
@@ -6,4 +8,5 @@ export interface IModelSettings{
     monitor_metric: string,
     epochs: number,
     batch_size: number,
+    NNI: IModelSettingsNNI
 }
