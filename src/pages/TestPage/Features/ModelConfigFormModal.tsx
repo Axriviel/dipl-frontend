@@ -48,13 +48,15 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
     // Funkce pro aktualizaci specifických NNI nastavení
     const updateNNISettings = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+        const parsedValue = name === "nni_max_trials" || name === "nni_concurrency" ? Number(value) : value;
+
         setModelParams(prev => ({
             ...prev,
             settings: {
                 ...prev.settings,
                 NNI: {
                     ...prev.settings.NNI,
-                    [name]: value
+                    [name]: parsedValue
                 }
             }
         }));
