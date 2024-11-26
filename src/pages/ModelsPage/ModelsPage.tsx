@@ -52,6 +52,10 @@ export const ModelsPage = () => {
         }
     };
 
+    const handleShowParams = () => {
+        window.location.href = `http://localhost:5000/api/get-params/${selectedModel?.id}`;
+    }
+
     const handleDeleteModel = async (modelId: number) => {
         const result = await DeleteModel(modelId);
         if (result.success) {
@@ -146,6 +150,10 @@ export const ModelsPage = () => {
 
                         <Button onClick={handleShowDetails} className="m-2">
                             Details
+                        </Button>
+
+                        <Button onClick={handleShowParams} className="m-2">
+                            Params
                         </Button>
 
                         {/* show modal only when data exist */}
