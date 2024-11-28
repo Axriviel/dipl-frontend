@@ -142,10 +142,10 @@ export const ModelsPage = () => {
                     <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-center">
                         <h4>{selectedModel?.name}</h4>
                         {/* {selectedModel.id} */}
-                        <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p>
+                        {/* <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p> */}
                         <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
                         <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
-                        <p><strong>Error:</strong> {selectedModel?.error}</p>
+                        {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
 
                         <Button onClick={handleShowDetails} className="m-2">
