@@ -1,3 +1,4 @@
+import { IModelSettingsGA } from "./ModelSettingsGA";
 import { IModelSettingsNNI } from "./ModelSettingsNNI";
 
 export interface IModelSettings{
@@ -8,5 +9,6 @@ export interface IModelSettings{
     monitor_metric: string,
     epochs: number,
     batch_size: number,
-    NNI: IModelSettingsNNI
+    NNI: IModelSettingsNNI,
+    GA: IModelSettingsGA
 }

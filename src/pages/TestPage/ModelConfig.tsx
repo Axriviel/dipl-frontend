@@ -42,6 +42,13 @@ export const ModelConfig: React.FC = () => {
         nni_concurrency: 1,
         nni_max_trials: 5,
         nni_tuner: "Evolution"
+      },
+      GA: {
+        generations: 5,
+        populationSize: 5,
+        numParents: 2,
+        mutationRate: 0.3,
+        selectionMethod: "Tournament"
       }
     },
     datasetConfig: {
@@ -116,6 +123,13 @@ export const ModelConfig: React.FC = () => {
           nni_concurrency: 1,
           nni_max_trials: 5,
           nni_tuner: "Evolution"
+        },
+        GA: {
+          generations: 5,
+          populationSize: 5,
+          numParents: 2,
+          mutationRate: 0.3,
+          selectionMethod: "Tournament"
         }
       },
       datasetConfig: {

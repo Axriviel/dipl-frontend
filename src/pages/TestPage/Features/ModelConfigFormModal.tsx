@@ -1,6 +1,7 @@
+import { ChangeEvent } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { ModelParams } from "../ModelConfig";
-import { ChangeEvent } from "react";
+import { GASettingsForm } from "./Components/GASettingsForm";
 import { NNISettingsForm } from "./Components/NNISettingsForm";
 
 interface Props {
@@ -61,6 +62,30 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
             }
         }));
     };
+    // Funkce pro aktualizaci specifických NNI nastavení
+    const updateOptimizerSpecificSettings = (
+        e: any,
+        section: "NNI" | "GA"
+    ) => {
+        const { name, value } = e.target;
+        const parsedValue =
+            ["nni_max_trials", "nni_concurrency", "generations", "populationSize", "numParents"].includes(name)
+                ? Number(value)
+                : name === "mutationRate"
+                    ? parseFloat(value)
+                    : value;
+
+        setModelParams(prev => ({
+            ...prev,
+            settings: {
+                ...prev.settings,
+                [section]: {
+                    ...prev.settings[section],
+                    [name]: parsedValue,
+                },
+            },
+        }));
+    };
 
     // Funkce pro výběr metrik pomocí checkboxů
     const handleMetricsChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +130,15 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     {modelParams.settings.opt_algorithm === "nni" && (
                         <NNISettingsForm
                             nniSettings={modelParams.settings.NNI}
-                            updateNNISettings={updateNNISettings}
+                            updateNNISettings={(e) => updateOptimizerSpecificSettings(e, "NNI")}
+                        />
+                    )}
+
+                    {/* Genetics specific section */}
+                    {modelParams.settings.opt_algorithm === "genetic" && (
+                        <GASettingsForm
+                            gaSettings={modelParams.settings.GA}
+                            updateGASettings={(e) => updateOptimizerSpecificSettings(e, "GA")}
                         />
                     )}
 
