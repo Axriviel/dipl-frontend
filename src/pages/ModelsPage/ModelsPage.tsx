@@ -145,6 +145,7 @@ export const ModelsPage = () => {
                         {/* <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p> */}
                         <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
                         <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
+                        <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
                         {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
 
