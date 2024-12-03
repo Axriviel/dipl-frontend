@@ -17,6 +17,8 @@ import { LayerParams } from './Models/LayerParams';
 import { ILSTM } from './Models/LSTM';
 import { IMaxPooling2D } from './Models/MaxPooling2D';
 import { IModelSettings } from './Models/ModelSettings';
+import { FlattenLayerForm } from './Features/FormLayers/FlattenLayerForm';
+import { IFlattenLayer } from './Models/FlattenLayer';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
@@ -346,6 +348,14 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
         return (
           <MaxPooling2DLayerForm
             currentLayer={currentLayer as IMaxPooling2D}
+            handleChange={handleChange}
+            InputsConst={InputsConst}
+          />
+        );
+      case 'Flatten':
+        return (
+          <FlattenLayerForm
+            currentLayer={currentLayer as IFlattenLayer}
             handleChange={handleChange}
             InputsConst={InputsConst}
           />

@@ -17,6 +17,7 @@ import ModelVisualizer from './ModelVisualiser.tsx';
 import { createDropoutLayer } from './Features/Layers/CreateDropoutLayer.tsx';
 import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLayer.tsx';
 import { createLSTMLayer } from './Features/Layers/CreateLSTMLayer.tsx';
+import { createFlattenLayer } from './Features/Layers/CreateFlattenLayer.tsx';
 
 export interface ModelParams {
   layers: LayerParams[];
@@ -74,7 +75,8 @@ export const ModelConfig: React.FC = () => {
     { id: 4, name: 'Generator' },
     { id: 5, name: 'Dropout' },
     { id: 6, name: 'MaxPooling2D' },
-    { id: 7, name: "LSTM" }
+    { id: 7, name: "Flatten" },
+    { id: 8, name: "LSTM" }
   ];
   const addLayer = () => {
     let newLayer: LayerParams;
@@ -101,6 +103,9 @@ export const ModelConfig: React.FC = () => {
         break;
       case 'LSTM':
         newLayer = createLSTMLayer();
+        break;
+      case 'Flatten':
+        newLayer = createFlattenLayer();
         break;
       default:
         return;
