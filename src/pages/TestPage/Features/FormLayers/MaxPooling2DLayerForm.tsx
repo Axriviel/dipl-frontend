@@ -11,14 +11,14 @@ interface Props {
 
 export const MaxPooling2DLayerForm: React.FC<Props> = ({ currentLayer, handleChange, InputsConst }) => (
     <>
-    <Form.Group controlId={`poolSize-${currentLayer.id}`}>
+    <Form.Group controlId={`pool_size-${currentLayer.id}`}>
         <Form.Label>Pool Size:</Form.Label>
         <DebouncedTextInput
-            value={currentLayer.poolSize?.join(',') || '2,2'}
+            value={currentLayer.pool_size?.join(',') || '2,2'}
             timeout={700}
             onChange={(value) => {
                 const parsedValue = value.split(',').map(Number);
-                handleChange('poolSize', parsedValue); // Odeslání změny přes handleChange
+                handleChange('pool_size', parsedValue); // Odeslání změny přes handleChange
             }}
         />
     </Form.Group>

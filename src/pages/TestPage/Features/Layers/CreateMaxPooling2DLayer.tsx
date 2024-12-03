@@ -8,7 +8,7 @@ export const createMaxPooling2DLayer = (): IMaxPooling2D => {
         id: Date.now().toString(),
         name: `maxpooling2d_${layerCounter}`,
         type: 'MaxPooling2D',
-        poolSize: [2, 2],
+        pool_size: [2, 2],
         inputs: []
     };
 };
