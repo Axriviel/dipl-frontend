@@ -141,10 +141,10 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
           ? (() => {   // Inline funkce pro přiřazení podle typu
             switch (type) {
               case 'numeric':
-                return { type: 'numeric', min: 0, max: 100, step: 1 };  // Výchozí hodnoty pro 'numeric'
+                return { type: 'numeric', min: 1, max: 100, step: 1 };  // Výchozí hodnoty pro 'numeric'
 
               case 'numeric-test':
-                return { type: 'numeric-test', min: 0, max: 100 };  // Výchozí hodnoty pro 'numeric-test'
+                return { type: 'numeric-test', min: 1, max: 100 };  // Výchozí hodnoty pro 'numeric-test'
 
               case 'text':
                 return { type: 'text', options: ['option1', 'option2'] };  // Výchozí hodnoty pro 'text'
