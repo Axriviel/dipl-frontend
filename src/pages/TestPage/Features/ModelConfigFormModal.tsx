@@ -35,16 +35,17 @@ const availableMetrics = [
 export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
 
     // Funkce pro aktualizaci nastavení
-    const updateSettings = (e: any) => {
+    const updateSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setModelParams(prev => ({
             ...prev,
             settings: {
                 ...prev.settings,
-                [name]: value
+                [name]: name === "epochs" || name === "batch_size" ? parseInt(value, 10) : value
             }
         }));
     };
+    
 
     // Funkce pro aktualizaci specifických NNI nastavení
     const updateNNISettings = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
