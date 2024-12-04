@@ -2,6 +2,7 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import { NumericRandomizers, RandomConfig } from '../../LayerConfig';
 import { IConv2DLayer } from '../../Models/Conv2DLayer';
+import { RandomizerSelect } from '../RandomizerSelect';
 
 interface Conv2DLayerFormProps {
     currentLayer: IConv2DLayer;
@@ -22,29 +23,12 @@ export const Conv2DLayerForm: React.FC<Conv2DLayerFormProps> = ({
         <>
             <Form.Group controlId={`filters-${currentLayer.id}`}>
                 <Form.Label>Filters:</Form.Label>
-                {/* <Form.Check
-                    type="checkbox"
-                    label="Randomize Filters"
-                    checked={!!currentLayer.filtersRandom}
-                    onChange={() => handleRandomToggle('filters', "numeric")}
-                /> */}
 
-                <Form.Control
-                    as="select"
-                    value={currentLayer.unitsRandom ? currentLayer.unitsRandom.type : 'value'}
-                    onChange={(e: any) => {
-                        const selectedType = e.target.value;
-
-                        handleRandomToggle('filters', selectedType as string);
-
-                    }}
-                >
-                    {NumericRandomizers.map((option) => (
-                        <option key={option} value={option}>
-                            {option === 'value' ? 'Value' : option}
-                        </option>
-                    ))}
-                </Form.Control>
+                <RandomizerSelect
+                    value={currentLayer.filtersRandom ? currentLayer.filtersRandom.type : 'value'}
+                    onChange={(selectedType: string) => handleRandomToggle('filters', selectedType)}
+                    options={NumericRandomizers} // Můžeš předat jakýkoliv seznam možností
+                />
 
                 {renderRandomConfig('filters', currentLayer.filtersRandom)}
                 {!currentLayer.filtersRandom && (
