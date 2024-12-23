@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { configData } from '../../config/config.tsx';
@@ -204,15 +204,15 @@ export const ModelConfig: React.FC = () => {
   };
 
   // set default dataset
-  // useEffect(() => {
-  //   fetch('/pima-indians-diabetes.csv')
-  //     .then(response => response.blob())
-  //     .then(blob => {
-  //       const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-  //       setFile(defaultFile);
-  //     })
-  //     .catch(error => console.error("Chyba při načítání souboru:", error));
-  // }, []);
+  useEffect(() => {
+    fetch('/pima-indians-diabetes.csv')
+      .then(response => response.blob())
+      .then(blob => {
+        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+        setFile(defaultFile);
+      })
+      .catch(error => console.error("Chyba při načítání souboru:", error));
+  }, []);
 
   const handleSubmit = async () => {
     console.log(JSON.stringify(modelParams.layers))
