@@ -5,8 +5,12 @@ import { configData } from '../../config/config.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
+import { createDropoutLayer } from './Features/Layers/CreateDropoutLayer.tsx';
+import { createFlattenLayer } from './Features/Layers/CreateFlattenLayer.tsx';
 import { createGeneratorLayer } from './Features/Layers/CreateGeneratorLayer.tsx';
 import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
+import { createLSTMLayer } from './Features/Layers/CreateLSTMLayer.tsx';
+import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLayer.tsx';
 import { ModelConfigForm } from './Features/ModelConfigFormModal.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import "./ModelConfig.css";
@@ -14,10 +18,6 @@ import { IDatasetConfig } from './Models/DatasetConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { createDropoutLayer } from './Features/Layers/CreateDropoutLayer.tsx';
-import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLayer.tsx';
-import { createLSTMLayer } from './Features/Layers/CreateLSTMLayer.tsx';
-import { createFlattenLayer } from './Features/Layers/CreateFlattenLayer.tsx';
 
 export interface ModelParams {
   layers: LayerParams[];
@@ -221,6 +221,7 @@ export const ModelConfig: React.FC = () => {
 
     try {
       if (!file) {
+        addAlert("Please select a file before submitting", "error");
         console.error("No dataset file selected");
         return;
       }

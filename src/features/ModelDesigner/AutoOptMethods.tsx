@@ -1,1 +1,1 @@
-export const AutoOptMethods = ["random", "special"]
+export const AutoOptMethods = ["random", "genetic", "special"]
