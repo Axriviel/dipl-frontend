@@ -12,6 +12,7 @@ import { DownloadModel } from "../../features/Models/DownloadModel";
 import { GetModels } from "../../features/Models/GetModels";
 import { IModel } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
+import { configData } from "../../config/config";
 // import Tippy from "@tippyjs/react";
 
 
@@ -53,7 +54,7 @@ export const ModelsPage = () => {
     };
 
     const handleShowParams = () => {
-        window.location.href = `http://localhost:5000/api/get-params/${selectedModel?.id}`;
+        window.location.href = `${configData.API_URL}/api/get-params/${selectedModel?.id}`;
     }
 
     const handleDeleteModel = async (modelId: number) => {
