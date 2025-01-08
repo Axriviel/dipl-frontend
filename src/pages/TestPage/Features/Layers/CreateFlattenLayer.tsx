@@ -6,8 +6,8 @@ export const createFlattenLayer = (): IFlattenLayer => {
     layerCounter++;
     return {
         id: Date.now().toString(),
-        name: `flatten_${layerCounter}`,
-        type: 'flatten',
+        name: `Flatten_${layerCounter}`,
+        type: 'Flatten',
         inputs: []
     };
 };
