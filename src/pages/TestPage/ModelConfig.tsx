@@ -325,6 +325,7 @@ export const ModelConfig: React.FC = () => {
       {selectedLayer && (
         <LayerConfig
           layer={selectedLayer}
+          isGenerator={false}
           updateLayer={(updatedLayer) => updateLayer(modelParams.layers.findIndex(l => l.id === updatedLayer.id), updatedLayer)}
           allLayers={modelParams.layers}
           show={showModal}

@@ -53,6 +53,7 @@ export const TextRandomizers = ["value", "text"];
 //using generic type T so i can work with interfaces for specific layers. If not defined, use LayerParams
 interface LayerConfigProps<T extends LayerParams = LayerParams> {
   layer: T;
+  isGenerator: boolean | undefined;
   updateLayer: (updatedLayer: T) => void;
   allLayers: LayerParams[];
   show: boolean;
@@ -60,7 +61,7 @@ interface LayerConfigProps<T extends LayerParams = LayerParams> {
   handleClose: () => void;
 }
 
-export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, allLayers, show, updateModelParams, handleClose }) => {
+export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, updateLayer, allLayers, show, updateModelParams, handleClose }) => {
   const [currentLayer, setCurrentLayer] = useState<LayerParams>(layer);
 
   useEffect(() => {
@@ -277,7 +278,8 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, updateLayer, al
 
   const InputsConst = (
     <Form.Group controlId={`inputs-${currentLayer.id}`}>
-      <Form.Label>Inputs:</Form.Label>
+
+      <Form.Label> {isGenerator ? "Possible follows:" : "Inputs:"}</Form.Label>
       <Form.Control
         as="select"
         multiple

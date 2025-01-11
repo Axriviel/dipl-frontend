@@ -7,6 +7,12 @@ import { LayerConfig, NumericRandomizers, RandomConfig } from '../../LayerConfig
 import { IModelSettings } from '../../Models/ModelSettings';
 import { RandomizerSelect } from '../RandomizerSelect';
 import { IGeneratorLayer } from '../../Models/GeneratorLayers';
+import { createGeneratorLayer } from '../Layers/CreateGeneratorLayer';
+import { createDropoutLayer } from '../Layers/CreateDropoutLayer';
+import { createMaxPooling2DLayer } from '../Layers/CreateMaxPooling2DLayer';
+import { createLSTMLayer } from '../Layers/CreateLSTMLayer';
+import { createFlattenLayer } from '../Layers/CreateFlattenLayer';
+import { createInputLayer } from '../Layers/CreateInputLayer';
 
 interface GeneratorLayerFormProps {
   currentLayer: IGeneratorLayer;
@@ -27,15 +33,45 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
   const [showLayerConfig, setShowLayerConfig] = useState<boolean>(false);
   const [newLayerType, setNewLayerType] = useState<string>('Dense');
 
+  const selectableLayers = [
+    { id: 1, name: 'Dense' },
+    { id: 2, name: 'Conv2D' },
+    { id: 3, name: 'Input' },
+    // { id: 4, name: 'Generator' },
+    { id: 5, name: 'Dropout' },
+    { id: 6, name: 'MaxPooling2D' },
+    { id: 7, name: "Flatten" },
+    { id: 8, name: "LSTM" }
+  ];
+
   // Přidání nové vrstvy do generátoru pomocí existujících funkcí
   const addLayerToGenerator = () => {
     let newLayer: LayerParams;
     switch (newLayerType) {
+      case "Input":
+        newLayer = createInputLayer();
+        break;
       case 'Dense':
         newLayer = createDenseLayer();
+        console.log(newLayer)
         break;
       case 'Conv2D':
         newLayer = createConv2DLayer();
+        break;
+      case 'Generator':
+        newLayer = createGeneratorLayer();
+        break;
+      case 'Dropout':
+        newLayer = createDropoutLayer();
+        break;
+      case 'MaxPooling2D':
+        newLayer = createMaxPooling2DLayer();
+        break;
+      case 'LSTM':
+        newLayer = createLSTMLayer();
+        break;
+      case 'Flatten':
+        newLayer = createFlattenLayer();
         break;
       default:
         return;
@@ -94,8 +130,11 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
           value={newLayerType}
           onChange={(e) => setNewLayerType(e.target.value)}
         >
-          <option value="Dense">Dense</option>
-          <option value="Conv2D">Conv2D</option>
+          {selectableLayers.map((layer) => (
+            <option key={layer.id} value={layer.name}>
+              {layer.name}
+            </option>
+          ))}
         </Form.Control>
       </Form.Group>
 
@@ -124,6 +163,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
       {selectedLayer && (
         <LayerConfig
           layer={selectedLayer}
+          isGenerator={true}
           updateLayer={(updatedLayer) => {
             const updatedLayers = currentLayer.possibleLayers.map((l: LayerParams) =>
               l.id === updatedLayer.id ? updatedLayer : l
