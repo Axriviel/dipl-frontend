@@ -286,9 +286,17 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
         value={currentLayer.inputs}
         onChange={handleInputsChange}
       >
-        {allLayers.filter(l => l.id !== currentLayer.id).map(l => (
-          <option key={l.id} value={l.id}>{l.type} (ID: {l.id})</option>
-        ))}
+        {/* generator layer followup can have itself, regular layer can not */}
+        {isGenerator ?
+          allLayers.map(l => (
+            <option key={l.id} value={l.id}>{l.type} (ID: {l.id})</option>
+          ))
+          :
+          allLayers.filter(l => l.id !== currentLayer.id).map(l => (
+            <option key={l.id} value={l.id}>{l.type} (ID: {l.id})</option>
+          ))
+        }
+
       </Form.Control>
     </Form.Group>
   );
