@@ -46,9 +46,11 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (notifications.length < data.notifications.length) {
-                        setHasNewNotification(true);
-                    }
+                    const hasUnreadNotifications = data.notifications.some((n: INotification) => !n.was_read);
+                    setHasNewNotification(hasUnreadNotifications)
+                    // if (notifications.length < data.notifications.length) {
+                    // setHasNewNotification(true);
+                    // }
                     setNotifications(data.notifications);
                     setTotalPages(data.totalPages); // Nastavení celkového počtu stránek
                 })
