@@ -2,9 +2,9 @@ import { IGeneratorLayer } from "../../Models/GeneratorLayers";
 
 let layerCounter = 0;
 
-export const createGeneratorLayer = (): IGeneratorLayer => {
+export const createGeneratorLayer = (customParams: Partial<IGeneratorLayer> = {}): IGeneratorLayer => {
     layerCounter++;
-    return {
+    const defaultParams: IGeneratorLayer = {
         id: Date.now().toString(),
         name: `generator_${layerCounter}`,
         type: 'Generator',
@@ -15,4 +15,6 @@ export const createGeneratorLayer = (): IGeneratorLayer => {
         possibleLayers: [],
         inputs: [],
     };
+
+    return { ...defaultParams, ...customParams };
 };
