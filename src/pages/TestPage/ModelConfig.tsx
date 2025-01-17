@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
-import { configData } from '../../config/config.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
@@ -14,23 +13,20 @@ import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLay
 import { ModelConfigForm } from './Features/ModelConfigFormModal.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import "./ModelConfig.css";
-import { IDatasetConfig } from './Models/DatasetConfig.tsx';
 import { LayerParams } from './Models/LayerParams.tsx';
+import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
+import { configData } from '../../config/config.tsx';
 
-export interface ModelParams {
-  layers: LayerParams[];
-  settings: IModelSettings;
-  datasetConfig: IDatasetConfig;
-}
+
 
 export const ModelConfig: React.FC = () => {
   const { addAlert } = useAlert();
 
 
   // init modelParams object with one input layer and default settings
-  const [modelParams, setModelParams] = useState<ModelParams>(() => ({
+  const [modelParams, setModelParams] = useState<IModelParams>(() => ({
     layers: [createInputLayer({ id: "1732203259530" }), createDenseLayer({ id: "1732203259531", units: 1, activation: "sigmoid", inputs: ["1732203259530"] })], settings: {
       opt_algorithm: "random",
       optimizer: 'adam',

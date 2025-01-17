@@ -1,19 +1,18 @@
 import { ChangeEvent } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { GASettingsForm } from "./Components/GASettingsForm";
-import { NNISettingsForm } from "./Components/NNISettingsForm";
-import { IModelParams } from "../Models/ModelParams";
-import { availableMetrics, availableMonitorMetrics, lossFunctionOptions, optAlgorithmOptions, optimizerOptions } from "../../../config/config";
+import { availableMetrics, availableMonitorMetrics, lossFunctionOptions, optAlgorithmAutoOptions, optimizerOptions } from "../../../../config/config";
+import { GASettingsForm } from "../../../TestPage/Features/Components/GASettingsForm";
+import { IAutoTaskState } from "../../Models/AutoTask";
 
 interface Props {
-    modelParams: IModelParams;
-    setModelParams: React.Dispatch<React.SetStateAction<IModelParams>>;
+    modelParams: IAutoTaskState;
+    setModelParams: React.Dispatch<React.SetStateAction<IAutoTaskState>>;
     show: boolean;
     handleClose: () => void;
 }
 
 
-export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
+export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
 
     // Funkce pro aktualizaci nastavení
     const updateSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,24 +26,6 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
         }));
     };
 
-
-    // // Funkce pro aktualizaci specifických NNI nastavení
-    // const updateNNISettings = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    //     const { name, value } = e.target;
-    //     const parsedValue = name === "nni_max_trials" || name === "nni_concurrency" ? Number(value) : value;
-
-    //     setModelParams(prev => ({
-    //         ...prev,
-    //         settings: {
-    //             ...prev.settings,
-    //             NNI: {
-    //                 ...prev.settings.NNI,
-    //                 [name]: parsedValue
-    //             }
-    //         }
-    //     }));
-    // };
-    // Funkce pro aktualizaci specifických NNI nastavení
     const updateOptimizerSpecificSettings = (
         e: any,
         section: "NNI" | "GA"
@@ -102,19 +83,19 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             value={modelParams.settings.opt_algorithm}
                             onChange={updateSettings}
                         >
-                            {optAlgorithmOptions.map(opt => (
+                            {optAlgorithmAutoOptions.map(opt => (
                                 <option key={opt} value={opt}>{opt}</option>
                             ))}
                         </Form.Control>
                     </Form.Group>
 
                     {/* Specifická sekce pro NNI */}
-                    {modelParams.settings.opt_algorithm === "nni" && (
-                        <NNISettingsForm
+                    {/* {modelParams.settings.opt_algorithm === "nni" && (
+                        <NNISettingsAutoForm
                             nniSettings={modelParams.settings.NNI}
                             updateNNISettings={(e) => updateOptimizerSpecificSettings(e, "NNI")}
                         />
-                    )}
+                    )} */}
 
                     {/* Genetics specific section */}
                     {modelParams.settings.opt_algorithm === "genetic" && (
