@@ -1,0 +1,7 @@
+.tags-container{
+    max-width: 40vh;
+}
+.tag{
+    margin-top: 0.25rem;
+    margin-bottom: 0.1rem;
+}

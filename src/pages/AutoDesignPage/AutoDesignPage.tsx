@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Badge, Button, Form } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
 import { configData } from "../../config/config";
@@ -8,6 +8,7 @@ import { DatasetConfigModal } from "../TestPage/Features/Dataset/DatasetConfigMo
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
+import "./AutoDesignPage.css"
 
 
 export const AutoDesignPage = () => {
@@ -41,11 +42,25 @@ export const AutoDesignPage = () => {
             // file: null,             // Výchozí hodnota pro soubor
         }
     });
+    const [tags, setTags] = useState<string[]>([])
 
 
     const [useTimer, setUseTimer] = useState<boolean>(false)
     const [file, setFile] = useState<File | null>(null);  // Přidáme stav pro soubor
     const { addAlert } = useAlert();
+
+    const [tagInput, setTagInput] = useState<string>("");
+
+    const handleAddTag = () => {
+        if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+            setTags([...tags, tagInput.trim()]);
+            setTagInput("");
+        }
+    };
+
+    const handleRemoveTag = (tag: string) => {
+        setTags(tags.filter(t => t !== tag));
+    };
 
 
     // Načtení výchozích vrstev při prvním renderu
@@ -121,35 +136,46 @@ export const AutoDesignPage = () => {
             console.log(JSON.stringify(autoTask.layers))
             console.log(JSON.stringify(autoTask.settings))
             console.log(JSON.stringify(autoTask.datasetConfig))
+
             if (!file) {
                 addAlert("Please select a file before submitting", "error");
                 return;
             }
 
-            // const formData = new FormData();
-            // formData.append("datasetFile", file);  // Přidáme soubor do FormData
-            // formData.append("taskType", autoTask.taskType);
-            // // formData.append("optMethod", autoTask.settings.opt_algorithm);
-            // formData.append('layers', JSON.stringify(autoTask.layers));  // Přidání vrstev do FormData
-            // formData.append("settings", JSON.stringify(autoTask.settings)) //add settings to form
-            // formData.append("datasetConfig", JSON.stringify(autoTask.datasetConfig))
-            // formData.append("maxModels", JSON.stringify(autoTask.maxModels))
-            // formData.append("timeOut", JSON.stringify(autoTask.timeOut))
+            // Přidání typ úlohy a datasetu jako tagů na začátek
+            const updatedTags = {
+                "task": autoTask.taskType,
+                "dataset": file.name,
+                "metric": autoTask.settings.monitor_metric,
+                "userTags": tags
+            };
+            console.log(JSON.stringify(updatedTags))
 
-            // const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
-            //     method: 'POST',
-            //     credentials: 'include',
-            //     body: formData,  // Odesíláme FormData místo JSON
-            // });
+            const formData = new FormData();
+            formData.append("datasetFile", file);  // Přidáme soubor do FormData
+            formData.append("taskType", autoTask.taskType);
+            // formData.append("optMethod", autoTask.settings.opt_algorithm);
+            formData.append('layers', JSON.stringify(autoTask.layers));  // Přidání vrstev do FormData
+            formData.append("settings", JSON.stringify(autoTask.settings)) //add settings to form
+            formData.append("datasetConfig", JSON.stringify(autoTask.datasetConfig))
+            formData.append("maxModels", JSON.stringify(autoTask.maxModels))
+            formData.append("timeOut", JSON.stringify(autoTask.timeOut))
+            formData.append("tags", JSON.stringify(updatedTags))
 
-            // if (!response.ok) {
-            //     const errorData = await response.json();
-            //     throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
-            // }
+            const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
+                method: 'POST',
+                credentials: 'include',
+                body: formData,  // Odesíláme FormData místo JSON
+            });
 
-            // const result = await response.json();
-            // console.log('Model successfully sent to backend:', result);
-            // addAlert(result.message, "success");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Model successfully sent to backend:', result);
+            addAlert(result.message, "success");
         } catch (error: any) {
             if (error instanceof Error) {
                 addAlert("" + error.message, "error");
@@ -287,9 +313,49 @@ export const AutoDesignPage = () => {
                         />
                     </>
                 )}
+
+                <Form.Label>Tags:</Form.Label>
+                <div className="d-flex">
+                    <Form.Control
+                        type="text"
+                        placeholder="Enter a tag and press Add"
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                    // onKeyPress={(e) => {
+                    //     if (e.key === "Enter") {
+                    //         e.preventDefault();
+                    //         handleAddTag();
+                    //     }
+                    // }
+                    // }
+                    />
+                    <Button className="ms-2" onClick={handleAddTag}>
+                        Add
+                    </Button>
+                </div>
+
+                <div className="mt-2 d-flex flex-wrap tags-container">
+                    {tags.length > 0 ? (
+                        tags.map((tag, index) => (
+                            <Badge
+                                key={index}
+                                bg="primary"
+                                className="tag mx-1"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleRemoveTag(tag)}
+                            >
+                                {tag} ✖
+                            </Badge>
+                        ))
+                    ) : (
+                        <p>No tags added yet.</p>
+                    )}
+                </div>
             </Form.Group>
 
             {renderLayerSpecificFields()}
+
+            <Button className="m-2" onClick={() => console.log(tags)}>Submit Tags</Button>
 
             <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
         </div>
