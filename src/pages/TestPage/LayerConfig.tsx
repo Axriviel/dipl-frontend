@@ -407,9 +407,11 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
           Save
         </Button>
         {/* replace with icon */}
-        <Button variant='secondary' onClick={handleDelete}>
-          Delete
-        </Button>
+        {isGenerator ? undefined :
+          <Button variant='secondary' onClick={handleDelete}>
+            Delete
+          </Button>
+        }
         <Button variant="secondary" onClick={handleClose}>
           Exit
         </Button>

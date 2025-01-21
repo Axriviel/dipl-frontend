@@ -13,6 +13,7 @@ import { createMaxPooling2DLayer } from '../Layers/CreateMaxPooling2DLayer';
 import { createLSTMLayer } from '../Layers/CreateLSTMLayer';
 import { createFlattenLayer } from '../Layers/CreateFlattenLayer';
 import { createInputLayer } from '../Layers/CreateInputLayer';
+import "./GeneratorLayerForm.css"
 
 interface GeneratorLayerFormProps {
   currentLayer: IGeneratorLayer;
@@ -43,6 +44,13 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
     { id: 7, name: "Flatten" },
     { id: 8, name: "LSTM" }
   ];
+
+  const removeLayerFromGenerator = (layerId: string) => {
+    const updatedLayers = currentLayer.possibleLayers.filter(
+      (layer: LayerParams) => layer.id !== layerId
+    );
+    handleChange('possibleLayers', updatedLayers);
+  };
 
   // Přidání nové vrstvy do generátoru pomocí existujících funkcí
   const addLayerToGenerator = () => {
@@ -111,10 +119,17 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
       {/* Seznam vrstev v generátoru */}
       {currentLayer.possibleLayers && currentLayer.possibleLayers.length > 0 ? (
         currentLayer.possibleLayers.map((layer: LayerParams, index: number) => (
-          <div key={index} className="d-flex justify-content-between">
-            <p>{layer.type} Layer (ID: {layer.id})</p>
+          <div key={index} className="d-flex justify-content-between align-items-center generator-layers-table">
+            <p className='flex-grow-1 my-0'>{layer.type} Layer (ID: {layer.id})</p>
+            <Button
+              variant="danger"
+              onClick={() => removeLayerFromGenerator(layer.id)}
+              className='mx-2'
+            >
+              Remove
+            </Button>
             <Button variant="primary" onClick={() => handleLayerClick(layer)}>
-              Edit Layer
+              Edit
             </Button>
           </div>
         ))
