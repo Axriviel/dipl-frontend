@@ -1,0 +1,15 @@
+.generator-layers-table {
+    padding: 5px;
+    margin-bottom: 2px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .generator-layers-table:hover {
+    background-color: #e6f7ff; /* Světle modrá */
+    /* transform: scale(1.02); */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
