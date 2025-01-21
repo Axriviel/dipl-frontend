@@ -355,7 +355,7 @@ export const AutoDesignPage = () => {
 
             {renderLayerSpecificFields()}
 
-            <Button className="m-2" onClick={() => console.log(tags)}>Submit Tags</Button>
+            {/* <Button className="m-2" onClick={() => console.log(tags)}>Submit Tags</Button> */}
 
             <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
         </div>
