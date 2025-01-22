@@ -2,9 +2,9 @@ import { IConv2DLayer } from "../../Models/Conv2DLayer";
 
 let layerCounter = 0;
 
-export const createConv2DLayer = (): IConv2DLayer => {
+export const createConv2DLayer = (customParams: Partial<IConv2DLayer> = {}): IConv2DLayer => {
   layerCounter++;
-  return {
+  const defaultParams: IConv2DLayer = {
     id: Date.now().toString(),
     name: `conv2d_${layerCounter}`,
     type: 'Conv2D',
@@ -14,4 +14,6 @@ export const createConv2DLayer = (): IConv2DLayer => {
     activation: 'relu',
     inputs: []
   };
+
+  return { ...defaultParams, ...customParams };
 };
