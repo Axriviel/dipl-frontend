@@ -25,6 +25,7 @@ export const AutoDesignPage = () => {
             monitor_metric: "val_accuracy",
             epochs: 10,
             batch_size: 32,
+            max_models: 5,
             GA: {
                 generations: 5,
                 populationSize: 5,
@@ -162,6 +163,8 @@ export const AutoDesignPage = () => {
             formData.append("timeOut", JSON.stringify(autoTask.timeOut))
             formData.append("tags", JSON.stringify(updatedTags))
 
+            addAlert("Task sent to server", "info")
+            
             const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
                 method: 'POST',
                 credentials: 'include',
