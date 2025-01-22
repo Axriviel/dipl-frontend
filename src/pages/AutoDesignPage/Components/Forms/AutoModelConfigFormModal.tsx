@@ -21,7 +21,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
             ...prev,
             settings: {
                 ...prev.settings,
-                [name]: name === "epochs" || name === "batch_size" ? parseInt(value, 10) : value
+                [name]: name === "epochs" || name === "batch_size" || name === "max_models" ? parseInt(value, 10) : value
             }
         }));
     };
@@ -189,6 +189,16 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                             type="number"
                             name="batch_size"
                             value={modelParams.settings.batch_size}
+                            onChange={updateSettings}
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formBatchSize">
+                        <Form.Label>Max models</Form.Label>
+                        <Form.Control
+                            type="number"
+                            name="max_models"
+                            value={modelParams.settings.max_models}
                             onChange={updateSettings}
                         />
                     </Form.Group>
