@@ -21,9 +21,9 @@ export const Navigation = () => {
             </div>
             <ul className={`${menuOpen ? "show" : ""}`}>
                 <li><NavLink to="/loginPage" className="nav-button">Login</NavLink></li>
-                <li><NavLink to="/listFeedback" className="nav-button">List Feedback</NavLink></li>
                 {isAuthenticated ?
                     <>
+                        <li><NavLink to="/listFeedback" className="nav-button">List Feedback</NavLink></li>
                         <li><NavLink to="/profile" className="nav-button">Profile</NavLink></li>
                         <li><NavLink to="/models" className="nav-button">Models</NavLink></li>
                         <li><NavLink to="/modelcreator" className="nav-button">Designer</NavLink></li>
