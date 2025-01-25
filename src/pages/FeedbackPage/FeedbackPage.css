@@ -1,21 +1,71 @@
 .feedback-container {
-    background-color: var(--random-background);
-    width: 40vw;
-    border-radius: 20px;
+    background-color: #e3f2fd;
+    /* Světle modrá, příjemná na pohled */
+    border: 2px solid #90caf9;
+    /* Světle modrý rámeček */
+    border-radius: 15px;
+    /* Zaoblené rohy */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    /* Jemný modrý stín */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 2rem;
+    /* Prostor uvnitř kontejneru */
+    width: 40rem;
+    margin: 0 auto;
+    /* Horizontální zarovnání na střed */
 }
 
 .feedback-container:hover {
-    transform: scale(1.03);
+    transform: scale(1.01);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+    /* Zvýrazněný stín při hoveru */
 }
+
 
 .feedback-container h2 {
-    border-bottom: solid 2px var(--underline-color);
+    color: #1565c0;
+    border-bottom: solid 2px #90caf9;
     padding-bottom: 0.3rem;
-    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
-@media(max-width: 768px){
-    .feedback-container{
+.form-control {
+    background-color: #ffffff;
+    border: 1px solid #90caf9;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #42a5f5;
+    box-shadow: 0 0 5px rgba(66, 165, 245, 0.5);
+    outline: none;
+}
+
+form button[type="submit"] {
+    background: linear-gradient(90deg, #42a5f5, #1e88e5);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+form button[type="submit"]:hover {
+    background: linear-gradient(90deg, #1e88e5, #1565c0);
+    transform: scale(1.05);
+}
+
+
+@media(max-width: 768px) {
+    .feedback-container {
         width: 80vw;
     }
 }
