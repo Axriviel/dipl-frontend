@@ -23,7 +23,7 @@ export const LoginPage = () => {
                         <span className="link-text d-flex justify-content-center" onClick={handleSwitch}> No account yet? </span>
                     </div> :
                     <div>
-                        Already logged in. 
+                        <span className="d-flex justify-content-center">Already logged in.</span>
                         <Logout />
                     </div>
 
