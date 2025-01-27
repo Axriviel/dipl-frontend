@@ -9,6 +9,8 @@ export interface IModelSettings{
     monitor_metric: string,
     epochs: number,
     batch_size: number,
+    max_models: number,
+    es_threshold: number,
     NNI: IModelSettingsNNI,
     GA: IModelSettingsGA
 }
