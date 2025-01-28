@@ -22,7 +22,8 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
             ...prev,
             settings: {
                 ...prev.settings,
-                [name]: name === "epochs" || name === "batch_size" || name === "max_models" ? parseInt(value, 10) : value
+                [name]: name === "epochs" || name === "batch_size" || name === "max_models" ? parseInt(value, 10) :
+                    name === "es_threshold" ? parseFloat(value) : value
             }
         }));
     };
@@ -212,11 +213,21 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         />
                     </Form.Group>
                     <Form.Group controlId="max_models">
-                        <Form.Label>Max models</Form.Label>
+                        <Form.Label>Limit - max models</Form.Label>
                         <Form.Control
                             type="number"
                             name="max_models"
                             value={modelParams.settings.max_models}
+                            onChange={updateSettings}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="es_threshold">
+                        <Form.Label>ES threshold</Form.Label>
+                        <Form.Control
+                            type="number"
+                            step="0.01"
+                            name="es_threshold"
+                            value={modelParams.settings.es_threshold}
                             onChange={updateSettings}
                         />
                     </Form.Group>

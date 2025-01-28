@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
@@ -18,6 +18,9 @@ import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { configData } from '../../config/config.tsx';
+import { IndiansPreset } from './Features/Presets/IndiansPreset.tsx';
+import { Cifar10Preset } from './Features/Presets/Cifar10Preset.tsx';
+import { PresetSelector } from './Features/Components/PresetSelector.tsx';
 
 
 
@@ -35,6 +38,8 @@ export const ModelConfig: React.FC = () => {
       monitor_metric: "val_accuracy",
       epochs: 10,
       batch_size: 32,
+      max_models: 5,
+      es_threshold: 0.7,
       NNI: {
         nni_concurrency: 1,
         nni_max_trials: 5,
@@ -59,6 +64,7 @@ export const ModelConfig: React.FC = () => {
   }));
 
   const [newLayerType, setNewLayerType] = useState<string>('Dense');
+  const [preset, setPreset] = useState<string>("Indians")
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
@@ -120,6 +126,8 @@ export const ModelConfig: React.FC = () => {
         monitor_metric: "val_accuracy",
         epochs: 10,
         batch_size: 32,
+        max_models: 5,
+        es_threshold: 0.7,
         NNI: {
           nni_concurrency: 1,
           nni_max_trials: 5,
@@ -199,21 +207,42 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
+  const handlePresetChange = (event: any) => {
+    const selectedPreset = event.target.value; 
+    console.log("Selected preset:", selectedPreset);
+    setPreset(selectedPreset); //set preset
+    switch (selectedPreset) {
+      case "Indians":
+        IndiansPreset(setModelParams, setFile);
+        break;
+
+      case "Cifar10":
+        Cifar10Preset(setModelParams, setFile);
+        break;
+
+      default:
+        console.error("Unknown preset:", selectedPreset);
+    }
+  };
+
   // set default dataset
   useEffect(() => {
-    fetch('/pima-indians-diabetes.csv')
-      .then(response => response.blob())
-      .then(blob => {
-        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-        setFile(defaultFile);
-      })
-      .catch(error => console.error("Chyba při načítání souboru:", error));
+    if (file === null) {
+      fetch('/pima-indians-diabetes.csv')
+        .then(response => response.blob())
+        .then(blob => {
+          const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+          setFile(defaultFile);
+        })
+        .catch(error => console.error("Chyba při načítání souboru:", error));
+    }
   }, []);
 
   const handleSubmit = async () => {
     console.log(JSON.stringify(modelParams.layers))
     console.log(JSON.stringify(modelParams.settings))
     console.log(JSON.stringify(modelParams.datasetConfig))
+    console.log(JSON.stringify(file?.name))
 
     try {
       if (!file) {
@@ -226,6 +255,8 @@ export const ModelConfig: React.FC = () => {
       formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
       formData.append("settings", JSON.stringify(modelParams.settings)) //add settings to form
       formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig))
+
+      addAlert("Task sent to server", "info")
 
       const response = await fetch(`${configData.API_URL}/api/save-model`, {
         method: 'POST',
@@ -263,9 +294,12 @@ export const ModelConfig: React.FC = () => {
       {/* right pannel for layer selection etc. */}
       <div className='d-flex flex-column align-items-center flex-fill layer-list'>
         <h2>Model Configuration</h2>
-        <Button onClick={handleResetAll} className='reset-button'>Reset</Button>
+        <div className='reset-button d-flex flex-row'>
+          <PresetSelector preset={preset} handlePresetChange={handlePresetChange} />
+          <Button onClick={handleResetAll} className='mx-2'>Reset</Button>
+        </div>
 
-        {/* Přidání nahrání datasetu */}
+        {/* upload dataset */}
         <input type="file" accept=".csv,.tsv,.npy,.npz,.h5" onChange={handleFileChange} />
         {file ? (
           <p>Výchozí soubor: {file.name}</p>

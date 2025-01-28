@@ -2,8 +2,7 @@ import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import { Badge, Button, Form } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
-import { configData } from "../../config/config";
-import { taskTypes } from "../../features/ModelLayers/TaskTypes";
+import { autoTaskTypes, configData } from "../../config/config";
 import { DatasetConfigModal } from "../TestPage/Features/Dataset/DatasetConfigModal";
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
@@ -26,6 +25,7 @@ export const AutoDesignPage = () => {
             epochs: 10,
             batch_size: 32,
             max_models: 5,
+            es_threshold: 0.7,
             GA: {
                 generations: 5,
                 populationSize: 5,
@@ -74,13 +74,15 @@ export const AutoDesignPage = () => {
     }, []); // Prázdné pole závislostí zajistí, že se efekt spustí jen jednou
     // set default dataset
     useEffect(() => {
-        fetch('/pima-indians-diabetes.csv')
-            .then(response => response.blob())
-            .then(blob => {
-                const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-                setFile(defaultFile);
-            })
-            .catch(error => console.error("Chyba při načítání souboru:", error));
+        if (file === null) {
+            fetch('/pima-indians-diabetes.csv')
+                .then(response => response.blob())
+                .then(blob => {
+                    const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+                    setFile(defaultFile);
+                })
+                .catch(error => console.error("Chyba při načítání souboru:", error));
+        }
     }, []);
 
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -95,6 +97,7 @@ export const AutoDesignPage = () => {
             // Pokud se mění taskType, aktualizujte layers
             if (name === "taskType") {
                 updatedTask.layers = GetTaskLayers(value);
+                handlePresetFileChange(value)
             }
 
             return updatedTask;
@@ -114,6 +117,17 @@ export const AutoDesignPage = () => {
         });
     };
 
+    // change key and value in specific layer
+    const handleLayerUnitsChange = (key: string, layer: number, value: number | string) => {
+        setAutoTask((prevState) => {
+            const layers = [...prevState.layers];
+            layers[layer] = {
+                ...layers[layer],
+                [key]: value,
+            };
+            return { ...prevState, layers };
+        });
+    };
 
     const handleDebouncedNumberChange = useCallback((key: keyof IAutoTaskState) => {
         return (value: number) => {
@@ -130,6 +144,56 @@ export const AutoDesignPage = () => {
             setFile(e.target.files[0]);  // Uložíme soubor do stavu
         }
     };
+
+    const handlePresetFileChange = (selectedTaskType: string) => {
+        switch (selectedTaskType) {
+            case "binary classification":
+                fetch('/pima-indians-diabetes.csv')
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+                        setFile(defaultFile);
+                    })
+                    .catch(error => console.error("Chyba při načítání souboru:", error));
+                break;
+            case "multiclass classification":
+                fetch('/iris_prepared.npz')
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const defaultFile = new File([blob], "iris_prepared.npz", { type: blob.type });
+                        setFile(defaultFile);
+                    })
+                    .catch(error => console.error("Chyba při načítání souboru:", error));
+
+                // dataset config for iris
+                setAutoTask((prevAutoTask) => ({
+                    ...prevAutoTask,
+                    datasetConfig: {
+                        ...prevAutoTask.datasetConfig,
+                        x_num: 4,
+                        y_num: 5,
+                    },
+                    layers: prevAutoTask.layers.map((layer, index) =>
+                        index === 0 ? { ...layer, shape: [4] } :
+                            index === 2
+                                ? { ...layer, units: 3 }
+                                : layer
+                    ),
+                }));
+
+
+                break;
+            case "image multiclass classification":
+                fetch('/cifar10_normalized.npz')
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
+                        setFile(defaultFile);
+                    })
+                    .catch(error => console.error("Chyba při načítání souboru:", error));
+                break;
+        }
+    }
 
     const handleSubmit = async () => {
         try {
@@ -164,7 +228,7 @@ export const AutoDesignPage = () => {
             formData.append("tags", JSON.stringify(updatedTags))
 
             addAlert("Task sent to server", "info")
-            
+
             const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
                 method: 'POST',
                 credentials: 'include',
@@ -191,15 +255,40 @@ export const AutoDesignPage = () => {
     };
 
 
-    const renderLayerSpecificFields = () => {
+    //definice přendat do jiného souboru?
+    const renderMethodSpecificFields = () => {
         switch (autoTask.taskType) {
-            case 'random':
+            case 'image multiclass classification':
                 return (
-                    null
+                    <>
+                        <Form.Label>Output classes:</Form.Label>
+                        <DebouncedNumberInput
+                            value={autoTask.layers[3]?.units}
+                            onChange={(value: number) =>
+                                handleLayerUnitsChange('units', 3, value)
+                            }
+                            timeout={500}
+                            placeholder="Enter number of classes"
+                            min={1}
+                            step={1}
+                        />
+                    </>
                 );
-            case 'evolution':
+            case 'multiclass classification':
                 return (
-                    null
+                    <>
+                        <Form.Label>Output classes:</Form.Label>
+                        <DebouncedNumberInput
+                            value={autoTask.layers[2]?.units}
+                            onChange={(value: number) =>
+                                handleLayerUnitsChange('units', 2, value)
+                            }
+                            timeout={500}
+                            placeholder="Enter number of classes"
+                            min={1}
+                            step={1}
+                        />
+                    </>
                 );
 
             default:
@@ -227,7 +316,7 @@ export const AutoDesignPage = () => {
                     value={autoTask.taskType || ''}
                     onChange={handleInputChange}
                 >
-                    {taskTypes.map(tt => (
+                    {autoTaskTypes.map(tt => (
                         <option key={tt} value={tt}>{tt}</option>
                     ))}
                 </Form.Control>
@@ -266,7 +355,7 @@ export const AutoDesignPage = () => {
                 <Form.Label>Upload Dataset:</Form.Label>
                 <Form.Control
                     type="file"
-                    accept=".csv"
+                    accept=".csv, .npz"
                     onChange={handleFileChange}
                 />
                 {file ? (
@@ -284,8 +373,11 @@ export const AutoDesignPage = () => {
                     }
                 />
 
+                {renderMethodSpecificFields()}
 
-                <Form.Label>Max Models:</Form.Label>
+
+
+                {/* <Form.Label>Max Models:</Form.Label>
 
                 <DebouncedNumberInput
                     value={autoTask.maxModels}
@@ -294,7 +386,7 @@ export const AutoDesignPage = () => {
                     placeholder="Enter maximum number of models"
                     min={1}
                     step={1}
-                />
+                /> */}
 
                 <Form.Check
                     type="checkbox"
@@ -356,7 +448,6 @@ export const AutoDesignPage = () => {
                 </div>
             </Form.Group>
 
-            {renderLayerSpecificFields()}
 
             {/* <Button className="m-2" onClick={() => console.log(tags)}>Submit Tags</Button> */}
 

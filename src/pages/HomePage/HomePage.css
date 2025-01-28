@@ -1,6 +1,7 @@
 .home-page-image{
-    height: auto;
-    width: 38%;
+    height: 70vh;
+    width: auto;
+    border-radius: 50px;
 }
 .main-desc{
 
