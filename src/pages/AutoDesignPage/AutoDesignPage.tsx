@@ -155,6 +155,14 @@ export const AutoDesignPage = () => {
                         setFile(defaultFile);
                     })
                     .catch(error => console.error("Chyba při načítání souboru:", error));
+                setAutoTask((prevAutoTask) => ({
+                    ...prevAutoTask,
+                    datasetConfig: {
+                        ...prevAutoTask.datasetConfig,
+                        x_num: 8,
+                        y_num: 9,
+                    },
+                }));
                 break;
             case "multiclass classification":
                 fetch('/iris_prepared.npz')
@@ -327,9 +335,16 @@ export const AutoDesignPage = () => {
                 </div>
 
                 <DatasetConfigModal
-                    modelParams={autoTask}
-                    setModelParams={setAutoTask}
-                    show={showDatasetSettingsModal}
+                    datasetParams={autoTask.datasetConfig}
+                    setDatasetConfig={(newConfig) => {
+                        setAutoTask((prev) => ({
+                            ...prev,
+                            datasetConfig: {
+                                ...prev.datasetConfig,
+                                ...newConfig,
+                            },
+                        }));
+                    }} show={showDatasetSettingsModal}
                     handleClose={handleCloseDatasetModal} />
 
                 {/* Modální okno pro úpravu nastavení modelu */}

@@ -208,7 +208,7 @@ export const ModelConfig: React.FC = () => {
   };
 
   const handlePresetChange = (event: any) => {
-    const selectedPreset = event.target.value; 
+    const selectedPreset = event.target.value;
     console.log("Selected preset:", selectedPreset);
     setPreset(selectedPreset); //set preset
     switch (selectedPreset) {
@@ -314,9 +314,16 @@ export const ModelConfig: React.FC = () => {
         </div>
 
         <DatasetConfigModal
-          modelParams={modelParams}
-          setModelParams={setModelParams}
-          show={showDatasetSettingsModal}
+          datasetParams={modelParams.datasetConfig}
+          setDatasetConfig={(newConfig) => {
+            setModelParams((prev) => ({
+              ...prev,
+              datasetConfig: {
+                ...prev.datasetConfig,
+                ...newConfig,
+              },
+            }));
+          }} show={showDatasetSettingsModal}
           handleClose={handleCloseDatasetModal} />
 
         {/* Modální okno pro úpravu nastavení modelu */}
