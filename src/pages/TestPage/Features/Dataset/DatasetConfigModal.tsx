@@ -1,8 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { configData } from '../../../../config/config';
-import { IModelParams } from '../../Models/ModelParams';
-import { IAutoTaskState } from '../../../AutoDesignPage/Models/AutoTask';
+// import { configData } from '../../../../config/config';
 import { IDatasetConfig } from '../../Models/DatasetConfig';
 
 interface DatasetConfigModalProps {

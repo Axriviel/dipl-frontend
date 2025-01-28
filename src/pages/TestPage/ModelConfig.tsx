@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button} from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
