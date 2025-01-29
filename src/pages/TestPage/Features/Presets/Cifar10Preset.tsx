@@ -3,7 +3,7 @@ import { createDenseLayer } from "../Layers/CreateDenseLayer";
 import { createFlattenLayer } from "../Layers/CreateFlattenLayer";
 import { createInputLayer } from "../Layers/CreateInputLayer";
 
-export const Cifar10Preset = async (setModelParams: Function, setFile: Function) => {
+export const Cifar10Preset = async (setModelParams: Function, setSelectedDataset: Function) => {
   setModelParams({
     layers: [
       createInputLayer({ id: "1732203259550", shape: [32, 32, 3] }),
@@ -53,11 +53,12 @@ export const Cifar10Preset = async (setModelParams: Function, setFile: Function)
   });
 
   try {
-    const response = await fetch("/cifar10_normalized.npz");
-    const blob = await response.blob();
-    const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
-    setFile(defaultFile);
+    // const response = await fetch("/cifar10_normalized.npz");
+    // const blob = await response.blob();
+    // const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
+    // setFile(defaultFile);
+    setSelectedDataset("cifar10_normalized.npz")
   } catch (error) {
-    console.error("Chyba při načítání souboru:", error);
+    console.error("Error loading file:", error);
   }
 };

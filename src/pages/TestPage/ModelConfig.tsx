@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
@@ -21,6 +21,7 @@ import { configData } from '../../config/config.tsx';
 import { IndiansPreset } from './Features/Presets/IndiansPreset.tsx';
 import { Cifar10Preset } from './Features/Presets/Cifar10Preset.tsx';
 import { PresetSelector } from './Features/Components/PresetSelector.tsx';
+import { GetUserDatasets } from '../../features/UserDatasets/GetDatasets.tsx';
 
 
 
@@ -69,7 +70,9 @@ export const ModelConfig: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [showDatasetSettingsModal, setShowDatasetSettingsModal] = useState<boolean>(false);
-  const [file, setFile] = useState<File | null>(null);  // dataset upload
+  const [datasets, setDatasets] = useState<string[]>([]);
+  const [selectedDataset, setSelectedDataset] = useState<string>("");
+  const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
   const selectableLayers = [
     { id: 1, name: 'Dense' },
     { id: 2, name: 'Conv2D' },
@@ -201,10 +204,14 @@ export const ModelConfig: React.FC = () => {
   };
 
   // Přidání handleru pro výběr souboru
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setFile(e.target.files[0]);
+  //   }
+  // };
+  const handleDatasetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDataset(e.target.value);
+    setUseDefaultDataset(false)
   };
 
   const handlePresetChange = (event: any) => {
@@ -213,11 +220,13 @@ export const ModelConfig: React.FC = () => {
     setPreset(selectedPreset); //set preset
     switch (selectedPreset) {
       case "Indians":
-        IndiansPreset(setModelParams, setFile);
+        IndiansPreset(setModelParams, setSelectedDataset);
+        setUseDefaultDataset(true);
         break;
 
       case "Cifar10":
-        Cifar10Preset(setModelParams, setFile);
+        Cifar10Preset(setModelParams, setSelectedDataset);
+        setUseDefaultDataset(true);
         break;
 
       default:
@@ -227,32 +236,41 @@ export const ModelConfig: React.FC = () => {
 
   // set default dataset
   useEffect(() => {
-    if (file === null) {
-      fetch('/pima-indians-diabetes.csv')
-        .then(response => response.blob())
-        .then(blob => {
-          const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-          setFile(defaultFile);
-        })
-        .catch(error => console.error("Chyba při načítání souboru:", error));
-    }
+    setUseDefaultDataset(true)
+    setSelectedDataset("pima-indians-diabetes.csv")
+    // if (file === null) {
+    //   fetch('/pima-indians-diabetes.csv')
+    //     .then(response => response.blob())
+    //     .then(blob => {
+    //       const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+    //       setFile(defaultFile);
+    //     })
+    //     .catch(error => console.error("Chyba při načítání souboru:", error));
+    // }
+  }, []);
+
+  // Load datasets
+  useEffect(() => {
+    GetUserDatasets()
+      .then((data) => setDatasets(data.datasets))
+      .catch((error) => console.error("Error fetching datasets:", error));
   }, []);
 
   const handleSubmit = () => {
     console.log(JSON.stringify(modelParams.layers));
     console.log(JSON.stringify(modelParams.settings));
     console.log(JSON.stringify(modelParams.datasetConfig));
-    console.log(JSON.stringify(file?.name));
+    console.log(JSON.stringify(selectedDataset));
 
-    if (!file) {
-      addAlert("Please select a file before submitting", "error");
-      console.error("No dataset file selected");
+    if (!selectedDataset) {
+      addAlert("Please select a dataset before submitting", "error");
       return;
     }
 
     // Vytvoření FormData
     const formData = new FormData();
-    formData.append("datasetFile", file);
+    formData.append("datasetFile", selectedDataset);
+    formData.append("useDefaultDataset", useDefaultDataset ? "true" : "false");
     formData.append("layers", JSON.stringify(modelParams.layers));
     formData.append("settings", JSON.stringify(modelParams.settings));
     formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig));
@@ -309,13 +327,26 @@ export const ModelConfig: React.FC = () => {
           <Button onClick={handleResetAll} className='mx-2'>Reset</Button>
         </div>
 
-        {/* upload dataset */}
-        <input type="file" accept=".csv,.tsv,.npy,.npz,.h5" onChange={handleFileChange} />
-        {file ? (
-          <p>Výchozí soubor: {file.name}</p>
-        ) : (
-          <p>Žádný soubor nebyl vybrán</p>
-        )}
+        {/* <Form.Label>Select Dataset:</Form.Label> */}
+        <div className='w-75'>
+          <Form.Select
+            className="cursor-pointer"
+            value={selectedDataset}
+            onChange={handleDatasetChange}
+          >
+            <option value="">-- Select a dataset --</option>
+            {datasets.map((dataset, index) => (
+              <option key={index} value={dataset}>
+                {dataset}
+              </option>
+            ))}
+          </Form.Select>
+          {useDefaultDataset ? (
+            <p>Default file: {selectedDataset}</p>
+          ) : (
+            <p></p>
+          )}
+        </div>
 
 
         <div className='d-flex flex-row flex-wrap'>

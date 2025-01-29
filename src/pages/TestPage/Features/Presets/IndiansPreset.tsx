@@ -1,7 +1,7 @@
 import { createDenseLayer } from "../Layers/CreateDenseLayer";
 import { createInputLayer } from "../Layers/CreateInputLayer";
 
-export const IndiansPreset = async (setModelParams: Function, setFile: Function) => {
+export const IndiansPreset = async (setModelParams: Function, setSelectedDataset: Function) => {
     setModelParams({
         layers: [
             createInputLayer({ id: "1732203259530" }),
@@ -44,10 +44,10 @@ export const IndiansPreset = async (setModelParams: Function, setFile: Function)
     });
 
     try {
-        const response = await fetch("/pima-indians-diabetes.csv");
-        const blob = await response.blob();
-        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-        setFile(defaultFile);
+        // const response = await fetch("/pima-indians-diabetes.csv");
+        // const blob = await response.blob();
+        // const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+        setSelectedDataset("pima-indians-diabetes.csv");
     } catch (error) {
         console.error("Chyba při načítání souboru:", error);
     }

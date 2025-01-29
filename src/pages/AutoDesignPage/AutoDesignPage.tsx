@@ -8,6 +8,7 @@ import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
 import "./AutoDesignPage.css"
+import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 
 
 export const AutoDesignPage = () => {
@@ -47,7 +48,9 @@ export const AutoDesignPage = () => {
 
 
     const [useTimer, setUseTimer] = useState<boolean>(false)
-    const [file, setFile] = useState<File | null>(null);  // Přidáme stav pro soubor
+    const [datasets, setDatasets] = useState<string[]>([]);
+    const [selectedDataset, setSelectedDataset] = useState<string>(""); 
+    const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
     const { addAlert } = useAlert();
 
     const [tagInput, setTagInput] = useState<string>("");
@@ -63,6 +66,12 @@ export const AutoDesignPage = () => {
         setTags(tags.filter(t => t !== tag));
     };
 
+    // Load datasets
+    useEffect(() => {
+        GetUserDatasets()
+            .then((data) => setDatasets(data.datasets))
+            .catch((error) => console.error("Error fetching datasets:", error));
+    }, []);
 
     // Načtení výchozích vrstev při prvním renderu
     useEffect(() => {
@@ -72,18 +81,27 @@ export const AutoDesignPage = () => {
             layers
         }));
     }, []); // Prázdné pole závislostí zajistí, že se efekt spustí jen jednou
+
     // set default dataset
     useEffect(() => {
-        if (file === null) {
-            fetch('/pima-indians-diabetes.csv')
-                .then(response => response.blob())
-                .then(blob => {
-                    const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-                    setFile(defaultFile);
-                })
-                .catch(error => console.error("Chyba při načítání souboru:", error));
-        }
+        setUseDefaultDataset(true)
+        setSelectedDataset("pima-indians-diabetes.csv")
+        // if (file === null) {
+        //     fetch('/pima-indians-diabetes.csv')
+        //         .then(response => response.blob())
+        //         .then(blob => {
+        //             const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+        //             setFile(defaultFile);
+        //         })
+        //         .catch(error => console.error("Chyba při načítání souboru:", error));
+        // }
     }, []);
+
+    // Zpracování změny výběru datasetu
+    const handleDatasetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedDataset(e.target.value);
+        setUseDefaultDataset(false)
+    };
 
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -139,22 +157,24 @@ export const AutoDesignPage = () => {
         };
     }, []);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setFile(e.target.files[0]);  // Uložíme soubor do stavu
-        }
-    };
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (e.target.files) {
+    //         setFile(e.target.files[0]);  // Uložíme soubor do stavu
+    //     }
+    // };
 
     const handlePresetFileChange = (selectedTaskType: string) => {
         switch (selectedTaskType) {
             case "binary classification":
-                fetch('/pima-indians-diabetes.csv')
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-                        setFile(defaultFile);
-                    })
-                    .catch(error => console.error("Chyba při načítání souboru:", error));
+                // fetch('/pima-indians-diabetes.csv')
+                //     .then(response => response.blob())
+                //     .then(blob => {
+                //         const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+                //         setFile(defaultFile);
+                //     })
+                //     .catch(error => console.error("Chyba při načítání souboru:", error));
+                setSelectedDataset("pima-indians-diabetes.csv")
+                setUseDefaultDataset(true)
                 setAutoTask((prevAutoTask) => ({
                     ...prevAutoTask,
                     datasetConfig: {
@@ -165,14 +185,15 @@ export const AutoDesignPage = () => {
                 }));
                 break;
             case "multiclass classification":
-                fetch('/iris_prepared.npz')
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const defaultFile = new File([blob], "iris_prepared.npz", { type: blob.type });
-                        setFile(defaultFile);
-                    })
-                    .catch(error => console.error("Chyba při načítání souboru:", error));
-
+                // fetch('/iris_prepared.npz')
+                //     .then(response => response.blob())
+                //     .then(blob => {
+                //         const defaultFile = new File([blob], "iris_prepared.npz", { type: blob.type });
+                //         setFile(defaultFile);
+                //     })
+                //     .catch(error => console.error("Chyba při načítání souboru:", error));
+                setSelectedDataset("iris_prepared.npz")
+                setUseDefaultDataset(true)
                 // dataset config for iris
                 setAutoTask((prevAutoTask) => ({
                     ...prevAutoTask,
@@ -192,31 +213,34 @@ export const AutoDesignPage = () => {
 
                 break;
             case "image multiclass classification":
-                fetch('/cifar10_normalized.npz')
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
-                        setFile(defaultFile);
-                    })
-                    .catch(error => console.error("Chyba při načítání souboru:", error));
+                // fetch('/cifar10_normalized.npz')
+                //     .then(response => response.blob())
+                //     .then(blob => {
+                //         const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
+                //         setFile(defaultFile);
+                //     })
+                //     .catch(error => console.error("Chyba při načítání souboru:", error));
+                setSelectedDataset("cifar10_normalized.npz")
+                setUseDefaultDataset(true)
                 break;
         }
     }
 
     const handleSubmit = () => {
-        if (!file) {
-            addAlert("Please select a file before submitting", "error");
+        if (!selectedDataset) {
+            addAlert("Please select a dataset before submitting", "error");
             return;
         }
 
         console.log(JSON.stringify(autoTask.layers));
         console.log(JSON.stringify(autoTask.settings));
         console.log(JSON.stringify(autoTask.datasetConfig));
+        console.log("Selected dataset:", selectedDataset);
 
         // Přidání typ úlohy a datasetu jako tagů
         const updatedTags = {
             "task": autoTask.taskType,
-            "dataset": file.name,
+            "dataset": selectedDataset,
             "metric": autoTask.settings.monitor_metric,
             "userTags": tags,
         };
@@ -224,7 +248,8 @@ export const AutoDesignPage = () => {
 
         // Vytvoření FormData
         const formData = new FormData();
-        formData.append("datasetFile", file);
+        formData.append("datasetFile", selectedDataset);
+        formData.append("useDefaultDataset", useDefaultDataset? "true": "false");
         formData.append("taskType", autoTask.taskType);
         formData.append("layers", JSON.stringify(autoTask.layers));
         formData.append("settings", JSON.stringify(autoTask.settings));
@@ -329,8 +354,7 @@ export const AutoDesignPage = () => {
         <div className="d-flex flex-column align-items-center">
             <Form.Group>
                 <Form.Label>Task type:</Form.Label>
-                <Form.Control
-                    as="select"
+                <Form.Select
                     name="taskType"
                     value={autoTask.taskType || ''}
                     onChange={handleInputChange}
@@ -338,7 +362,7 @@ export const AutoDesignPage = () => {
                     {autoTaskTypes.map(tt => (
                         <option key={tt} value={tt}>{tt}</option>
                     ))}
-                </Form.Control>
+                </Form.Select>
 
                 <div className='d-flex flex-row justify-content-center flex-wrap'>
                     <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
@@ -378,16 +402,23 @@ export const AutoDesignPage = () => {
                     ))}
                 </Form.Control> */}
 
-                <Form.Label>Upload Dataset:</Form.Label>
-                <Form.Control
-                    type="file"
-                    accept=".csv, .npz"
-                    onChange={handleFileChange}
-                />
-                {file ? (
-                    <p>Default file: {file.name}</p>
+                <Form.Label>Select Dataset:</Form.Label>
+                <Form.Select
+                    className="cursor-pointer"
+                    value={selectedDataset}
+                    onChange={handleDatasetChange}
+                >
+                    <option value="">-- Select a dataset --</option>
+                    {datasets.map((dataset, index) => (
+                        <option key={index} value={dataset}>
+                            {dataset}
+                        </option>
+                    ))}
+                </Form.Select>
+                {useDefaultDataset ? (
+                    <p>Default file: {selectedDataset}</p>
                 ) : (
-                    <p>No file selected</p>
+                    <p></p>
                 )}
 
                 <Form.Label>Input Shape:</Form.Label>
