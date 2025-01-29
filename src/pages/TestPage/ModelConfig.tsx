@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
@@ -238,50 +238,60 @@ export const ModelConfig: React.FC = () => {
     }
   }, []);
 
-  const handleSubmit = async () => {
-    console.log(JSON.stringify(modelParams.layers))
-    console.log(JSON.stringify(modelParams.settings))
-    console.log(JSON.stringify(modelParams.datasetConfig))
-    console.log(JSON.stringify(file?.name))
+  const handleSubmit = () => {
+    console.log(JSON.stringify(modelParams.layers));
+    console.log(JSON.stringify(modelParams.settings));
+    console.log(JSON.stringify(modelParams.datasetConfig));
+    console.log(JSON.stringify(file?.name));
 
-    try {
-      if (!file) {
-        addAlert("Please select a file before submitting", "error");
-        console.error("No dataset file selected");
-        return;
-      }
-      const formData = new FormData();
-      formData.append('datasetFile', file);  // Přidání souboru do FormData
-      formData.append('layers', JSON.stringify(modelParams.layers));  // Přidání vrstev do FormData
-      formData.append("settings", JSON.stringify(modelParams.settings)) //add settings to form
-      formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig))
+    if (!file) {
+      addAlert("Please select a file before submitting", "error");
+      console.error("No dataset file selected");
+      return;
+    }
 
-      addAlert("Task sent to server", "info")
+    // Vytvoření FormData
+    const formData = new FormData();
+    formData.append("datasetFile", file);
+    formData.append("layers", JSON.stringify(modelParams.layers));
+    formData.append("settings", JSON.stringify(modelParams.settings));
+    formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig));
 
-      const response = await fetch(`${configData.API_URL}/api/save-model`, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,  // Odeslání FormData
+    addAlert("Task sent to server", "info");
+
+    // Odeslání požadavku
+    fetch(`${configData.API_URL}/api/save-model`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Zpracování chyby odpovědi
+          return response.json().then((errorData) => {
+            throw new Error(`Error ${response.status}: ${errorData.error}`);
+          });
+        }
+        return response.json(); // Vrácení dat z odpovědi
+      })
+      .then((result) => {
+        // Zpracování úspěšné odpovědi
+        addAlert(result.message, "success");
+        console.log("Model successfully sent to backend:", result);
+      })
+      .catch((error) => {
+        // Zpracování chyby
+        if (error instanceof Error) {
+          addAlert(error.message, "error");
+          console.error("Error sending model to backend:", error.message);
+        } else {
+          addAlert("Unknown error occurred", "error");
+          console.error("Unknown error", error);
+        }
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Error ${response.status}: ${errorData.error}`);
-      }
-
-      const result = await response.json();
-      addAlert(result.message, "success")
-      console.log('Model successfully sent to backend:', result);
-    } catch (error) {
-      if (error instanceof Error) {
-        addAlert(error.message, "error");
-        console.error('Error sending model to backend:', error.message);
-      } else {
-        addAlert("" + error, "error");
-        console.error('Unknown error', error);
-      }
-    }
   };
+
 
   return (
     <div className='m-2 d-flex flex-row flex-wrap'>

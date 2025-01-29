@@ -203,64 +203,75 @@ export const AutoDesignPage = () => {
         }
     }
 
-    const handleSubmit = async () => {
-        try {
-            // console.log(autoTask)
-            console.log(JSON.stringify(autoTask.layers))
-            console.log(JSON.stringify(autoTask.settings))
-            console.log(JSON.stringify(autoTask.datasetConfig))
+    const handleSubmit = () => {
+        if (!file) {
+            addAlert("Please select a file before submitting", "error");
+            return;
+        }
 
-            if (!file) {
-                addAlert("Please select a file before submitting", "error");
-                return;
-            }
+        console.log(JSON.stringify(autoTask.layers));
+        console.log(JSON.stringify(autoTask.settings));
+        console.log(JSON.stringify(autoTask.datasetConfig));
 
-            // Přidání typ úlohy a datasetu jako tagů na začátek
-            const updatedTags = {
-                "task": autoTask.taskType,
-                "dataset": file.name,
-                "metric": autoTask.settings.monitor_metric,
-                "userTags": tags
-            };
-            console.log(JSON.stringify(updatedTags))
+        // Přidání typ úlohy a datasetu jako tagů
+        const updatedTags = {
+            "task": autoTask.taskType,
+            "dataset": file.name,
+            "metric": autoTask.settings.monitor_metric,
+            "userTags": tags,
+        };
+        console.log(JSON.stringify(updatedTags));
 
-            const formData = new FormData();
-            formData.append("datasetFile", file);  // Přidáme soubor do FormData
-            formData.append("taskType", autoTask.taskType);
-            // formData.append("optMethod", autoTask.settings.opt_algorithm);
-            formData.append('layers', JSON.stringify(autoTask.layers));  // Přidání vrstev do FormData
-            formData.append("settings", JSON.stringify(autoTask.settings)) //add settings to form
-            formData.append("datasetConfig", JSON.stringify(autoTask.datasetConfig))
-            formData.append("maxModels", JSON.stringify(autoTask.maxModels))
-            formData.append("timeOut", JSON.stringify(autoTask.timeOut))
-            formData.append("tags", JSON.stringify(updatedTags))
+        // Vytvoření FormData
+        const formData = new FormData();
+        formData.append("datasetFile", file);
+        formData.append("taskType", autoTask.taskType);
+        formData.append("layers", JSON.stringify(autoTask.layers));
+        formData.append("settings", JSON.stringify(autoTask.settings));
+        formData.append("datasetConfig", JSON.stringify(autoTask.datasetConfig));
+        formData.append("maxModels", JSON.stringify(autoTask.maxModels));
+        formData.append("timeOut", JSON.stringify(autoTask.timeOut));
+        formData.append("tags", JSON.stringify(updatedTags));
 
-            addAlert("Task sent to server", "info")
+        addAlert("Task sent to server", "info");
 
-            const response = await fetch(`${configData.API_URL}/api/models/save-auto-model`, {
-                method: 'POST',
-                credentials: 'include',
-                body: formData,  // Odesíláme FormData místo JSON
+        // Udržujte referenci na stav, aby se zabránilo aktualizaci odmountované komponenty
+        let isMounted = true;
+
+        fetch(`${configData.API_URL}/api/models/save-auto-model`, {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((errorData) => {
+                        throw new Error(
+                            errorData.error || `HTTP error! Status: ${response.status}`
+                        );
+                    });
+                }
+                return response.json();
+            })
+            .then((result) => {
+                if (isMounted) {
+                    console.log("Model successfully sent to backend:", result);
+                    addAlert(result.message, "success");
+                }
+            })
+            .catch((error) => {
+                if (isMounted) {
+                    console.error("Error sending model to backend:", error);
+                    addAlert(error.message || "Unexpected error occurred", "error");
+                }
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Model successfully sent to backend:', result);
-            addAlert(result.message, "success");
-        } catch (error: any) {
-            if (error instanceof Error) {
-                addAlert("" + error.message, "error");
-                console.error('Error sending model to backend:', error);
-            } else {
-                console.error('Unexpected error', error);
-                addAlert("Unexpected error", "error");
-            }
-        }
+        // Zajistíme, že po odmountování komponenty se zabrání změnám stavu
+        return () => {
+            isMounted = false;
+        };
     };
+
 
 
     //definice přendat do jiného souboru?
