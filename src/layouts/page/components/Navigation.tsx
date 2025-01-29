@@ -25,6 +25,7 @@ export const Navigation = () => {
                     <>
                         <li><NavLink to="/listFeedback" className="nav-button">List Feedback</NavLink></li>
                         <li><NavLink to="/profile" className="nav-button">Profile</NavLink></li>
+                        <li><NavLink to="/userDatasets" className="nav-button">Datasets</NavLink></li>
                         <li><NavLink to="/models" className="nav-button">Models</NavLink></li>
                         <li><NavLink to="/modelcreator" className="nav-button">Designer</NavLink></li>
                         {/* <li><NavLink to="/test"> className="nav-button mx-1">test</NavLink></li> */}

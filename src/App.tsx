@@ -18,6 +18,7 @@ import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { ModelConfig } from './pages/TestPage/ModelConfig';
 import { ListNotifications } from './pages/ListNotifications/ListNotifications';
 import { NotificationProvider } from './features/Notifications/NotificationsContext';
+import { UserDatasetsPage } from './pages/UserDatasetsPage/UserDatasetsPage';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/listNotifications" element={<ListNotifications />} />
                   <Route path="/t" element={<HomePage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/userDatasets" element={<UserDatasetsPage />} />
                   <Route path="/feedback" element={<FeedbackPage />} />
                 </Route>
               </Routes>
