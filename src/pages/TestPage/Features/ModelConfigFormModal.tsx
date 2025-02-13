@@ -16,7 +16,7 @@ interface Props {
 export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
 
     // Funkce pro aktualizaci nastavení
-    const updateSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updateSettings = (e: any) => {
         const { name, value } = e.target;
         setModelParams(prev => ({
             ...prev,
@@ -97,7 +97,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     {/* choose optimization algorithm */}
                     <Form.Group controlId="formOptimizer">
                         <Form.Label>Opt Algorithm</Form.Label>
-                        <Form.Control
+                        <Form.Select
                             as="select"
                             name="opt_algorithm"
                             value={modelParams.settings.opt_algorithm}
@@ -106,7 +106,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             {optAlgorithmOptions.map(opt => (
                                 <option key={opt} value={opt}>{opt}</option>
                             ))}
-                        </Form.Control>
+                        </Form.Select>
                     </Form.Group>
 
                     {/* Specifická sekce pro NNI */}
@@ -143,8 +143,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     {/* Výběr optimalizátoru */}
                     <Form.Group controlId="formOptimizer">
                         <Form.Label>Optimizer</Form.Label>
-                        <Form.Control
-                            as="select"
+                        <Form.Select
                             name="optimizer"
                             value={modelParams.settings.optimizer}
                             onChange={updateSettings}
@@ -152,14 +151,13 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             {optimizerOptions.map(opt => (
                                 <option key={opt} value={opt}>{opt}</option>
                             ))}
-                        </Form.Control>
+                        </Form.Select>
                     </Form.Group>
 
                     {/* select loss function */}
                     <Form.Group controlId="formLossFunction">
                         <Form.Label>Loss Function</Form.Label>
-                        <Form.Control
-                            as="select"
+                        <Form.Select
                             name="loss"
                             value={modelParams.settings.loss}
                             onChange={updateSettings}
@@ -168,7 +166,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                                 <option key={lfo} value={lfo}>{lfo}</option>
                             ))}
 
-                        </Form.Control>
+                        </Form.Select>
                     </Form.Group>
 
                     {/* Checkboxy pro výběr metrik */}
@@ -188,8 +186,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     {/* Výběr monitorovací metriky */}
                     <Form.Group controlId="formMonitorMetric">
                         <Form.Label>Monitor Metric</Form.Label>
-                        <Form.Control
-                            as="select"
+                        <Form.Select
                             name="monitor_metric"
                             value={modelParams.settings.monitor_metric}
                             onChange={updateSettings}
@@ -204,7 +201,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                                     <option key={metric} value={metric}>{metric}</option>
                                 ))
                             }
-                        </Form.Control>
+                        </Form.Select>
                     </Form.Group>
 
                     {/* Nastavení epoch a batch size */}

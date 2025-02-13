@@ -52,7 +52,7 @@ export const LSTMLayerForm: React.FC<Props> = ({
                 />
                 {renderRandomConfig('activation', currentLayer.activationRandom)}
                 {!currentLayer.activationRandom && (
-                    <Form.Control
+                    <Form.Select
                         as="select"
                         value={currentLayer.activation || 'tanh'}
                         onChange={(e: any) =>
@@ -64,14 +64,14 @@ export const LSTMLayerForm: React.FC<Props> = ({
                                 {func}
                             </option>
                         ))}
-                    </Form.Control>
+                    </Form.Select>
                 )}
             </Form.Group>
 
             {/* Recurrent Activation */}
             <Form.Group controlId={`recurrentActivation-${currentLayer.id}`}>
                 <Form.Label>Recurrent Activation:</Form.Label>
-                <Form.Control
+                <Form.Select
                     as="select"
                     value={currentLayer.recurrentActivation || 'sigmoid'}
                     onChange={(e: any) =>
@@ -83,7 +83,7 @@ export const LSTMLayerForm: React.FC<Props> = ({
                             {func}
                         </option>
                     ))}
-                </Form.Control>
+                </Form.Select>
             </Form.Group>
 
             {/* Return Sequences */}

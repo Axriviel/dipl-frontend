@@ -16,7 +16,7 @@ export const RandomizerSelect: React.FC<Props> = ({
     return (
         <Form.Group controlId="randomTypeSelect">
             <Form.Label>{label}</Form.Label>
-            <Form.Control
+            <Form.Select
                 as="select"
                 value={value}
                 onChange={(e) => { 
@@ -28,7 +28,7 @@ export const RandomizerSelect: React.FC<Props> = ({
                     {option}
                 </option>
             ))}
-        </Form.Control>
+        </Form.Select>
         </Form.Group >
     );
 };

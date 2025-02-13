@@ -31,7 +31,7 @@ export const InputLayerForm: React.FC<InputLayerFormProps> = ({ currentLayer, ha
 
             <Form.Group controlId={`dtype-${currentLayer.id}`}>
                 <Form.Label>Data Type (dtype):</Form.Label>
-                <Form.Control
+                <Form.Select
                     as="select"
                     value={currentLayer.dtype || 'float32'}
                     onChange={(e: any) => handleChange('dtype', e.target.value)}
@@ -40,7 +40,7 @@ export const InputLayerForm: React.FC<InputLayerFormProps> = ({ currentLayer, ha
                     <option value="float64">float64</option>
                     <option value="int32">int32</option>
                     <option value="bool">bool</option>
-                </Form.Control>
+                </Form.Select>
             </Form.Group>
 
             <Form.Group controlId={`sparse-${currentLayer.id}`}>

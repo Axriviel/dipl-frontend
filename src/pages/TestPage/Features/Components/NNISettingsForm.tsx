@@ -34,7 +34,7 @@ export const NNISettingsForm: React.FC<Props> = ({ nniSettings, updateNNISetting
 
             <Form.Group controlId="formNNITuner">
                 <Form.Label>NNI Tuner</Form.Label>
-                <Form.Control
+                <Form.Select
                     as="select"
                     name="nni_tuner"
                     value={nniSettings.nni_tuner}
@@ -43,7 +43,7 @@ export const NNISettingsForm: React.FC<Props> = ({ nniSettings, updateNNISetting
                     {nniTunerOptions.map(tuner => (
                         <option key={tuner} value={tuner}>{tuner}</option>
                     ))}
-                </Form.Control>
+                </Form.Select>
             </Form.Group>
         </>
     );

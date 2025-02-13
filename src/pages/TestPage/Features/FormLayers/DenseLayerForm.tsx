@@ -92,7 +92,7 @@ export const DenseLayerForm: React.FC<Props> = ({
                 {/* prvním parametrem je prvek, který bude randomizován a druhým je proměnná v currentLayer, do které se to ukládá */}
                 {renderRandomConfig('activation', currentLayer.activationRandom)}
                 {!currentLayer.activationRandom && (
-                    <Form.Control
+                    <Form.Select
                         as="select"
                         value={currentLayer.activation || ''}
                         onChange={handleActivationChange}
@@ -102,7 +102,7 @@ export const DenseLayerForm: React.FC<Props> = ({
                                 {fn}
                             </option>
                         ))}
-                    </Form.Control>
+                    </Form.Select>
                 )}
             </Form.Group>
             {InputsConst}

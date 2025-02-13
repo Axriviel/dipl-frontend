@@ -140,7 +140,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
       {/* Výběr typu vrstvy a tlačítko pro přidání */}
       <Form.Group>
         <Form.Label>Add a layer to generator</Form.Label>
-        <Form.Control
+        <Form.Select
           as="select"
           value={newLayerType}
           onChange={(e) => setNewLayerType(e.target.value)}
@@ -150,7 +150,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
               {layer.name}
             </option>
           ))}
-        </Form.Control>
+        </Form.Select>
       </Form.Group>
 
       <Button onClick={addLayerToGenerator}>Add Layer</Button>
@@ -159,7 +159,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
       {/* Výběr první vrstvy */}
       <Form.Group>
         <Form.Label>Set first layer</Form.Label>
-        <Form.Control
+        <Form.Select
           as="select"
           value={currentLayer.firstLayer || ""}
           onChange={(e) => handleChange('firstLayer', e.target.value)}
@@ -170,7 +170,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
               {layer.name} (ID: {layer.id})
             </option>
           ))}
-        </Form.Control>
+        </Form.Select>
       </Form.Group>
 
 
