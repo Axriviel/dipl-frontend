@@ -25,9 +25,11 @@ export const Cifar10Preset = async (setModelParams: Function, setSelectedDataset
       opt_algorithm: "random",
       optimizer: "adam",
       loss: "binary_crossentropy",
+      model_name: "myModel",
       metrics: ["accuracy"],
       monitor_metric: "val_accuracy",
       epochs: 3,
+      es_threshold: 0.5,
       batch_size: 32,
       max_models: 5,
       NNI: {
