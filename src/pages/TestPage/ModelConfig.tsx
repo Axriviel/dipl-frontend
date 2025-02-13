@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
+import { configData } from '../../config/config.tsx';
+import { GetUserDatasets } from '../../features/UserDatasets/GetDatasets.tsx';
+import { PresetSelector } from './Features/Components/PresetSelector.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
@@ -11,17 +14,15 @@ import { createInputLayer } from './Features/Layers/CreateInputLayer.tsx';
 import { createLSTMLayer } from './Features/Layers/CreateLSTMLayer.tsx';
 import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLayer.tsx';
 import { ModelConfigForm } from './Features/ModelConfigFormModal.tsx';
+import { Cifar10Preset } from './Features/Presets/Cifar10Preset.tsx';
+import { IndiansPreset } from './Features/Presets/IndiansPreset.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import "./ModelConfig.css";
 import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { configData } from '../../config/config.tsx';
-import { IndiansPreset } from './Features/Presets/IndiansPreset.tsx';
-import { Cifar10Preset } from './Features/Presets/Cifar10Preset.tsx';
-import { PresetSelector } from './Features/Components/PresetSelector.tsx';
-import { GetUserDatasets } from '../../features/UserDatasets/GetDatasets.tsx';
+import { PresetsModal } from './Features/Presets/PresetsModal.tsx';
 
 
 
@@ -35,6 +36,7 @@ export const ModelConfig: React.FC = () => {
       opt_algorithm: "random",
       optimizer: 'adam',
       loss: 'binary_crossentropy',
+      model_name: "myModel",
       metrics: ['accuracy'],
       monitor_metric: "val_accuracy",
       epochs: 10,
@@ -70,6 +72,7 @@ export const ModelConfig: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [showDatasetSettingsModal, setShowDatasetSettingsModal] = useState<boolean>(false);
+  const [showPresetsModal, setShowPresetModal] = useState<boolean>(false);
   const [datasets, setDatasets] = useState<string[]>([]);
   const [selectedDataset, setSelectedDataset] = useState<string>("");
   const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
@@ -125,6 +128,7 @@ export const ModelConfig: React.FC = () => {
         opt_algorithm: "random",
         optimizer: 'adam',
         loss: 'binary_crossentropy',
+        model_name: "myModel",
         metrics: ['accuracy'],
         monitor_metric: "val_accuracy",
         epochs: 10,
@@ -184,6 +188,8 @@ export const ModelConfig: React.FC = () => {
   const handleOpenSettingsModal = () => setShowSettingsModal(true);
   const handleCloseSettingsModal = () => setShowSettingsModal(false);
 
+  const handleOpenPresetModal = () => setShowPresetModal(true);
+  const handleClosePresetModal = () => setShowPresetModal(false);
 
   const handleOpenDatasetSettingsModal = () => setShowDatasetSettingsModal(true);
   const handleCloseDatasetModal = () => setShowDatasetSettingsModal(false);  // Zavření modálního okna datasetu
@@ -322,10 +328,10 @@ export const ModelConfig: React.FC = () => {
       {/* right pannel for layer selection etc. */}
       <div className='d-flex flex-column align-items-center flex-fill layer-list'>
         <h2>Model Configuration</h2>
-        <div className='reset-button d-flex flex-row'>
+        {/* <div className='reset-button d-flex flex-row'>
           <PresetSelector preset={preset} handlePresetChange={handlePresetChange} />
           <Button onClick={handleResetAll} className='mx-2'>Reset</Button>
-        </div>
+        </div> */}
 
         {/* <Form.Label>Select Dataset:</Form.Label> */}
         <div className='w-75'>
@@ -353,6 +359,7 @@ export const ModelConfig: React.FC = () => {
           <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
           <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
         </div>
+        <Button className='m-1' onClick={handleOpenPresetModal}> Preset Settings</Button>
 
         <DatasetConfigModal
           datasetParams={modelParams.datasetConfig}
@@ -374,6 +381,19 @@ export const ModelConfig: React.FC = () => {
           show={showSettingsModal}
           handleClose={handleCloseSettingsModal}
         />
+
+        <PresetsModal
+          show={showPresetsModal}
+          handleClose={handleClosePresetModal}
+          preset={preset}
+          handlePresetChange={handlePresetChange}
+          setModelParams={setModelParams}
+          handleResetAll={() => {
+            handleResetAll();
+            handleClosePresetModal();
+          }}
+        />
+
 
         <select className='p-1 m-1' value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
           {selectableLayers.map((layer) => (
