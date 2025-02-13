@@ -125,6 +125,21 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         />
                     )}
 
+
+                    <Form.Group controlId="modelName">
+                        <Form.Label>Model Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="model_name"
+                            value={modelParams.settings.model_name}
+                            onChange={updateSettings}
+                        />
+                        <Form.Text className="text-muted">
+                            Enter a unique name for your model.
+                        </Form.Text>
+                    </Form.Group>
+
+
                     {/* Výběr optimalizátoru */}
                     <Form.Group controlId="formOptimizer">
                         <Form.Label>Optimizer</Form.Label>
