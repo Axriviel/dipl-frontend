@@ -204,6 +204,29 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
+  const handleDownloadJson = (filename: string) => {
+
+    const data = {
+      creation_config: [
+        modelParams.layers,      // Vrstva modelu
+        modelParams.settings,    // Nastavení modelu
+        modelParams.datasetConfig // Konfigurace datasetu
+      ]
+    }
+
+    const jsonStr = JSON.stringify(data, null, 2); // Naformátovaný JSON
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Funkce pro aktualizaci vrstev z ModelVisualizer - přidání propojení mezi vrstvami
   const handleLayersChange = (updatedLayers: LayerParams[]) => {
     setModelParams((prev) => ({ ...prev, layers: updatedLayers }));
@@ -359,6 +382,9 @@ export const ModelConfig: React.FC = () => {
           <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
           <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
         </div>
+        <Button onClick={() => handleDownloadJson("myModel.json")}>
+          Stáhnout JSON
+        </Button>
         <Button className='m-1' onClick={handleOpenPresetModal}> Preset Settings</Button>
 
         <DatasetConfigModal
