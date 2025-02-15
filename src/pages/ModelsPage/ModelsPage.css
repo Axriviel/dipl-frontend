@@ -16,10 +16,16 @@
     margin: 3rem;
 }
 
-.metric-chart{
+.metric-chart {
     width: 50%;
     min-height: 200px;
     max-height: 70vh;
+}
+
+.list-group-item:hover {
+    transform: scale(1.03);
+    z-index: 1;
+    border: 1px solid #0d6efd;
 }
 
 @media (max-width: 768px) {
@@ -33,7 +39,8 @@
     .section-border {
         border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     }
-    .metric-chart{
+
+    .metric-chart {
         width: 100%;
         max-height: 40vh;
     }

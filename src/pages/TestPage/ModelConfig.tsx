@@ -3,7 +3,6 @@ import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
 import { configData } from '../../config/config.tsx';
 import { GetUserDatasets } from '../../features/UserDatasets/GetDatasets.tsx';
-import { PresetSelector } from './Features/Components/PresetSelector.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
@@ -16,13 +15,15 @@ import { createMaxPooling2DLayer } from './Features/Layers/CreateMaxPooling2DLay
 import { ModelConfigForm } from './Features/ModelConfigFormModal.tsx';
 import { Cifar10Preset } from './Features/Presets/Cifar10Preset.tsx';
 import { IndiansPreset } from './Features/Presets/IndiansPreset.tsx';
+import { PresetsModal } from './Features/Presets/PresetsModal.tsx';
 import { LayerConfig } from './LayerConfig.tsx';
 import "./ModelConfig.css";
 import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { PresetsModal } from './Features/Presets/PresetsModal.tsx';
+import { LayerTable } from './Features/Components/LayerTable.tsx';
+import Tippy from '@tippyjs/react';
 
 
 
@@ -243,6 +244,21 @@ export const ModelConfig: React.FC = () => {
     setUseDefaultDataset(false)
   };
 
+  const handleDelete = (id: string) => {
+    const idToDelete = id;
+
+    // Filtruje vrstvy a odstraní aktuální vrstvu
+    const updatedLayers = modelParams.layers.filter(layer => layer.id !== idToDelete);
+
+    // remove deleted layer id from inputs of other layers
+    const cleanedLayers = updatedLayers.map(layer => ({
+      ...layer,
+      inputs: layer.inputs.filter(inputId => inputId !== idToDelete)
+    }));
+
+    handleUpdateModelParams(cleanedLayers);
+  };
+
   const handlePresetChange = (event: any) => {
     const selectedPreset = event.target.value;
     console.log("Selected preset:", selectedPreset);
@@ -341,7 +357,7 @@ export const ModelConfig: React.FC = () => {
 
 
   return (
-    <div className='m-2 d-flex flex-row flex-wrap'>
+    <div className='m-2 d-flex flex-row flex-wrap justify-content-center align-items-center'>
       <div className='model-visualizer'>
         {/* <h3>Model Visualizer</h3> */}
 
@@ -356,36 +372,77 @@ export const ModelConfig: React.FC = () => {
           <Button onClick={handleResetAll} className='mx-2'>Reset</Button>
         </div> */}
 
-        {/* <Form.Label>Select Dataset:</Form.Label> */}
-        <div className='w-75'>
-          <Form.Select
-            className="cursor-pointer"
-            value={selectedDataset}
-            onChange={handleDatasetChange}
-          >
-            <option value="">-- Select a dataset --</option>
-            {datasets.map((dataset, index) => (
-              <option key={index} value={dataset}>
-                {dataset}
-              </option>
-            ))}
-          </Form.Select>
-          {useDefaultDataset ? (
-            <p>Default file: {selectedDataset}</p>
-          ) : (
-            <p></p>
-          )}
+        <div className='model-menu-container mb-1'>
+          <div className='d-flex flex-column justify-content-center align-items-center'>
+            {/* <Form.Label>Select Dataset:</Form.Label> */}
+            <div className='w-75' >
+              <Tippy content="Dataset used to train model">
+                <Form.Select
+                  className="cursor-pointer"
+                  value={selectedDataset}
+                  onChange={handleDatasetChange}
+                >
+                  <option value="">-- Select a dataset --</option>
+                  {datasets.map((dataset, index) => (
+                    <option key={index} value={dataset}>
+                      {dataset}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Tippy>
+              {useDefaultDataset ? (
+                <p className='mb-0 px-1 text-center'><i>Default file: {selectedDataset}</i></p>
+              ) : (
+                <></>
+              )}
+            </div>
+
+
+            <div className='w-100 d-flex flex-row flex-wrap justify-content-center'>
+
+              <div className=' d-flex flex-column justify-content-end align-items-center flex-grow-1'>
+                <Tippy content='Select a layer to be added into model'>
+                  <Form.Select
+                    className="m-1 cursor-pointer layer-select-dropdown"
+                    value={newLayerType}
+                    onChange={(e) => setNewLayerType(e.target.value)}
+                  >
+                    <option value="">-- Select a layer --</option>
+                    {selectableLayers.map((layer) => (
+                      <option key={layer.id} value={layer.name}>
+                        {layer.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Tippy>
+
+                <Button className='m-1' onClick={addLayer}>Add Layer</Button>
+              </div>
+
+              <div className=' d-flex flex-column justify-content-center align-items-center flex-grow-1'>
+                <Tippy content="Dataset specific settings">
+                  <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
+                </Tippy>
+
+                <Tippy content="Model specific settings">
+                  <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
+                </Tippy>
+
+                <Tippy content="Presets and saved model uploading logic">
+                  <Button className='m-1' onClick={handleOpenPresetModal}> Preset Settings</Button>
+                </Tippy>
+              </div>
+            </div>
+          </div>
         </div>
 
 
-        <div className='d-flex flex-row flex-wrap'>
-          <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
-          <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
-        </div>
-        <Button onClick={() => handleDownloadJson("myModel.json")}>
-          Stáhnout JSON
-        </Button>
-        <Button className='m-1' onClick={handleOpenPresetModal}> Preset Settings</Button>
+
+        <Tippy content="Download currently defined model as JSON">
+          <Button className="m-1 download-json-button" onClick={() => handleDownloadJson("myModel.json")}>
+            Download JSON
+          </Button>
+        </Tippy>
 
         <DatasetConfigModal
           datasetParams={modelParams.datasetConfig}
@@ -421,17 +478,20 @@ export const ModelConfig: React.FC = () => {
         />
 
 
-        <select className='p-1 m-1' value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
-          {selectableLayers.map((layer) => (
-            <option key={layer.id} value={layer.name}>
-              {layer.name}
-            </option>
-          ))}
-        </select>
+        {/* <select className='p-1 m-1' value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
+            {selectableLayers.map((layer) => (
+              <option key={layer.id} value={layer.name}>
+                {layer.name}
+              </option>
+            ))}
+          </select> */}
 
-        <Button onClick={addLayer}>Add Layer</Button>
-
-        {modelParams.layers.map((layer) => (
+        <LayerTable
+          layers={modelParams.layers}
+          handleLayerClick={handleLayerClick}
+          handleDelete={handleDelete}
+        />
+        {/* {modelParams.layers.map((layer) => (
           <Button
             key={layer.id}
             onClick={() => handleLayerClick(layer)}
@@ -440,7 +500,7 @@ export const ModelConfig: React.FC = () => {
           >
             {layer.type} Layer (ID: {layer.id})
           </Button>
-        ))}
+        ))} */}
 
         <Button onClick={handleSubmit}>Submit Model</Button>
       </div>
@@ -451,6 +511,7 @@ export const ModelConfig: React.FC = () => {
           layer={selectedLayer}
           isGenerator={false}
           updateLayer={(updatedLayer) => updateLayer(modelParams.layers.findIndex(l => l.id === updatedLayer.id), updatedLayer)}
+          handleDelete={handleDelete}
           allLayers={modelParams.layers}
           show={showModal}
           updateModelParams={handleUpdateModelParams}

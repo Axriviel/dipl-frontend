@@ -76,10 +76,10 @@ export const loadWithReplace = (file: File,
     setModelParams: (params: IModelParams) => void
 ) => {
 
-    var lastGeneratorIndex
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
+            // var lastGeneratorIndex
             const jsonData = JSON.parse(e.target?.result as string);
 
             if (!jsonData.creation_config || !Array.isArray(jsonData.creation_config)) {
@@ -89,7 +89,7 @@ export const loadWithReplace = (file: File,
 
             const [l, settings, datasetConfig] = jsonData.creation_config;
 
-            const [layers_params, t, generator_conf] = jsonData.used_params;
+            const [layers_params, _t, generator_conf] = jsonData.used_params;
 
             console.log(Object.values(layers_params)[0])
             console.log("original lp", layers_params)
@@ -112,7 +112,7 @@ export const loadWithReplace = (file: File,
                 }
 
                 if (layer.type.toLowerCase() === "generator") {
-                    lastGeneratorIndex = (layer: any) => layers.findIndex(l => l.id === layer.id);
+                    // lastGeneratorIndex = (layer: any) => layers.findIndex(l => l.id === layer.id);
                     console.log("lgi", lastGeneratorId)
                     // Přidáme do layersFinal vrstvy před generátorem
                     // layersFinal.push(...layers.slice(layersFinal.length, index));

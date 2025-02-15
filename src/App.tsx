@@ -19,6 +19,7 @@ import { ModelConfig } from './pages/TestPage/ModelConfig';
 import { ListNotifications } from './pages/ListNotifications/ListNotifications';
 import { NotificationProvider } from './features/Notifications/NotificationsContext';
 import { UserDatasetsPage } from './pages/UserDatasetsPage/UserDatasetsPage';
+import 'tippy.js/dist/tippy.css'; // optional
 
 function App() {
 

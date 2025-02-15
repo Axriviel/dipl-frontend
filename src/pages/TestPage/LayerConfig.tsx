@@ -55,13 +55,14 @@ interface LayerConfigProps<T extends LayerParams = LayerParams> {
   layer: T;
   isGenerator: boolean | undefined;
   updateLayer: (updatedLayer: T) => void;
+  handleDelete: (id: string) => void;
   allLayers: LayerParams[];
   show: boolean;
   updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
   handleClose: () => void;
 }
 
-export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, updateLayer, allLayers, show, updateModelParams, handleClose }) => {
+export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, updateLayer, handleDelete, allLayers, show, updateModelParams, handleClose }) => {
   const [currentLayer, setCurrentLayer] = useState<LayerParams>(layer);
 
   useEffect(() => {
@@ -73,19 +74,19 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
     handleClose();
   };
 
-  const handleDelete = () => {
-    const idToDelete = currentLayer.id;
+  const handleDeleteClick = () => {
+     handleDelete(currentLayer.id);
 
-    // Filtruje vrstvy a odstraní aktuální vrstvu
-    const updatedLayers = allLayers.filter(layer => layer.id !== idToDelete);
+    // // Filtruje vrstvy a odstraní aktuální vrstvu
+    // const updatedLayers = allLayers.filter(layer => layer.id !== idToDelete);
 
-    // remove deleted layer id from inputs of other layers
-    const cleanedLayers = updatedLayers.map(layer => ({
-      ...layer,
-      inputs: layer.inputs.filter(inputId => inputId !== idToDelete)
-    }));
+    // // remove deleted layer id from inputs of other layers
+    // const cleanedLayers = updatedLayers.map(layer => ({
+    //   ...layer,
+    //   inputs: layer.inputs.filter(inputId => inputId !== idToDelete)
+    // }));
 
-    updateModelParams(cleanedLayers);
+    // updateModelParams(cleanedLayers);
     handleClose();
   };
 
@@ -408,7 +409,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
         </Button>
         {/* replace with icon */}
         {isGenerator ? undefined :
-          <Button variant='secondary' onClick={handleDelete}>
+          <Button variant='secondary' onClick={handleDeleteClick}>
             Delete
           </Button>
         }

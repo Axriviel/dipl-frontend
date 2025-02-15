@@ -1,25 +1,87 @@
 .model-visualizer {
     height: 75vh;
-    width: 70vw;
+    width: 60vw;
 }
 
 .layer-list {
     height: 75vh;
+    max-width: 39.5vw;
     border-left: 1px red solid;
     overflow: auto;
 }
 
-.reset-button{
+/* .reset-button {
     position: fixed;
     right: 1rem;
     top: 11vh;
     z-index: 1000;
+} */
+
+.download-json-button {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 1000;
 }
 
+.layer-table {
+    max-width: 38vw;
+    width: 30vw !important;
+    overflow: auto;
+    border-radius: 10px;
+    /* border: 1px solid #ddd; */
+    /* Lepší vizuální oddělení */
+}
+
+.layer-table thead {
+    position: sticky;
+    top: 0;
+    background: white;
+    /* Důležité! Bez toho by header překryl text */
+    z-index: 100;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.layer-id {
+    max-width: 150px;
+    /* Nastav maximální šířku */
+    white-space: nowrap;
+    /* Zabrání zalomení textu */
+    overflow: hidden;
+    /* Skryje přetekající část */
+    text-overflow: ellipsis;
+    /* Přidá "..." pokud je text příliš dlouhý */
+    cursor: pointer;
+    /* Změní kurzor na ukazatel */
+
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.model-menu-container {
+    width: 30vw;
+    padding: 1rem;
+    background-color: #e7e7e7;
+    border-radius: 10px;
+    
+}
+
+.layer-select-dropdown {
+    width: 60%;
+}
+
+
 @media (max-width: 1100px) {
-    .model-visualizer{
+    .model-visualizer {
         width: 100vh;
     }
+
     .layer-list {
         height: auto;
         border: none;

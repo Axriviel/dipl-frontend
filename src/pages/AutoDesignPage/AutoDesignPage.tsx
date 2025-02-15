@@ -32,7 +32,7 @@ export const AutoDesignPage = () => {
                 nni_concurrency: 1,
                 nni_max_trials: 5,
                 nni_tuner: "Evolution"
-              },
+            },
             GA: {
                 generations: 5,
                 populationSize: 5,
@@ -55,7 +55,7 @@ export const AutoDesignPage = () => {
 
     const [useTimer, setUseTimer] = useState<boolean>(false)
     const [datasets, setDatasets] = useState<string[]>([]);
-    const [selectedDataset, setSelectedDataset] = useState<string>(""); 
+    const [selectedDataset, setSelectedDataset] = useState<string>("");
     const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
     const { addAlert } = useAlert();
 
@@ -255,7 +255,7 @@ export const AutoDesignPage = () => {
         // Vytvoření FormData
         const formData = new FormData();
         formData.append("datasetFile", selectedDataset);
-        formData.append("useDefaultDataset", useDefaultDataset? "true": "false");
+        formData.append("useDefaultDataset", useDefaultDataset ? "true" : "false");
         formData.append("taskType", autoTask.taskType);
         formData.append("layers", JSON.stringify(autoTask.layers));
         formData.append("settings", JSON.stringify(autoTask.settings));
@@ -358,6 +358,7 @@ export const AutoDesignPage = () => {
 
     return (
         <div className="d-flex flex-column align-items-center">
+            <h2 className="p-2">Model Configuration</h2>
             <Form.Group>
                 <Form.Label>Task type:</Form.Label>
                 <Form.Select
@@ -422,9 +423,9 @@ export const AutoDesignPage = () => {
                     ))}
                 </Form.Select>
                 {useDefaultDataset ? (
-                    <p>Default file: {selectedDataset}</p>
+                    <p className='mb-0 px-1 text-center'><i>Default file: {selectedDataset}</i></p>
                 ) : (
-                    <p></p>
+                    <></>
                 )}
 
                 <Form.Label>Input Shape:</Form.Label>

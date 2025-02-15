@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 import { CustomizableDesign } from '../../components/DesignerOptions/CustomizableDesign';
 import { FullAutoDesign } from '../../components/DesignerOptions/FullAutoDesign';
 import "./ModelDesignerPage.css";
+import Tippy from '@tippyjs/react';
 
 export const ModelDesignerPage: React.FC = () => {
     const [selectedDesigner, handleSelectDesigner] = useState(false)
@@ -63,14 +64,23 @@ export const ModelDesignerPage: React.FC = () => {
     return (
         <div>
             {chosenDesigner === false ?
-                <div className='d-flex flex-column align-items-center p-3'>
-                    <h2 className='bordered-down'>Volba designeru</h2>
-                    <Button className='m-1' onClick={handleSelectCustomized}>Custom</Button>
-                    <Button className='m-1' onClick={handleSelectFullAuto}>Automated</Button>
+                <div className='d-flex flex-column align-items-center p-3 basic-card'>
+                    <h2 className='bordered-down'>Choose the designer</h2>
+                    <div className='mt-1 m-3 d-flex flex-row justify-content-center'>
+                        <Tippy content="Designer allowing manual addition of layers, choice of architecture etc.">
+                            <Button className='mx-3' onClick={handleSelectCustomized}>Custom</Button>
+                        </Tippy>
+                        <Tippy content="Designer that allows automated model creation">
+                            <Button className='mx-3' onClick={handleSelectFullAuto}>Automated</Button>
+                        </Tippy>
+                    </div>
                 </div>
                 :
                 <>
-                    <Button className='switch-button' onClick={handleDesignerChange}>Switch</Button>
+                    <Tippy content="Switch to other designer" placement='bottom'>
+                        <Button className='switch-button' onClick={handleDesignerChange}>Flip</Button>
+                    </Tippy>
+
                     {selectedDesigner !== false ?
                         <FullAutoDesign /> :
                         <CustomizableDesign />

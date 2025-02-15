@@ -1,13 +1,15 @@
 import Tippy from "@tippyjs/react";
 import React from "react";
 import { Table, Button } from "react-bootstrap";
+import { LayerParams } from "../../Models/LayerParams";
 
 interface Props {
-    layers: { id: string | number; type: string }[];
+    layers: LayerParams[];
     handleLayerClick: (layer: any) => void;
+    handleDelete: (id: string) => void;
 }
 
-export const LayerTable: React.FC<Props> = ({ layers, handleLayerClick }) => {
+export const LayerTable: React.FC<Props> = ({ layers, handleLayerClick, handleDelete }) => {
     return (
         <div className="layer-table">
             <Table striped bordered hover>
@@ -30,7 +32,10 @@ export const LayerTable: React.FC<Props> = ({ layers, handleLayerClick }) => {
                                 </Tippy>
                             </td>
                             <td className="text-center">
-                                <Button variant="primary" onClick={() => handleLayerClick(layer)}>
+                                <Button variant="danger" className="mx-1" onClick={() => handleDelete(layer.id)}>
+                                    Remove
+                                </Button>
+                                <Button variant="primary" className="mx-1" onClick={() => handleLayerClick(layer)}>
                                     Edit
                                 </Button>
                             </td>
