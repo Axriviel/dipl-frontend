@@ -134,14 +134,14 @@ export const ModelsPage = () => {
 
                     {/* chart section */}
                     <div className="metric-chart col-md-6 col-lg-6 p-3 section-border">
-                        <h4 className="text-center">Graf metriky</h4>
+                        <h4 className="text-center">Metric history graph</h4>
                         {/* <MetricLineChart metricValues={mockTrainingData} metric="accuracy" /> */}
                         <MetricLineChart metricValues={selectedModel.metric_values_history} metric={selectedModel.watched_metric} />
                     </div>
 
                     {/* right section */}
-                    <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-center">
-                        <h4>{selectedModel?.name}</h4>
+                    <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-left">
+                        <h3>{selectedModel?.name}</h3>
                         {/* {selectedModel.id} */}
                         {/* <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p> */}
                         <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
@@ -149,7 +149,6 @@ export const ModelsPage = () => {
                         <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
                         {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
-
                         <Button onClick={handleShowDetails} className="m-2">
                             Details
                         </Button>
@@ -157,7 +156,6 @@ export const ModelsPage = () => {
                         <Button onClick={handleShowParams} className="m-2">
                             Params
                         </Button>
-
                         {/* show modal only when data exist */}
                         {modelStructureData && (
                             <ModelStructureModal
