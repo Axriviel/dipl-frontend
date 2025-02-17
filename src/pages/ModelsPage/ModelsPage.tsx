@@ -13,6 +13,7 @@ import { GetModels } from "../../features/Models/GetModels";
 import { IModel } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
 import { configData } from "../../config/config";
+import DataModal from "../../components/ModelDetails/ModelDetailsModal";
 // import Tippy from "@tippyjs/react";
 
 
@@ -27,6 +28,7 @@ export const ModelsPage = () => {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
 
     const handleClose = () => setShowDetailsModal(false);
+    const handleCloseParams = () => setShowParamsModal(false);
 
     const handleDownload = () => {
         DownloadModel(selectedModel!.id)
@@ -53,9 +55,25 @@ export const ModelsPage = () => {
         }
     };
 
-    const handleShowParams = () => {
-        window.location.href = `${configData.API_URL}/api/get-params/${selectedModel?.id}`;
-    }
+    // const handleShowParams = () => {
+    //     window.location.href = `${configData.API_URL}/api/get-params/${selectedModel?.id}`;
+    // }
+
+    const [showParamsModal, setShowParamsModal] = useState(false);
+    const [paramsModalData, setParamsModalData] = useState(null);
+
+
+    const handleShowParams = async () => {
+        try {
+            const response = await fetch(`${configData.API_URL}/api/get-params/${selectedModel?.id}`);
+            if (!response.ok) throw new Error("Failed to fetch data");
+            const data = await response.json();
+            setParamsModalData(data);
+            setShowParamsModal(true);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const handleDeleteModel = async (modelId: number) => {
         const result = await DeleteModel(modelId);
@@ -156,6 +174,10 @@ export const ModelsPage = () => {
                         <Button onClick={handleShowParams} className="m-2">
                             Params
                         </Button>
+
+
+                        {paramsModalData && <DataModal show={showParamsModal} data={paramsModalData} onClose={handleCloseParams} />}
+
                         {/* show modal only when data exist */}
                         {modelStructureData && (
                             <ModelStructureModal

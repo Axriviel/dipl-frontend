@@ -24,6 +24,7 @@ import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { LayerTable } from './Features/Components/LayerTable.tsx';
 import Tippy from '@tippyjs/react';
+import { DownloadJSON } from '../../features/Models/DownloadJSON.tsx';
 
 
 
@@ -439,7 +440,13 @@ export const ModelConfig: React.FC = () => {
 
 
         <Tippy content="Download currently defined model as JSON">
-          <Button className="m-1 download-json-button" onClick={() => handleDownloadJson("myModel.json")}>
+          <Button className="m-1 download-json-button" onClick={DownloadJSON({
+            creation_config: [
+              modelParams.layers,      // Vrstva modelu
+              modelParams.settings,    // Nastavení modelu
+              modelParams.datasetConfig // Konfigurace datasetu
+            ]
+          })}>
             Download JSON
           </Button>
         </Tippy>
@@ -506,18 +513,20 @@ export const ModelConfig: React.FC = () => {
       </div>
 
 
-      {selectedLayer && (
-        <LayerConfig
-          layer={selectedLayer}
-          isGenerator={false}
-          updateLayer={(updatedLayer) => updateLayer(modelParams.layers.findIndex(l => l.id === updatedLayer.id), updatedLayer)}
-          handleDelete={handleDelete}
-          allLayers={modelParams.layers}
-          show={showModal}
-          updateModelParams={handleUpdateModelParams}
-          handleClose={handleCloseModal}
-        />
-      )}
-    </div>
+      {
+        selectedLayer && (
+          <LayerConfig
+            layer={selectedLayer}
+            isGenerator={false}
+            updateLayer={(updatedLayer) => updateLayer(modelParams.layers.findIndex(l => l.id === updatedLayer.id), updatedLayer)}
+            handleDelete={handleDelete}
+            allLayers={modelParams.layers}
+            show={showModal}
+            updateModelParams={handleUpdateModelParams}
+            handleClose={handleCloseModal}
+          />
+        )
+      }
+    </div >
   );
 };
