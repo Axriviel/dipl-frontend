@@ -15,7 +15,7 @@ export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, on
       <Modal.Header closeButton>
         <Modal.Title>Model: {modelName}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className='overflow-auto'>
         <Table striped bordered hover>
           <thead className='text-center'>
             <tr>
