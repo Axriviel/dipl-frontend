@@ -14,6 +14,7 @@ import { IModel } from "../../features/Models/models/Model";
 import "./ModelsPage.css";
 import { configData } from "../../config/config";
 import DataModal from "../../components/ModelDetails/ModelDetailsModal";
+import Tippy from "@tippyjs/react";
 // import Tippy from "@tippyjs/react";
 
 
@@ -167,14 +168,16 @@ export const ModelsPage = () => {
                         <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
                         {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
                         <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
-                        <Button onClick={handleShowDetails} className="m-2">
-                            Details
-                        </Button>
-
-                        <Button onClick={handleShowParams} className="m-2">
-                            Params
-                        </Button>
-
+                        <Tippy content="Display layers summary">
+                            <Button onClick={handleShowDetails} className="m-2">
+                                Summary
+                            </Button>
+                        </Tippy>
+                        <Tippy content="Show model parameters and downloadable JSON" placement="bottom">
+                            <Button onClick={handleShowParams} className="m-2">
+                                Params
+                            </Button>
+                        </Tippy>
 
                         {paramsModalData && <DataModal show={showParamsModal} data={paramsModalData} onClose={handleCloseParams} />}
 
