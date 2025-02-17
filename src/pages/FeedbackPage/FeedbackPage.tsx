@@ -34,7 +34,7 @@ export const FeedbackPage = () => {
 
     return (
         <div className="feedback-container mx-auto my-5 p-5 d-flex justify-content-center">
-            <Form onSubmit={handleSubmit} className="d-flex flex-column align-items-center w-50">
+            <Form onSubmit={handleSubmit} className="d-flex flex-column align-items-center w-75">
                 <Form.Label><h2 className="">Provide feedback</h2></Form.Label>
                 <Form.Group className="mb-3 w-100" controlId="user">
                     <Form.Label>User:</Form.Label>
