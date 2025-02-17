@@ -46,7 +46,7 @@
     outline: none;
 }
 
-form button[type="submit"] {
+/* form button[type="submit"] {
     background: linear-gradient(90deg, #42a5f5, #1e88e5);
     border: none;
     border-radius: 8px;
@@ -61,7 +61,7 @@ form button[type="submit"] {
 form button[type="submit"]:hover {
     background: linear-gradient(90deg, #1e88e5, #1565c0);
     transform: scale(1.05);
-}
+} */
 
 
 @media(max-width: 768px) {

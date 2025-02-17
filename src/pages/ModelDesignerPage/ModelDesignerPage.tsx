@@ -64,7 +64,7 @@ export const ModelDesignerPage: React.FC = () => {
     return (
         <div>
             {chosenDesigner === false ?
-                <div className='d-flex flex-column align-items-center p-3 basic-card'>
+                <div className='d-flex flex-column align-items-center p-3 my-5 basic-card'>
                     <h2 className='bordered-down'>Choose the designer</h2>
                     <div className='mt-1 m-3 d-flex flex-row justify-content-center'>
                         <Tippy content="Designer allowing manual addition of layers, choice of architecture etc.">

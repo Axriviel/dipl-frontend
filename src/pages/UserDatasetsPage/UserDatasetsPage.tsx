@@ -37,7 +37,7 @@ export const UserDatasetsPage = () => {
     };
 
     const handleDeleteDataset = (dataset: string) => {
-        if (!window.confirm(`Opravdu chcete smazat dataset "${dataset}"?`)) return;
+        if (!window.confirm(`Do you really want to delete "${dataset}"?`)) return;
 
         fetch(`${configData.API_URL}/api/dataset/delete`, {
             method: "DELETE",
@@ -58,13 +58,13 @@ export const UserDatasetsPage = () => {
                 fetchDatasets();
             })
             .catch((error) => {
-                console.error("Chyba při mazání datasetu:", error);
-                addAlert(error.message || "Nepodařilo se smazat dataset", "error");
+                console.error("Error deleting dataset:", error);
+                addAlert(error.message || "Error deleting dataset", error);
             });
     };
 
     return (
-        <div className="datasets-container">
+        <div className="datasets-container my-5">
             <h2>My datasets:</h2>
 
             <Button className="upload-button" onClick={() => setShowUploadModal(true)}>
