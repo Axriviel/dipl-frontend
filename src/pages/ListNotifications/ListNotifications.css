@@ -8,20 +8,21 @@
 }
 
 .notification .mark-as-read {
-    position: absolute; /*notification musí mít pos relative, aby to fungovalo*/
+    position: absolute;
+    /*notification musí mít pos relative, aby to fungovalo*/
     right: 0.5rem;
     top: 0.5rem;
     cursor: pointer;
 }
 
 /* mírné posunutí, aby byla nějaká interakce s tím, že jsme ji vybrali */
-.notification:hover{
-    transform: translateY(-5px);  
+.notification:hover {
+    transform: translateY(-5px);
     transform: scale(1.05);
-    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-li{
+li {
     list-style: none;
 }
 
@@ -38,4 +39,10 @@ li{
 
 .notification-title {
     border-bottom: solid black 1px;
+}
+
+@media (max-width:1100px) {
+    .notification{
+        width: 75vw;
+    }
 }
