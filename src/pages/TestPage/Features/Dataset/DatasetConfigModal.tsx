@@ -1,69 +1,84 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 // import { configData } from '../../../../config/config';
 import { IDatasetConfig } from '../../Models/DatasetConfig';
+import { configData } from '../../../../config/config';
+import { IModelParams } from '../../Models/ModelParams';
 
 interface DatasetConfigModalProps {
+    datasetName: string;
     datasetParams: IDatasetConfig;
-    setDatasetConfig: (newConfig: Partial<IDatasetConfig>) => void;
+    setDatasetConfig: React.Dispatch<React.SetStateAction<IModelParams>>;
     show: boolean;
     handleClose: () => void;
 }
 
-export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetParams, setDatasetConfig, show, handleClose }) => {
-    // const [columnNames, setColumnNames] = useState<string[]>([]); // Seznam názvů sloupců
+export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetName, datasetParams, setDatasetConfig, show, handleClose }) => {
+    const [columnNames, setColumnNames] = useState<string[]>([]); // Seznam názvů sloupců
 
     // Funkce pro načtení sloupců z datasetu po nahrání
-    // const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (!file) return;
+    useEffect(() => {
+        if (!datasetName) return;
 
-    //     const formData = new FormData();
-    //     formData.append("file", file);
+        fetch(`${configData.API_URL}/api/dataset/get_column_names`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dataset_name: datasetName }),
 
-    //     const response = await fetch(`${configData.API_URL}/api/get_column_names`, {
-    //         method: "POST",
-    //         credentials: "include",
-    //         body: formData,
-    //     });
-    //     const data = await response.json();
-    //     setColumnNames(data); // Nastavení názvů sloupců
-    //     setDatasetConfig({ file });
-    // };
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(`Error ${response.status}: ${errorData.error}`);
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (!data.columns) {
+                    throw new Error("Invalid response format: missing 'columns' field");
+                }
+                console.log("✅ Přijaté sloupce:", data.columns);
+                setColumnNames(data.columns);  // Opraveno, aby se správně nastavily sloupce
+            })
+            .catch(error => {
+                console.error("Error fetching column names:", error);
+            });
+    }, [datasetName]);
 
-    // // Výběr vstupních sloupců (X)
-    // const handleXColumnsChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    //     const selectedColumns = Array.from(e.target.selectedOptions, option => option.value);
-    //     setModelParams(prev => ({
-    //         ...prev,
-    //         datasetConfig: {
-    //             ...prev.datasetConfig,
-    //             x_columns: selectedColumns
-    //         },
-    //         inputLayer: {
-    //             ...prev.inputLayer,
-    //             shape: [selectedColumns.length]
-    //         }
-    //     }));
-    // };
+    // Výběr vstupních sloupců (X)
+    // Výběr vstupních sloupců (X)
+    const handleXColumnsChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const selectedColumns = Array.from(e.target.selectedOptions, option => option.value);
+        setDatasetConfig(prev => ({
+            ...prev, 
+            datasetConfig: {
+                ...prev.datasetConfig,
+                x_columns: selectedColumns
+            }
+        }));
+    };
 
-    // // Výběr výstupního sloupce (Y)
-    // const handleYColumnChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    //     setModelParams(prev => ({
-    //         ...prev,
-    //         datasetConfig: {
-    //             ...prev.datasetConfig,
-    //             y_column: e.target.value
-    //         }
-    //     }));
-    // };
+    const handleYColumnChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        setDatasetConfig(prev => ({
+            ...prev,
+            datasetConfig: {
+                ...prev.datasetConfig,
+                y_column: e.target.value
+            }
+        }));
+    };
 
     //handle change
     const handleDatasetConfigChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         const numericValue = parseFloat(value);
 
-        setDatasetConfig({ [name]: numericValue });
+        setDatasetConfig(prev => ({
+            ...prev,
+            [name]: numericValue
+        }));
     };
 
     return (
@@ -85,24 +100,25 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetP
                     </Form.Group> */}
 
                     {/* Výběr sloupců pro vstupy X */}
-                    {/* <Form.Group controlId="formXColumns">
+                    <Form.Group controlId="formXColumns">
                         <Form.Label>Input Columns (X)</Form.Label>
-                        <Form.Control as="select" multiple>
+                        <Form.Select as="select" multiple onChange={handleXColumnsChange}>
                             {columnNames.map((col, index) => (
                                 <option key={index} value={col}>{col}</option>
                             ))}
-                        </Form.Control>
-                    </Form.Group> */}
+                        </Form.Select>
+                    </Form.Group>
 
                     {/* Výběr sloupce pro výstup Y */}
-                    {/* <Form.Group controlId="formYColumn">
+                    <Form.Group controlId="formYColumn">
                         <Form.Label>Output Column (Y)</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Select as="select" onChange={handleYColumnChange}>
+                            <option value="">-- Select Output Column --</option>
                             {columnNames.map((col, index) => (
                                 <option key={index} value={col}>{col}</option>
                             ))}
-                        </Form.Control>
-                    </Form.Group> */}
+                        </Form.Select>
+                    </Form.Group>
 
                     {/* Nastavení testovací velikosti */}
                     <Form.Group controlId="formTestSize">

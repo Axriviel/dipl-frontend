@@ -324,35 +324,35 @@ export const ModelConfig: React.FC = () => {
     addAlert("Task sent to server", "info");
 
     // Odeslání požadavku
-    fetch(`${configData.API_URL}/api/save-model`, {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          // Zpracování chyby odpovědi
-          return response.json().then((errorData) => {
-            throw new Error(`Error ${response.status}: ${errorData.error}`);
-          });
-        }
-        return response.json(); // Vrácení dat z odpovědi
-      })
-      .then((result) => {
-        // Zpracování úspěšné odpovědi
-        addAlert(result.message, "success");
-        console.log("Model successfully sent to backend:", result);
-      })
-      .catch((error) => {
-        // Zpracování chyby
-        if (error instanceof Error) {
-          addAlert(error.message, "error");
-          console.error("Error sending model to backend:", error.message);
-        } else {
-          addAlert("Unknown error occurred", "error");
-          console.error("Unknown error", error);
-        }
-      });
+    // fetch(`${configData.API_URL}/api/save-model`, {
+    //   method: "POST",
+    //   credentials: "include",
+    //   body: formData,
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       // Zpracování chyby odpovědi
+    //       return response.json().then((errorData) => {
+    //         throw new Error(`Error ${response.status}: ${errorData.error}`);
+    //       });
+    //     }
+    //     return response.json(); // Vrácení dat z odpovědi
+    //   })
+    //   .then((result) => {
+    //     // Zpracování úspěšné odpovědi
+    //     addAlert(result.message, "success");
+    //     console.log("Model successfully sent to backend:", result);
+    //   })
+    //   .catch((error) => {
+    //     // Zpracování chyby
+    //     if (error instanceof Error) {
+    //       addAlert(error.message, "error");
+    //       console.error("Error sending model to backend:", error.message);
+    //     } else {
+    //       addAlert("Unknown error occurred", "error");
+    //       console.error("Unknown error", error);
+    //     }
+    //   });
 
   };
 
@@ -452,16 +452,10 @@ export const ModelConfig: React.FC = () => {
         </Tippy>
 
         <DatasetConfigModal
+          datasetName={selectedDataset}
           datasetParams={modelParams.datasetConfig}
-          setDatasetConfig={(newConfig) => {
-            setModelParams((prev) => ({
-              ...prev,
-              datasetConfig: {
-                ...prev.datasetConfig,
-                ...newConfig,
-              },
-            }));
-          }} show={showDatasetSettingsModal}
+          setDatasetConfig={setModelParams}
+          show={showDatasetSettingsModal}
           handleClose={handleCloseDatasetModal} />
 
         {/* Modální okno pro úpravu nastavení modelu */}
