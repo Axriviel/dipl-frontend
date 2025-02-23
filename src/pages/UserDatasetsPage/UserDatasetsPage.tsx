@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./UserDatasetsPage.css";
 import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 import { IUserDataset } from "../../features/UserDatasets/Models/UserDataset";
-import { Button} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { configData } from "../../config/config";
 import { UploadDatasetModal } from "./Components/UploadDatasetModal";
@@ -10,7 +10,9 @@ import { UploadDatasetModal } from "./Components/UploadDatasetModal";
 export const UserDatasetsPage = () => {
     const [datasets, setDatasets] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [detailsLoading, setDetailsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [datasetDetails, setDatasetDetails] = useState<any>(null);
     const [selectedDataset, setSelectedDataset] = useState<string | null>(null);
     const { addAlert } = useAlert();
     const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
@@ -18,6 +20,12 @@ export const UserDatasetsPage = () => {
     useEffect(() => {
         fetchDatasets();
     }, []);
+
+    useEffect(() => {
+        if (selectedDataset) {
+            fetchDatasetDetails(selectedDataset);
+        }
+    }, [selectedDataset]);
 
     const fetchDatasets = () => {
         setLoading(true);
@@ -29,6 +37,34 @@ export const UserDatasetsPage = () => {
             .catch((error) => {
                 setError(error.message);
                 setLoading(false);
+            });
+    };
+
+    const fetchDatasetDetails = (dataset: string) => {
+        setDetailsLoading(true)
+        fetch(`${configData.API_URL}/api/dataset/details`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dataset_name: dataset }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((errorData) => {
+                        throw new Error(errorData.error || `Error ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setDatasetDetails(data);
+                setDetailsLoading(false)
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error fetching dataset details:", error);
+                addAlert(error.message || "Error fetching dataset details", "error");
+                setDatasetDetails(null);
             });
     };
 
@@ -48,7 +84,7 @@ export const UserDatasetsPage = () => {
             .then((response) => {
                 if (!response.ok) {
                     return response.json().then((errorData) => {
-                        throw new Error(errorData.error || `Chyba ${response.status}`);
+                        throw new Error(errorData.error || `Error ${response.status}`);
                     });
                 }
                 return response.json();
@@ -56,10 +92,14 @@ export const UserDatasetsPage = () => {
             .then((result) => {
                 addAlert(result.message, "success");
                 fetchDatasets();
+                if (selectedDataset === dataset) {
+                    setSelectedDataset(null);
+                    setDatasetDetails(null);
+                }
             })
             .catch((error) => {
                 console.error("Error deleting dataset:", error);
-                addAlert(error.message || "Error deleting dataset", error);
+                addAlert(error.message || "Error deleting dataset", "error");
             });
     };
 
@@ -100,14 +140,56 @@ export const UserDatasetsPage = () => {
                     ))}
                 </ul>
             )}
+            {/* {console.log(datasetDetails.shape?? "")} */}
+            {
+                selectedDataset && datasetDetails && (
+                    !detailsLoading ?
+                        <div className="dataset-details">
+                            <h3>Dataset Details: {selectedDataset}</h3>
+                            <div><strong>Rows:</strong>
+                                <ul>
+                                    {datasetDetails.shape
+                                        ? Object.entries(datasetDetails.num_rows).map(([key, value]) => (
+                                            <li key={key}>
+                                                <strong>{key}:</strong> {JSON.stringify(value)}
+                                            </li>
+                                        ))
+                                        : "N/A"}
+                                </ul>
 
-            {selectedDataset && <p>Selected dataset: {selectedDataset}</p>}
+                            </div>
+                            <div><strong>Columns:</strong>
+                                <ul>
+                                    {datasetDetails.shape
+                                        ? Object.entries(datasetDetails.num_columns).map(([key, value]) => (
+                                            <li key={key}>
+                                                <strong>{key}:</strong> {JSON.stringify(value)}
+                                            </li>
+                                        ))
+                                        : "N/A"}
+                                </ul>
+                            </div>
+                            <div>  <strong>Shape:</strong>
 
-            {/* Modální okno pro nahrání datasetu */}
+                                <ul>
+                                    {datasetDetails.shape
+                                        ? Object.entries(datasetDetails.shape).map(([key, value]) => (
+                                            <li key={key}>
+                                                <strong>{key}:</strong> {JSON.stringify(value)}
+                                            </li>
+                                        ))
+                                        : "N/A"}
+                                </ul>
+                            </div>
+                            <p><strong>Column names:</strong> {datasetDetails.column_names ? datasetDetails.column_names.join(", ") : "N/A"}</p>
+                        </div>
+                        :<p>"Loading"</p>
+            )}
+
             <UploadDatasetModal
                 show={showUploadModal}
                 handleClose={() => setShowUploadModal(false)}
-                onUploadSuccess={fetchDatasets} // Aktualizace seznamu datasetů po nahrání
+                onUploadSuccess={fetchDatasets}
             />
         </div>
     );
