@@ -15,10 +15,13 @@ interface DatasetConfigModalProps {
 
 export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetName, datasetParams, setDatasetConfig, show, handleClose }) => {
     const [columnNames, setColumnNames] = useState<string[]>([]); // Seznam názvů sloupců
+    const [datasetColumnsLoading, setDatasetColumnsLoading] = useState<boolean>(true)
+
 
     // Funkce pro načtení sloupců z datasetu po nahrání
     useEffect(() => {
         if (!datasetName) return;
+        setDatasetColumnsLoading(true)
 
         fetch(`${configData.API_URL}/api/dataset/get_column_names`, {
             method: "POST",
@@ -41,6 +44,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                 }
                 console.log("✅ Přijaté sloupce:", data.columns);
                 setColumnNames(data.columns);  // Opraveno, aby se správně nastavily sloupce
+                setDatasetColumnsLoading(false)
             })
             .catch(error => {
                 console.error("Error fetching column names:", error);
@@ -52,7 +56,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
     const handleXColumnsChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedColumns = Array.from(e.target.selectedOptions, option => option.value);
         setDatasetConfig(prev => ({
-            ...prev, 
+            ...prev,
             datasetConfig: {
                 ...prev.datasetConfig,
                 x_columns: selectedColumns
@@ -103,9 +107,12 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                     <Form.Group controlId="formXColumns">
                         <Form.Label>Input Columns (X)</Form.Label>
                         <Form.Select as="select" multiple onChange={handleXColumnsChange}>
-                            {columnNames.map((col, index) => (
-                                <option key={index} value={col}>{col}</option>
-                            ))}
+                            {!datasetColumnsLoading ?
+                                columnNames.map((col, index) => (
+                                    <option key={index} value={col}>{col}</option>
+                                ))
+                                : <option disabled value={""}>{"loading"}</option>
+                            }
                         </Form.Select>
                     </Form.Group>
 
@@ -114,9 +121,11 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                         <Form.Label>Output Column (Y)</Form.Label>
                         <Form.Select as="select" onChange={handleYColumnChange}>
                             <option value="">-- Select Output Column --</option>
-                            {columnNames.map((col, index) => (
-                                <option key={index} value={col}>{col}</option>
-                            ))}
+                            {!datasetColumnsLoading ?
+                                columnNames.map((col, index) => (
+                                    <option key={index} value={col}>{col}</option>
+                                ))
+                                : <option disabled value={""}>{"loading"}</option>}
                         </Form.Select>
                     </Form.Group>
 
