@@ -142,8 +142,8 @@ export const UserDatasetsPage = () => {
             )}
             {/* {console.log(datasetDetails.shape?? "")} */}
             {
-                selectedDataset && datasetDetails && (
-                    !detailsLoading ?
+                selectedDataset && (
+                    !detailsLoading && datasetDetails ?
                         <div className="dataset-details">
                             <h3>Dataset Details: {selectedDataset}</h3>
                             <div><strong>Rows:</strong>
@@ -183,8 +183,8 @@ export const UserDatasetsPage = () => {
                             </div>
                             <p><strong>Column names:</strong> {datasetDetails.column_names ? datasetDetails.column_names.join(", ") : "N/A"}</p>
                         </div>
-                        :<p>"Loading"</p>
-            )}
+                        : <p>"Loading"</p>
+                )}
 
             <UploadDatasetModal
                 show={showUploadModal}
