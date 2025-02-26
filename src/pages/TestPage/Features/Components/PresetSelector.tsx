@@ -8,7 +8,7 @@ interface Props {
 export const PresetSelector: React.FC<Props> = ({ preset, handlePresetChange }) => {
     return (
         <Form.Select
-            className="cursor-pointer"
+            className="cursor-pointer w-100"
             name="preset"
             value={preset}
             onChange={handlePresetChange}

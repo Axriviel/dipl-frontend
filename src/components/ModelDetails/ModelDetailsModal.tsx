@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal, Button, Accordion, Card } from "react-bootstrap";
 import { DownloadJSON } from "../../features/Models/DownloadJSON";
+import { HelpfulTip } from "../../features/Tooltip";
+import Tippy from "@tippyjs/react";
 
 type ModalProps = {
     show: boolean;
@@ -15,6 +17,11 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
                 <Modal.Title>Data Overview</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <div className="d-flex justify-content-center mb-1">
+                    <Tippy content="Downloads this model in JSON format, which can be uploaded in custom designer to further work with it">
+                        <Button className="mx-1" onClick={DownloadJSON(data)}>Download JSON</Button>
+                    </Tippy>
+                </div>
                 <Accordion>
                     <Accordion.Item eventKey="770">
                         <Accordion.Header>Used Params</Accordion.Header>
@@ -42,7 +49,6 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
                     <Accordion.Item eventKey="771">
                         <Accordion.Header>Creation Config</Accordion.Header>
                         <Accordion.Body className="d-flex flex-column justify-content-center">
-                            <Button className="m-auto" onClick={DownloadJSON(data)}>Download</Button>
                             <pre>{JSON.stringify(data, null, 2)}</pre>
                         </Accordion.Body>
                     </Accordion.Item>
@@ -53,7 +59,7 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
                     Close
                 </Button>
             </Modal.Footer>
-        </Modal>
+        </Modal >
     );
 };
 

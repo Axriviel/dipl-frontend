@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Tooltip } from "react-bootstrap";
 import { IModelParams } from "../../../Models/ModelParams";
 import { loadWithReplace } from "./LoadWithReplace";
 import { loadPureConfig } from "./LoadPureConfig";
 import { useAlert } from "../../../../../components/Alerts/AlertContext";
+import { HelpfulTip } from "../../../../../features/Tooltip";
 
 interface LoadJsonModelProps {
     setModelParams: (params: IModelParams) => void;
@@ -44,29 +45,29 @@ export const LoadJsonModel: React.FC<LoadJsonModelProps> = ({ setModelParams }) 
 
 
     return (
-        <div className="d-flex flex-column align-items-center">
-            <Form.Label>Load Model Configuration (JSON)</Form.Label>
-            <span>Upload mode: {useReplace ? "replacement" : "pure"}</span>
-            <Form.Check
-                type="checkbox"
-                label="Use Replace Logic"
-                checked={useReplace}
-                onChange={() => setUseReplace(!useReplace)}
-                className="mt-2"
-            />
+        <div className="d-flex flex-column align-items-left px-5">
+            <Form.Label className="">Load Model Configuration (JSON)</Form.Label>
             <Form.Control
+            className="w-100"
                 type="file"
                 accept=".json"
                 onChange={handleFileChange}
                 ref={fileInputRef}
             />
-            <Button className="mt-2" onClick={() => fileInputRef.current?.click()}>
+            {/* <Button className="mt-2" onClick={() => fileInputRef.current?.click()}>
                 Select JSON File
-            </Button>
-
+            </Button> */}
+            <span>Upload mode: {useReplace ? "replacement" : "pure"} <HelpfulTip text="Replacement mode replaces generators with used layers and sets every parameter to used value. Pure mode uses abstract setup."></HelpfulTip></span>
+            <Form.Check
+                type="checkbox"
+                label="Use Replacement Logic"
+                checked={useReplace}
+                onChange={() => setUseReplace(!useReplace)}
+                className="mt-2"
+            />
             {/* Potvrzovací tlačítko pro nahrání souboru */}
             <Button
-                className="mt-2"
+                className="mt-2 w-50"
                 onClick={handleUpload}
                 disabled={!selectedFile} // Neaktivní, pokud není vybraný soubor
             >

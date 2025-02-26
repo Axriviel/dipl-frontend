@@ -206,29 +206,6 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
-  const handleDownloadJson = (filename: string) => {
-
-    const data = {
-      creation_config: [
-        modelParams.layers,      // Vrstva modelu
-        modelParams.settings,    // Nastavení modelu
-        modelParams.datasetConfig // Konfigurace datasetu
-      ]
-    }
-
-    const jsonStr = JSON.stringify(data, null, 2); // Naformátovaný JSON
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   // Funkce pro aktualizaci vrstev z ModelVisualizer - přidání propojení mezi vrstvami
   const handleLayersChange = (updatedLayers: LayerParams[]) => {
     setModelParams((prev) => ({ ...prev, layers: updatedLayers }));
@@ -401,7 +378,7 @@ export const ModelConfig: React.FC = () => {
 
             <div className='w-100 d-flex flex-row flex-wrap justify-content-center'>
 
-              <div className=' d-flex flex-column justify-content-end align-items-center flex-grow-1'>
+              <div className=' d-flex flex-column justify-content-center align-items-center flex-grow-1'>
                 <Tippy content='Select a layer to be added into model'>
                   <Form.Select
                     className="m-1 cursor-pointer layer-select-dropdown"
@@ -430,7 +407,7 @@ export const ModelConfig: React.FC = () => {
                 </Tippy>
 
                 <Tippy content="Presets and saved model uploading logic">
-                  <Button className='m-1' onClick={handleOpenPresetModal}> Preset Settings</Button>
+                  <Button className='m-1' onClick={handleOpenPresetModal}> Utility Settings</Button>
                 </Tippy>
               </div>
             </div>
