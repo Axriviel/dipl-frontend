@@ -139,9 +139,11 @@ export const ModelsPage = () => {
                         </ul>
                         {/* Přidání tlačítka pro stažení modelu */}
                         <div className="d-flex justify-content-center flex-wrap">
-                            <Button onClick={handleDownload} className="m-2">
-                                Download Model
-                            </Button>
+                            <Tippy content="Download model in .keras format to your PC">
+                                <Button onClick={handleDownload} className="m-2">
+                                    Download Model
+                                </Button>
+                            </Tippy>
                             <Button className="m-2" onClick={async () => {
                                 await handleDeleteModel(selectedModel!.id);
                             }

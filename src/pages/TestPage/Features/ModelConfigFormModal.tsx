@@ -4,6 +4,7 @@ import { GASettingsForm } from "./Components/GASettingsForm";
 import { NNISettingsForm } from "./Components/NNISettingsForm";
 import { IModelParams } from "../Models/ModelParams";
 import { availableMetrics, availableMonitorMetrics, lossFunctionOptions, optAlgorithmOptions, optimizerOptions } from "../../../config/config";
+import { HelpfulTip } from "../../../features/Tooltip";
 
 interface Props {
     modelParams: IModelParams;
@@ -127,16 +128,13 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
 
 
                     <Form.Group controlId="modelName">
-                        <Form.Label>Model Name</Form.Label>
+                        <Form.Label>Model Name <HelpfulTip text="Select unique model name. Keeping default results in randomly generated number behind the name."/></Form.Label>
                         <Form.Control
                             type="text"
                             name="model_name"
                             value={modelParams.settings.model_name}
                             onChange={updateSettings}
                         />
-                        <Form.Text className="text-muted">
-                            Enter a unique name for your model.
-                        </Form.Text>
                     </Form.Group>
 
 

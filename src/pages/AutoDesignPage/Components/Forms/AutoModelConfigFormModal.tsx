@@ -3,6 +3,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { availableMetrics, availableMonitorMetrics, lossFunctionOptions, optAlgorithmAutoOptions, optimizerOptions } from "../../../../config/config";
 import { GASettingsForm } from "../../../TestPage/Features/Components/GASettingsForm";
 import { IAutoTaskState } from "../../Models/AutoTask";
+import { HelpfulTip } from "../../../../features/Tooltip";
 
 interface Props {
     modelParams: IAutoTaskState;
@@ -122,16 +123,13 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                     </Form.Group>
 
                     <Form.Group controlId="modelName">
-                        <Form.Label>Model Name</Form.Label>
+                        <Form.Label>Model Name <HelpfulTip text="Select unique model name. Keeping default results in randomly generated number behind the name."/></Form.Label>
                         <Form.Control
                             type="text"
                             name="model_name"
                             value={modelParams.settings.model_name}
                             onChange={updateSettings}
                         />
-                        <Form.Text className="text-muted">
-                            Enter a unique name for your model.
-                        </Form.Text>
                     </Form.Group>
 
                     {/* select loss function */}

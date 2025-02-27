@@ -9,6 +9,8 @@ import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
 import "./AutoDesignPage.css"
 import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
+import { HelpfulTip } from "../../features/Tooltip";
+import Tippy from "@tippyjs/react";
 
 
 export const AutoDesignPage = () => {
@@ -44,7 +46,7 @@ export const AutoDesignPage = () => {
         datasetConfig: {
             x_columns: [],          // Výchozí prázdný seznam
             x_num: 8,
-            y_column: "",
+            y_columns: [],
             y_num: 9,
             test_size: 0.2,         // Výchozí hodnota pro testovací sadu
             // file: null,             // Výchozí hodnota pro soubor
@@ -372,21 +374,19 @@ export const AutoDesignPage = () => {
                 </Form.Select>
 
                 <div className='d-flex flex-row justify-content-center flex-wrap'>
-                    <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
-                    <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
+                    <Tippy content="Dataset specific settings">
+                        <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
+                    </Tippy>
+                    <Tippy content="Model specific settings">
+                        <Button className='m-1' onClick={handleOpenSettingsModal}> Model Settings</Button>
+                    </Tippy>
                 </div>
 
                 <DatasetConfigModal
+                    datasetName={selectedDataset}
                     datasetParams={autoTask.datasetConfig}
-                    setDatasetConfig={(newConfig) => {
-                        setAutoTask((prev) => ({
-                            ...prev,
-                            datasetConfig: {
-                                ...prev.datasetConfig,
-                                ...newConfig,
-                            },
-                        }));
-                    }} show={showDatasetSettingsModal}
+                    setDatasetConfig={(value) => setAutoTask(value as IAutoTaskState)}
+                    show={showDatasetSettingsModal}
                     handleClose={handleCloseDatasetModal} />
 
                 {/* Modální okno pro úpravu nastavení modelu */}
@@ -451,13 +451,14 @@ export const AutoDesignPage = () => {
                     min={1}
                     step={1}
                 /> */}
-
-                <Form.Check
-                    type="checkbox"
-                    label="Use Timer"
-                    checked={useTimer}
-                    onChange={() => setUseTimer((prev) => !prev)}
-                />
+                <Tippy content="Limit time for which optimization can run in seconds">
+                    <Form.Check
+                        type="checkbox"
+                        label="Use Timer"
+                        checked={useTimer}
+                        onChange={() => setUseTimer((prev) => !prev)}
+                    />
+                </Tippy>
 
                 {useTimer && (
                     <>
@@ -473,7 +474,7 @@ export const AutoDesignPage = () => {
                     </>
                 )}
 
-                <Form.Label>Tags:</Form.Label>
+                <Form.Label>Tags:<HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
                 <div className="d-flex">
                     <Form.Control
                         type="text"
@@ -514,8 +515,9 @@ export const AutoDesignPage = () => {
 
 
             {/* <Button className="m-2" onClick={() => console.log(tags)}>Submit Tags</Button> */}
-
-            <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
+            <Tippy placement="bottom" content="Sends the task to backend. You will be notified about the result when finished">
+                <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
+            </Tippy>
         </div>
     )
 }

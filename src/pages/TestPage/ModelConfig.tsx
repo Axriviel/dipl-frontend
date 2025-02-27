@@ -61,7 +61,7 @@ export const ModelConfig: React.FC = () => {
     datasetConfig: {
       x_columns: [],          // Výchozí prázdný seznam
       x_num: 8,
-      y_column: "",
+      y_columns: [],
       y_num: 9,
       test_size: 0.2,         // Výchozí hodnota pro testovací sadu
       // file: null,             // Výchozí hodnota pro soubor
@@ -153,7 +153,7 @@ export const ModelConfig: React.FC = () => {
       datasetConfig: {
         x_columns: [],          // Výchozí prázdný seznam
         x_num: 8,
-        y_column: "",
+        y_columns: [],
         y_num: 9,
         test_size: 0.2,         // Výchozí hodnota pro testovací sadu
         // file: null,             // Výchozí hodnota pro soubor
@@ -431,7 +431,7 @@ export const ModelConfig: React.FC = () => {
         <DatasetConfigModal
           datasetName={selectedDataset}
           datasetParams={modelParams.datasetConfig}
-          setDatasetConfig={setModelParams}
+          setDatasetConfig={(value) => setModelParams(value as IModelParams)}
           show={showDatasetSettingsModal}
           handleClose={handleCloseDatasetModal} />
 
@@ -479,8 +479,9 @@ export const ModelConfig: React.FC = () => {
             {layer.type} Layer (ID: {layer.id})
           </Button>
         ))} */}
-
-        <Button onClick={handleSubmit}>Submit Model</Button>
+        <Tippy placement='bottom' content="Sends the task to backend. You will be notified about the result when finished">
+          <Button onClick={handleSubmit}>Submit Model</Button>
+        </Tippy>
       </div>
 
 
