@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
-import { Button, Form, Tooltip } from "react-bootstrap";
-import { IModelParams } from "../../../Models/ModelParams";
-import { loadWithReplace } from "./LoadWithReplace";
-import { loadPureConfig } from "./LoadPureConfig";
+import { Button, Form } from "react-bootstrap";
 import { useAlert } from "../../../../../components/Alerts/AlertContext";
 import { HelpfulTip } from "../../../../../features/Tooltip";
+import { IModelParams } from "../../../Models/ModelParams";
+import { loadPureConfig } from "./LoadPureConfig";
+import { loadWithReplace } from "./LoadWithReplace";
 
 interface LoadJsonModelProps {
     setModelParams: (params: IModelParams) => void;

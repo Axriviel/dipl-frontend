@@ -1,8 +1,10 @@
+import Tippy from '@tippyjs/react';
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
-import { configData } from '../../config/config.tsx';
+import { DownloadJSON } from '../../features/Models/DownloadJSON.tsx';
 import { GetUserDatasets } from '../../features/UserDatasets/GetDatasets.tsx';
+import { LayerTable } from './Features/Components/LayerTable.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
@@ -22,9 +24,6 @@ import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { LayerTable } from './Features/Components/LayerTable.tsx';
-import Tippy from '@tippyjs/react';
-import { DownloadJSON } from '../../features/Models/DownloadJSON.tsx';
 
 
 

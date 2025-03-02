@@ -1,8 +1,7 @@
-import React from "react";
-import { Modal, Button, Accordion, Card } from "react-bootstrap";
-import { DownloadJSON } from "../../features/Models/DownloadJSON";
-import { HelpfulTip } from "../../features/Tooltip";
 import Tippy from "@tippyjs/react";
+import React from "react";
+import { Accordion, Button, Modal } from "react-bootstrap";
+import { DownloadJSON } from "../../features/Models/DownloadJSON";
 
 type ModalProps = {
     show: boolean;
