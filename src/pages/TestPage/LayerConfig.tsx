@@ -60,7 +60,7 @@ interface LayerConfigProps<T extends LayerParams = LayerParams> {
   show: boolean;
   updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
   handleClose: () => void;
-}
+} 
 
 export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, updateLayer, handleDelete, allLayers, show, updateModelParams, handleClose }) => {
   const [currentLayer, setCurrentLayer] = useState<LayerParams>(layer);

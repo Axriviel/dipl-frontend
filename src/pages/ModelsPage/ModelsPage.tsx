@@ -15,6 +15,7 @@ import "./ModelsPage.css";
 import { configData } from "../../config/config";
 import DataModal from "../../components/ModelDetails/ModelDetailsModal";
 import Tippy from "@tippyjs/react";
+import { DownloadJSON } from "../../features/Models/DownloadJSON";
 // import Tippy from "@tippyjs/react";
 
 
@@ -181,11 +182,16 @@ export const ModelsPage = () => {
                             </Button>
                         </Tippy>
 
+                        <Tippy content="Downloads this model in JSON format, which can be uploaded in custom designer to further work with it">
+                            <Button onClick={DownloadJSON(paramsModalData)} className="m-2">Download JSON</Button>
+                        </Tippy>
+
                         {paramsModalData && <DataModal show={showParamsModal} data={paramsModalData} onClose={handleCloseParams} />}
 
                         {/* show modal only when data exist */}
                         {modelStructureData && (
                             <ModelStructureModal
+                                paramsButton={handleShowParams}
                                 modelName={selectedModel.name}
                                 data={modelStructureData}
                                 show={showDetailsModal}

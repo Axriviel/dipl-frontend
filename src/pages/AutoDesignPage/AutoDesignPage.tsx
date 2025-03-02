@@ -428,7 +428,10 @@ export const AutoDesignPage = () => {
                     <></>
                 )}
 
-                <Form.Label>Input Shape:</Form.Label>
+                <Form.Label className="mt-2">Input Shape: <HelpfulTip text="Input shape defines the dimensions of input data for a neural network.
+                For example for images: (height, width, channels), e.g., (28, 28, 3) for an RGB image or for 
+                tabular data: (number of features), e.g., (10) for a dataset with 10 columns."/>
+                </Form.Label>
                 <Form.Control
                     type="text"
                     value={autoTask.layers[0]?.shape ? autoTask.layers[0].shape.join(',') : ''} // Zobrazení pole jako řetězce
@@ -474,7 +477,7 @@ export const AutoDesignPage = () => {
                     </>
                 )}
 
-                <Form.Label>Tags:<HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
+                <Form.Label>Tags: <HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
                 <div className="d-flex">
                     <Form.Control
                         type="text"

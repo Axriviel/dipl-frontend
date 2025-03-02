@@ -1,15 +1,17 @@
 import React from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
 import { IModelStructureData } from './Models/ModelStructureData';
+import Tippy from '@tippyjs/react';
 
 interface Props {
+  paramsButton: () => void;
   modelName: string,
   data: IModelStructureData;
   show: boolean;
   onClose: () => void;
 }
 
-export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, onClose }) => {
+export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, onClose, paramsButton }) => {
   return (
     <Modal show={show} onHide={onClose} size='lg'>
       <Modal.Header closeButton>
@@ -38,7 +40,11 @@ export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, on
         </Table>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Tippy content="Show model parameters and downloadable JSON">
+          <Button onClick={paramsButton} className="m-2">
+            Params
+          </Button>
+        </Tippy>        <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
       </Modal.Footer>

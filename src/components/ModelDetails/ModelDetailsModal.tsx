@@ -1,7 +1,5 @@
-import Tippy from "@tippyjs/react";
 import React from "react";
 import { Accordion, Button, Modal } from "react-bootstrap";
-import { DownloadJSON } from "../../features/Models/DownloadJSON";
 
 type ModalProps = {
     show: boolean;
@@ -16,11 +14,6 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
                 <Modal.Title>Data Overview</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div className="d-flex justify-content-center mb-1">
-                    <Tippy content="Downloads this model in JSON format, which can be uploaded in custom designer to further work with it">
-                        <Button className="mx-1" onClick={DownloadJSON(data)}>Download JSON</Button>
-                    </Tippy>
-                </div>
                 <Accordion>
                     <Accordion.Item eventKey="770">
                         <Accordion.Header>Used Params</Accordion.Header>
