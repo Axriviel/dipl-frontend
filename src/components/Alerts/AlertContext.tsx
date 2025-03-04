@@ -28,6 +28,11 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             type
         };
         setAlerts((prev) => [...prev, newAlert]);
+
+        //remove alert after 5 seconds
+        setTimeout(() => {
+            removeAlert(newAlert.id);
+        }, 5000);
     };
 
     const removeAlert = (id: number) => {

@@ -362,6 +362,25 @@ export const AutoDesignPage = () => {
         <div className="d-flex flex-column align-items-center">
             <h2 className="p-2">Model Configuration</h2>
             <Form.Group>
+                <Form.Label>Select Dataset:</Form.Label>
+                <Form.Select
+                    className="cursor-pointer"
+                    value={selectedDataset}
+                    onChange={handleDatasetChange}
+                >
+                    <option value="">-- Select a dataset --</option>
+                    {datasets.map((dataset, index) => (
+                        <option key={index} value={dataset}>
+                            {dataset}
+                        </option>
+                    ))}
+                </Form.Select>
+                {useDefaultDataset ? (
+                    <p className='mb-0 px-1 text-center'><i>Default file: {selectedDataset}</i></p>
+                ) : (
+                    <></>
+                )}
+
                 <Form.Label>Task type:</Form.Label>
                 <Form.Select
                     name="taskType"
@@ -373,7 +392,7 @@ export const AutoDesignPage = () => {
                     ))}
                 </Form.Select>
 
-                <div className='d-flex flex-row justify-content-center flex-wrap'>
+                <div className='d-flex flex-row justify-content-center flex-wrap mt-2'>
                     <Tippy content="Dataset specific settings">
                         <Button className='m-1' onClick={handleOpenDatasetSettingsModal}> Dataset Config</Button>
                     </Tippy>
@@ -409,26 +428,7 @@ export const AutoDesignPage = () => {
                     ))}
                 </Form.Control> */}
 
-                <Form.Label>Select Dataset:</Form.Label>
-                <Form.Select
-                    className="cursor-pointer"
-                    value={selectedDataset}
-                    onChange={handleDatasetChange}
-                >
-                    <option value="">-- Select a dataset --</option>
-                    {datasets.map((dataset, index) => (
-                        <option key={index} value={dataset}>
-                            {dataset}
-                        </option>
-                    ))}
-                </Form.Select>
-                {useDefaultDataset ? (
-                    <p className='mb-0 px-1 text-center'><i>Default file: {selectedDataset}</i></p>
-                ) : (
-                    <></>
-                )}
-
-                <Form.Label className="mt-2">Input Shape: <HelpfulTip text="Input shape defines the dimensions of input data for a neural network.
+                {/* <Form.Label className="mt-2">Input Shape: <HelpfulTip text="Input shape defines the dimensions of input data for a neural network.
                 For example for images: (height, width, channels), e.g., (28, 28, 3) for an RGB image or for 
                 tabular data: (number of features), e.g., (10) for a dataset with 10 columns."/>
                 </Form.Label>
@@ -438,7 +438,7 @@ export const AutoDesignPage = () => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         handleInputShapeChange('shape', e.target.value.split(',').map(Number)) // Převod řetězce na pole čísel
                     }
-                />
+                /> */}
 
                 {renderMethodSpecificFields()}
 
