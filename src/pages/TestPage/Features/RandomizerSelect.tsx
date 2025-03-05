@@ -1,4 +1,5 @@
 import { Form } from "react-bootstrap";
+import { HelpfulTip } from "../../../features/Tooltip";
 
 interface Props {
     value: string; // Aktuální hodnota randomizeru
@@ -15,7 +16,7 @@ export const RandomizerSelect: React.FC<Props> = ({
 }) => {
     return (
         <Form.Group controlId="randomTypeSelect">
-            <Form.Label>{label}</Form.Label>
+            <Form.Label>{label} <HelpfulTip text="Select which randomization mode to use. Value means no randomization and using direct input value"/></Form.Label>
             <Form.Select
                 as="select"
                 value={value}

@@ -25,6 +25,7 @@ import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { configData } from '../../config/config.tsx';
+import { TaskProgressBar } from '../../features/ModelProgressBar/ProgressBar.tsx';
 
 
 
@@ -78,6 +79,7 @@ export const ModelConfig: React.FC = () => {
   const [datasets, setDatasets] = useState<string[]>([]);
   const [selectedDataset, setSelectedDataset] = useState<string>("");
   const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
+  const [taskActive, setTaskActive] = useState<boolean>(false)
   const selectableLayers = [
     { id: 1, name: 'Dense' },
     { id: 2, name: 'Conv2D' },
@@ -299,7 +301,7 @@ export const ModelConfig: React.FC = () => {
     formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig));
 
     addAlert("Task sent to server", "info");
-
+    setTaskActive(true)
     // Odeslání požadavku
     fetch(`${configData.API_URL}/api/save-model`, {
       method: "POST",
@@ -484,6 +486,8 @@ export const ModelConfig: React.FC = () => {
         </Tippy>
       </div>
 
+      <TaskProgressBar isActive={taskActive}
+                setIsActive={setTaskActive} />
 
       {
         selectedLayer && (

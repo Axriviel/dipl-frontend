@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
-import { Badge, Button, Form } from "react-bootstrap";
+import { Badge, Button, Form, ProgressBar } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
 import { autoTaskTypes, configData } from "../../config/config";
@@ -11,6 +11,7 @@ import "./AutoDesignPage.css"
 import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 import { HelpfulTip } from "../../features/Tooltip";
 import Tippy from "@tippyjs/react";
+import { TaskProgressBar } from "../../features/ModelProgressBar/ProgressBar";
 
 
 export const AutoDesignPage = () => {
@@ -60,6 +61,7 @@ export const AutoDesignPage = () => {
     const [selectedDataset, setSelectedDataset] = useState<string>("");
     const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
     const { addAlert } = useAlert();
+    const [taskActive, setTaskActive] = useState<boolean>(false)
 
     const [tagInput, setTagInput] = useState<string>("");
 
@@ -267,7 +269,7 @@ export const AutoDesignPage = () => {
         formData.append("tags", JSON.stringify(updatedTags));
 
         addAlert("Task sent to server", "info");
-
+        setTaskActive(true)
         // Udržujte referenci na stav, aby se zabránilo aktualizaci odmountované komponenty
         let isMounted = true;
 
@@ -521,6 +523,8 @@ export const AutoDesignPage = () => {
             <Tippy placement="bottom" content="Sends the task to backend. You will be notified about the result when finished">
                 <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
             </Tippy>
+            <TaskProgressBar isActive={taskActive}
+                setIsActive={setTaskActive} />
         </div>
     )
 }

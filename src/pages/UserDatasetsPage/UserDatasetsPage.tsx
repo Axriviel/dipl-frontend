@@ -106,6 +106,10 @@ export const UserDatasetsPage = () => {
     return (
         <div className="datasets-container my-5">
             <h2>My datasets:</h2>
+            <p>You can upload your dataset currently in .CSV and .NPZ formats. <br />
+                Data should be preprocessed and prepared.<br />
+                The .NPZ dataset should contain x_test, x_train, y_test and y_train data.
+            </p>
 
             <Button className="upload-button" onClick={() => setShowUploadModal(true)}>
                 📤 Upload Dataset
