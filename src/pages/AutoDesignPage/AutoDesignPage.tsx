@@ -1,17 +1,17 @@
+import Tippy from "@tippyjs/react";
 import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
-import { Badge, Button, Form, ProgressBar } from "react-bootstrap";
+import { Badge, Button, Form } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
 import { autoTaskTypes, configData } from "../../config/config";
+import { TaskProgressBar } from "../../features/ModelProgressBar/ProgressBar";
+import { HelpfulTip } from "../../features/Tooltip";
+import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 import { DatasetConfigModal } from "../TestPage/Features/Dataset/DatasetConfigModal";
+import "./AutoDesignPage.css";
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
-import "./AutoDesignPage.css"
-import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
-import { HelpfulTip } from "../../features/Tooltip";
-import Tippy from "@tippyjs/react";
-import { TaskProgressBar } from "../../features/ModelProgressBar/ProgressBar";
 
 
 export const AutoDesignPage = () => {
@@ -132,18 +132,18 @@ export const AutoDesignPage = () => {
         });
     };
 
-    const handleInputShapeChange = (key: string, value: number[]) => {
-        setAutoTask((prevState) => {
-            // Pokud layers ještě nemá žádný prvek, přidáme výchozí vrstvu
-            const layers = [...prevState.layers];
-            // Pokud první vrstva existuje, upravíme její hodnotu shape
-            layers[0] = {
-                ...layers[0],
-                [key]: value,
-            };
-            return { ...prevState, layers };
-        });
-    };
+    // const handleInputShapeChange = (key: string, value: number[]) => {
+    //     setAutoTask((prevState) => {
+    //         // Pokud layers ještě nemá žádný prvek, přidáme výchozí vrstvu
+    //         const layers = [...prevState.layers];
+    //         // Pokud první vrstva existuje, upravíme její hodnotu shape
+    //         layers[0] = {
+    //             ...layers[0],
+    //             [key]: value,
+    //         };
+    //         return { ...prevState, layers };
+    //     });
+    // };
 
     // change key and value in specific layer
     const handleLayerUnitsChange = (key: string, layer: number, value: number | string) => {
