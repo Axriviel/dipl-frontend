@@ -128,7 +128,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
 
 
                     <Form.Group controlId="modelName">
-                        <Form.Label>Model Name <HelpfulTip text="Select unique model name. Keeping default results in randomly generated number behind the name."/></Form.Label>
+                        <Form.Label>Model Name <HelpfulTip text="Select unique model name. Keeping default results in randomly generated number behind the name." /></Form.Label>
                         <Form.Control
                             type="text"
                             name="model_name"
@@ -212,7 +212,6 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             onChange={updateSettings}
                         />
                     </Form.Group>
-
                     <Form.Group controlId="formBatchSize">
                         <Form.Label>Batch Size</Form.Label>
                         <Form.Control
@@ -221,6 +220,21 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             value={modelParams.settings.batch_size}
                             onChange={updateSettings}
                         />
+
+                        {/* <RandomizerSelect
+                            value={modelParams.settings.batch_sizeRandom ? modelParams.settings.batch_sizeRandom.type : "value"}
+                            onChange={(selectedType: string) => handleRandomToggle("batch_size", selectedType)}
+                            options={TextRandomizers}
+                        />
+                        {renderRandomConfig("batch_size", modelParams.settings.batch_sizeRandom)}
+                        {!modelParams.settings.batch_sizeRandom && (
+                            <Form.Control
+                                type="number"
+                                name="batch_size"
+                                value={modelParams.settings.batch_size}
+                                onChange={updateSettings}
+                            />
+                        )} */}
                     </Form.Group>
                     <Form.Group controlId="max_models">
                         <Form.Label>Limit - max models</Form.Label>

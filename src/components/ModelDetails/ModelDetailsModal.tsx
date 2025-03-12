@@ -25,6 +25,16 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
                                         <pre>{JSON.stringify(data.used_params[0], null, 2)}</pre>
                                     </Accordion.Body>
                                 </Accordion.Item>
+                                {console.log(data.used_params[1])}
+                                {data.used_params[1] && Object.keys(data.used_params[1]).length > 0 && (
+                                    <Accordion.Item eventKey="580">
+                                        <Accordion.Header>Dataset params:</Accordion.Header>
+                                        <Accordion.Body className="d-flex flex-column justify-content-center">
+                                            <pre>{JSON.stringify(data.used_params[1], null, 2)}</pre>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                )}
+
                                 {data.used_params[2] && data.used_params[2].length > 0 &&
                                     data.used_params[2].map((item: any, index: any) => (
                                         <Accordion.Item eventKey={index.toString()} key={index}>

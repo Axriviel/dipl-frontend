@@ -17,6 +17,14 @@
     z-index: 1000;
 } */
 
+.model-config-progress-bar {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+}
+
 .download-json-button {
     position: fixed;
     left: 1rem;
@@ -69,7 +77,7 @@
     padding: 1rem;
     background-color: #e7e7e7;
     border-radius: 10px;
-    
+
 }
 
 .layer-select-dropdown {
@@ -80,6 +88,14 @@
 @media (max-width: 1100px) {
     .model-visualizer {
         width: 100vh;
+    }
+
+    .model-config-progress-bar {
+        top: 6rem;
+    }
+
+    .download-json-button {
+        bottom: 0;
     }
 
     .layer-list {

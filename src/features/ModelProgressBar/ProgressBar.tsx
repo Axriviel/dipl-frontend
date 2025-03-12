@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { configData } from '../../config/config';
+import "./ProgressBar.css"
+
 
 interface Props {
     isActive: boolean;
-    setIsActive: (active: boolean) => void; 
+    setIsActive: (active: boolean) => void;
 }
 
 export const TaskProgressBar: React.FC<Props> = ({ isActive, setIsActive }) => {
@@ -59,9 +61,11 @@ export const TaskProgressBar: React.FC<Props> = ({ isActive, setIsActive }) => {
     }, [isActive]);
 
     return (
-        <div>
-            <progress value={progress} max="100"></progress>
-            <p>{progress}%</p>
+        <div className="task-progress-container">
+            <p className="task-progress-title">Progress: {progress}%</p>
+            <div className="task-progress-wrapper">
+                <div className="task-progress-bar" style={{ width: `${progress}%` }}></div>
+            </div>
         </div>
     );
 };

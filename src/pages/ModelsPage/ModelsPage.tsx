@@ -126,20 +126,22 @@ export const ModelsPage = () => {
                     {/* Postranní panel vlevo */}
                     <div className="col-md-3 p-3 px-5 models-panel overflow-auto">
                         <h4 className="text-center">Models</h4>
-                        <ul className="list-group">
-                            {models.map(model => (
-                                <li
-                                    key={"model_" + model.id}
-                                    className={`list-group-item ${model.id === selectedModel!.id ? 'active' : ''}`}
-                                    onClick={() => setSelectedModel(model)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    {model.name}
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="list-group">
+                            <ul className="px-2">
+                                {models.map(model => (
+                                    <li
+                                        key={"model_" + model.id}
+                                        className={`list-group-item ${model.id === selectedModel!.id ? 'active' : ''}`}
+                                        onClick={() => setSelectedModel(model)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {model.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                         {/* Přidání tlačítka pro stažení modelu */}
-                        <div className="d-flex justify-content-center flex-wrap">
+                        <div className="d-flex justify-content-center flex-wrap px-2">
                             <Tippy content="Download model in .keras format to your PC">
                                 <Button onClick={handleDownload} className="m-2">
                                     Download Model

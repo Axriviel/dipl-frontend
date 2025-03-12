@@ -1,5 +1,7 @@
+import { createBatchNormLayer } from "../../../TestPage/Features/Layers/CreateBatchNormLayer";
 import { createConv2DLayer } from "../../../TestPage/Features/Layers/CreateConv2DLayer";
 import { createDenseLayer } from "../../../TestPage/Features/Layers/CreateDenseLayer";
+import { createDropoutLayer } from "../../../TestPage/Features/Layers/CreateDropoutLayer";
 import { createFlattenLayer } from "../../../TestPage/Features/Layers/CreateFlattenLayer";
 import { createGeneratorLayer } from "../../../TestPage/Features/Layers/CreateGeneratorLayer";
 import { createInputLayer } from "../../../TestPage/Features/Layers/CreateInputLayer";
@@ -89,6 +91,40 @@ export const GetTaskLayers = (taskType: String) => {
                     activation: "softmax",
                     inputs: ["3333"],
                 }),
+            ];
+        case "regression":
+            return [
+                // input layer, shape is set on backend, this is just some default value
+                createInputLayer({ id: "11111", shape: [8] }),
+
+                // definition of generator layer
+                createGeneratorLayer({
+                    id: "22222",
+                    // how big can the model get, min 1 hidden layer and max 10
+                    sizeRandom: { "type": "numeric", "min": 1, "max": 10, "step": 1 },
+                    possibleLayers: [
+                        createDenseLayer({
+                            id: "1",
+                            unitsRandom: { type: "numeric", min: 1, max: 100, step: 1 },
+                            inputs: ["1", "2", "3"],
+                        }),
+                        createDropoutLayer({
+                            id: "2",
+                            inputs: ["1", "2"],
+                        }),
+                        createBatchNormLayer({
+                            id: "3",
+                            inputs: ["1", "2"],
+                        }),
+                    ],
+                    inputs: ["11111"]
+                }),
+                // output layer
+                createDenseLayer({
+                    inputs: ["22222"],
+                    units: 1,
+                    activation: "linear"
+                })
             ];
 
         default:

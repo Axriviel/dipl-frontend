@@ -26,6 +26,7 @@ import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
 import { configData } from '../../config/config.tsx';
 import { TaskProgressBar } from '../../features/ModelProgressBar/ProgressBar.tsx';
+import { createBatchNormLayer } from './Features/Layers/CreateBatchNormLayer.tsx';
 
 
 
@@ -88,7 +89,8 @@ export const ModelConfig: React.FC = () => {
     { id: 5, name: 'Dropout' },
     { id: 6, name: 'MaxPooling2D' },
     { id: 7, name: "Flatten" },
-    { id: 8, name: "LSTM" }
+    { id: 8, name: "LSTM" },
+    { id: 9, name: "BatchNormalization" }
   ];
   const addLayer = () => {
     let newLayer: LayerParams;
@@ -118,6 +120,9 @@ export const ModelConfig: React.FC = () => {
         break;
       case 'Flatten':
         newLayer = createFlattenLayer();
+        break;
+      case "BatchNormalization":
+        newLayer = createBatchNormLayer();
         break;
       default:
         return;
@@ -485,9 +490,10 @@ export const ModelConfig: React.FC = () => {
           <Button onClick={handleSubmit}>Submit Model</Button>
         </Tippy>
       </div>
-
-      <TaskProgressBar isActive={taskActive}
-                setIsActive={setTaskActive} />
+      <div className='model-config-progress-bar'>
+        <TaskProgressBar isActive={taskActive}
+          setIsActive={setTaskActive} />
+      </div>
 
       {
         selectedLayer && (

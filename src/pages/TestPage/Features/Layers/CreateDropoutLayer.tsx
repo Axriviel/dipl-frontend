@@ -2,9 +2,9 @@ import { IDropoutLayer } from "../../Models/DropoutLayer";
 
 let layerCounter = 0;
 
-export const createDropoutLayer = (): IDropoutLayer => {
+export const createDropoutLayer = (customParams: Partial<IDropoutLayer> = {}): IDropoutLayer => {
   layerCounter++;
-  return {
+  const defaultParams: IDropoutLayer = {
     id: Date.now().toString(),
     name: `dropout_${layerCounter}`,
     type: 'Dropout',
@@ -12,4 +12,6 @@ export const createDropoutLayer = (): IDropoutLayer => {
     rate: 0.5,
     inputs: []
   };
+
+  return { ...defaultParams, ...customParams };
 };

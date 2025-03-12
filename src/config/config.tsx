@@ -5,7 +5,7 @@ export const API_KEY = "ASF4561.AF545wagdA56fds89911a2vaASF32!"
 
 
 // tasks that are supported in Auto designer section
-export const autoTaskTypes = ["binary classification", "multiclass classification", "image multiclass classification", ]
+export const autoTaskTypes = ["binary classification", "multiclass classification", "image multiclass classification", "regression"]
 
 // options for Model Configuration form
 //optimization algorithm options for custom designer

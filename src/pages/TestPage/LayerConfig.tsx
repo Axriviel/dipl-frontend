@@ -19,29 +19,31 @@ import { LayerParams } from './Models/LayerParams';
 import { ILSTM } from './Models/LSTM';
 import { IMaxPooling2D } from './Models/MaxPooling2D';
 import { IModelSettings } from './Models/ModelSettings';
+import { BatchNormalizationLayerForm } from './Features/FormLayers/BatchNormLayerForm';
+import { IBatchNormalizationLayer } from './Models/BatchNormLayer';
 
 
 //upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
 // Definice struktur pro náhodnost
-interface IRandomConfigBase {
+export interface IRandomConfigBase {
   type: 'numeric' | 'text' | "numeric-test";
 }
 
-interface INumericRandomConfig extends IRandomConfigBase {
+export interface INumericRandomConfig extends IRandomConfigBase {
   type: 'numeric';
   min: number;
   max: number;
   step?: number; // Volitelný parametr
 }
 
-interface ITestNumericRandomConfig extends IRandomConfigBase {
+export interface ITestNumericRandomConfig extends IRandomConfigBase {
   type: "numeric-test";
   min: number;
   max: number;
 }
 
 
-interface ITextRandomConfig extends IRandomConfigBase {
+export interface ITextRandomConfig extends IRandomConfigBase {
   type: 'text';
   options: string[];
 }
@@ -60,7 +62,7 @@ interface LayerConfigProps<T extends LayerParams = LayerParams> {
   show: boolean;
   updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
   handleClose: () => void;
-} 
+}
 
 export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, updateLayer, handleDelete, allLayers, show, updateModelParams, handleClose }) => {
   const [currentLayer, setCurrentLayer] = useState<LayerParams>(layer);
@@ -75,7 +77,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
   };
 
   const handleDeleteClick = () => {
-     handleDelete!(currentLayer.id);
+    handleDelete!(currentLayer.id);
 
     // // Filtruje vrstvy a odstraní aktuální vrstvu
     // const updatedLayers = allLayers.filter(layer => layer.id !== idToDelete);
@@ -246,21 +248,6 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
               />
 
             </Form.Group>
-
-            {/* stará verze, ještě před debounced inputem */}
-            {/* <Form.Group controlId={`${key}-options`}>
-              <Form.Label>Options:</Form.Label>
-              <Form.Control
-                type="text"
-                value={(randomConfig as ITextRandomConfig).options.join(', ')}  // Zobrazení pole jako čárkou oddělený řetězec
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const newOptions = e.target.value ? e.target.value.split(',').map(option => option.trim()).filter(option => option !== '') : [];
-                  //console.log("toto jsou nove options:", newOptions)
-                  handleChange(`${key}Random.options`, newOptions);
-                }}
-              />
-
-            </Form.Group> */}
           </>
         );
       default:
@@ -375,6 +362,16 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
         return (
           <LSTMLayerForm
             currentLayer={currentLayer as ILSTM}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
+            renderRandomConfig={renderRandomConfig}
+            InputsConst={InputsConst}
+          />
+        );
+      case 'BatchNormalization':
+        return (
+          <BatchNormalizationLayerForm
+            currentLayer={currentLayer as IBatchNormalizationLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
             renderRandomConfig={renderRandomConfig}
