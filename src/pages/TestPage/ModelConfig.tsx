@@ -159,9 +159,9 @@ export const ModelConfig: React.FC = () => {
       },
       datasetConfig: {
         x_columns: [],          // Výchozí prázdný seznam
-        x_num: 8,
+        x_num: 0,
         y_columns: [],
-        y_num: 9,
+        y_num: 0,
         test_size: 0.2,         // Výchozí hodnota pro testovací sadu
         // file: null,             // Výchozí hodnota pro soubor
       }
@@ -294,6 +294,11 @@ export const ModelConfig: React.FC = () => {
 
     if (!selectedDataset) {
       addAlert("Please select a dataset before submitting", "error");
+      return;
+    }
+
+    if ((modelParams.datasetConfig.x_num === 0 && modelParams.datasetConfig.y_num === 0) && (modelParams.datasetConfig.x_columns.length === 0 && modelParams.datasetConfig.y_columns.length === 0)) {
+      addAlert("You need to specify data in dataset config", "warning")
       return;
     }
 
@@ -437,7 +442,7 @@ export const ModelConfig: React.FC = () => {
 
         <DatasetConfigModal
           datasetName={selectedDataset}
-          isDefaultDataset={useDefaultDataset} 
+          isDefaultDataset={useDefaultDataset}
           datasetParams={modelParams.datasetConfig}
           setDatasetConfig={(value) => setModelParams(value as IModelParams)}
           show={showDatasetSettingsModal}

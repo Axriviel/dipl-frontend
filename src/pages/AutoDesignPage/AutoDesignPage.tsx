@@ -34,7 +34,7 @@ export const AutoDesignPage = () => {
                 "min": 1,
                 "step": 1,
                 "type": "numeric"
-              },
+            },
             max_models: 5,
             es_threshold: 0.7,
             NNI: {
@@ -251,6 +251,10 @@ export const AutoDesignPage = () => {
     const handleSubmit = () => {
         if (!selectedDataset) {
             addAlert("Please select a dataset before submitting", "error");
+            return;
+        }
+        if ((autoTask.datasetConfig.x_num === 0 && autoTask.datasetConfig.y_num === 0) && (autoTask.datasetConfig.x_columns.length === 0 && autoTask.datasetConfig.y_columns.length === 0)) {
+            addAlert("You need to specify data in dataset config", "warning")
             return;
         }
 
