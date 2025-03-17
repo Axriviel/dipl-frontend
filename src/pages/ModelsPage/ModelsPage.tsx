@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import imgUrl from "../../assets/bj.jpeg";
 import { useAlert } from "../../components/Alerts/AlertContext";
@@ -64,13 +64,31 @@ export const ModelsPage = () => {
     const [showParamsModal, setShowParamsModal] = useState(false);
     const [paramsModalData, setParamsModalData] = useState(null);
 
+    useEffect(() => {
+        fetchParamsData();
+        console.log("data", paramsModalData)
+    }, [selectedModel]);
+
+    const fetchParamsData = useCallback(async () => {
+        if (!selectedModel) {
+            setParamsModalData(null);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${configData.API_URL}/api/get-params/${selectedModel.id}`);
+            if (!response.ok) throw new Error("Failed to fetch data");
+
+            const data = await response.json();
+            setParamsModalData(data);
+        } catch (error) {
+            console.error("Error fetching model params:", error);
+            setParamsModalData(null);
+        }
+    }, [selectedModel]);
 
     const handleShowParams = async () => {
         try {
-            const response = await fetch(`${configData.API_URL}/api/get-params/${selectedModel?.id}`);
-            if (!response.ok) throw new Error("Failed to fetch data");
-            const data = await response.json();
-            setParamsModalData(data);
             setShowParamsModal(true);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -195,7 +213,7 @@ export const ModelsPage = () => {
                         </Tippy>
 
                         <Tippy content="Downloads this model in JSON format, which can be uploaded in custom designer to further work with it">
-                            <Button onClick={DownloadJSON(paramsModalData)} className="m-2">Download JSON</Button>
+                            <Button onClick={DownloadJSON(paramsModalData)} disabled={!paramsModalData} className="m-2">Download JSON</Button>
                         </Tippy>
 
                         {paramsModalData && <DataModal show={showParamsModal} data={paramsModalData} onClose={handleCloseParams} />}

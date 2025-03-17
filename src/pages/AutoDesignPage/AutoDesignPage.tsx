@@ -29,12 +29,12 @@ export const AutoDesignPage = () => {
             monitor_metric: "val_accuracy",
             epochs: 10,
             batch_size: 32,
-            batch_sizeRandom: {
-                "max": 100,
-                "min": 1,
-                "step": 1,
-                "type": "numeric"
-            },
+            // batch_sizeRandom: {
+            //     "max": 100,
+            //     "min": 1,
+            //     "step": 1,
+            //     "type": "numeric"
+            // },
             max_models: 5,
             es_threshold: 0.7,
             NNI: {
