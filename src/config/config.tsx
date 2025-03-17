@@ -18,7 +18,7 @@ export const optAlgorithmAutoOptions = ["random", "genetic", "tagging"];
 export const optimizerOptions = [
     'SGD', 'RMSprop', 'Adam', 'AdamW', 'Adadelta',
     'Adagrad', 'Adamax', 'Adafactor', 'Nadam',
-    'Ftrl', 'Lion', 'Lamb', 'Loss Scale Optimizer'
+    'Ftrl', 'Lion'
 ];
 
 //Keras loss function options

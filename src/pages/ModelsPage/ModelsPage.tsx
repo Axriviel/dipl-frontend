@@ -78,12 +78,22 @@ export const ModelsPage = () => {
     };
 
     const handleDeleteModel = async (modelId: number) => {
-        const result = await DeleteModel(modelId);
-        if (result.success) {
-            addAlert(result.message || 'Model successfully deleted', "success");
-            setRefetch(!refetch)
-        } else {
-            addAlert(result.message || 'Failed to delete the model', "error");
+        try {
+            const result = await DeleteModel(modelId);
+
+            if (result.success) {
+                addAlert(result.message || 'Model successfully deleted', "success");
+                setRefetch(!refetch);
+            } else {
+                if (result.status === 409) {
+                    addAlert("Model not found or already deleted", "warning");
+                    setRefetch(!refetch);
+                } else {
+                    addAlert(result.message || 'Failed to delete the model', "error");
+                }
+            }
+        } catch (error) {
+            addAlert("An unexpected error occurred while deleting the model", "error");
         }
     };
 

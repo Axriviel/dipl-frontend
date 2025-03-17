@@ -11,7 +11,7 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
     return (
         <Modal show={show} onHide={onClose} size="lg">
             <Modal.Header closeButton>
-                <Modal.Title>Data Overview</Modal.Title>
+                <Modal.Title>Model Overview</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Accordion>

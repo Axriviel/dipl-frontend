@@ -6,16 +6,18 @@ import { configData } from '../../../../config/config';
 import { IModelParams } from '../../Models/ModelParams';
 import { IAutoTaskState } from '../../../AutoDesignPage/Models/AutoTask';
 import { HelpfulTip } from '../../../../features/Tooltip';
+import { getDatasetColumns } from '../../../../features/Datasets/GetDatasetColumns';
 
 interface DatasetConfigModalProps {
     datasetName: string;
     datasetParams: IDatasetConfig;
+    isDefaultDataset?: boolean;
     setDatasetConfig: React.Dispatch<React.SetStateAction<IModelParams | IAutoTaskState>>;
     show: boolean;
     handleClose: () => void;
 }
 
-export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetName, datasetParams, setDatasetConfig, show, handleClose }) => {
+export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetName, isDefaultDataset, datasetParams, setDatasetConfig, show, handleClose }) => {
     const [columnNames, setColumnNames] = useState<string[]>([]); // Seznam názvů sloupců
     const [datasetColumnsLoading, setDatasetColumnsLoading] = useState<boolean>(true)
     const [selectedXColumns, setSelectedXColumns] = useState<string[]>([]);
@@ -35,34 +37,16 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
     // Funkce pro načtení sloupců z datasetu po nahrání
     useEffect(() => {
         if (!datasetName) return;
-        setDatasetColumnsLoading(true)
+        setDatasetColumnsLoading(true);
 
-        fetch(`${configData.API_URL}/api/dataset/get_column_names`, {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ dataset_name: datasetName }),
-
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(`Error ${response.status}: ${errorData.error}`);
-                    });
+        getDatasetColumns(datasetName, isDefaultDataset)
+            .then(columns => {
+                if (columns) {
+                    setColumnNames(columns);
                 }
-                return response.json();
+                setDatasetColumnsLoading(false);
             })
-            .then((data) => {
-                if (!data.columns) {
-                    throw new Error("Invalid response format: missing 'columns' field");
-                }
-                console.log("✅ Přijaté sloupce:", data.columns);
-                setColumnNames(data.columns);  // Opraveno, aby se správně nastavily sloupce
-                setDatasetColumnsLoading(false)
-            })
-            .catch(error => {
-                console.error("Error fetching column names:", error);
-            });
+            .catch(() => setDatasetColumnsLoading(false)); // Ošetření chyby
     }, [datasetName]);
 
     // Výběr vstupních sloupců (X)
@@ -93,7 +77,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
     const handleDatasetConfigChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         const numericValue = parseFloat(value);
-    
+
         setDatasetConfig(prev => ({
             ...prev,
             datasetConfig: {
@@ -102,7 +86,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
             }
         }));
     };
-    
+
 
     return (
         <Modal show={show} onHide={handleClose} centered>
@@ -129,7 +113,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                                 <option key={index} value={col}>{col}</option>
                             ))
                         ) : (
-                            <option disabled value={""}>{"loading"}</option>
+                            <option disabled value={""}>{"Loading ..."}</option>
                         )}
                     </Form.Select>
 
@@ -142,7 +126,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                                     <option key={index} value={col}>{col}</option>
                                 ))
                             ) : (
-                                <option disabled value={""}>{"loading"}</option>
+                                <option disabled value={""}>{"Loading ..."}</option>
                             )}
                         </Form.Select>
                     </Form.Group>

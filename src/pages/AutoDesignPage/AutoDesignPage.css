@@ -1,7 +1,12 @@
-.tags-container{
+.tags-container {
     max-width: 40vh;
 }
-.tag{
+
+.tag {
     margin-top: 0.25rem;
     margin-bottom: 0.1rem;
+}
+
+.auto-model-config-progress-bar {
+    width: 250px;
 }

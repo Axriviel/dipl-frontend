@@ -437,6 +437,7 @@ export const ModelConfig: React.FC = () => {
 
         <DatasetConfigModal
           datasetName={selectedDataset}
+          isDefaultDataset={useDefaultDataset} 
           datasetParams={modelParams.datasetConfig}
           setDatasetConfig={(value) => setModelParams(value as IModelParams)}
           show={showDatasetSettingsModal}

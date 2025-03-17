@@ -7,13 +7,19 @@ export const DeleteModel = async (modelId: number) => {
             credentials: "include",
         });
 
-        if (!response.ok) {
-            throw new Error(`Failed to delete the model: ${response.statusText}`);
-        }
+        const data = await response.json(); // Načtení odpovědi jako JSON
 
-        return { success: true, message: 'Model successfully deleted' };
+        return {
+            success: response.ok,
+            message: data.message || "Unknown error",
+            status: response.status, // Vracíme status kód pro frontend
+        };
     } catch (error) {
         console.error('Failed to delete the model:', error);
-        return { success: false, message: (error as Error).message }; 
+        return {
+            success: false,
+            message: "Server error. Please try again later.",
+            status: 500, // Pokud je to síťová chyba, považujeme to za 500
+        };
     }
 };

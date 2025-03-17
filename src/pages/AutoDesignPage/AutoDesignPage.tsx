@@ -29,6 +29,12 @@ export const AutoDesignPage = () => {
             monitor_metric: "val_accuracy",
             epochs: 10,
             batch_size: 32,
+            batch_sizeRandom: {
+                "max": 100,
+                "min": 1,
+                "step": 1,
+                "type": "numeric"
+              },
             max_models: 5,
             es_threshold: 0.7,
             NNI: {
@@ -46,9 +52,9 @@ export const AutoDesignPage = () => {
         },
         datasetConfig: {
             x_columns: [],          // Výchozí prázdný seznam
-            x_num: 8,
+            x_num: 0,
             y_columns: [],
-            y_num: 9,
+            y_num: 0,
             test_size: 0.2,         // Výchozí hodnota pro testovací sadu
             // file: null,             // Výchozí hodnota pro soubor
         }
@@ -183,16 +189,16 @@ export const AutoDesignPage = () => {
                 //         setFile(defaultFile);
                 //     })
                 //     .catch(error => console.error("Chyba při načítání souboru:", error));
-                setSelectedDataset("pima-indians-diabetes.csv")
-                setUseDefaultDataset(true)
-                setAutoTask((prevAutoTask) => ({
-                    ...prevAutoTask,
-                    datasetConfig: {
-                        ...prevAutoTask.datasetConfig,
-                        x_num: 8,
-                        y_num: 9,
-                    },
-                }));
+                // setSelectedDataset("pima-indians-diabetes.csv")
+                // setUseDefaultDataset(true)
+                // setAutoTask((prevAutoTask) => ({
+                //     ...prevAutoTask,
+                //     datasetConfig: {
+                //         ...prevAutoTask.datasetConfig,
+                //         x_num: 8,
+                //         y_num: 9,
+                //     },
+                // }));
                 break;
             case "multiclass classification":
                 // fetch('/iris_prepared.npz')
@@ -202,23 +208,23 @@ export const AutoDesignPage = () => {
                 //         setFile(defaultFile);
                 //     })
                 //     .catch(error => console.error("Chyba při načítání souboru:", error));
-                setSelectedDataset("iris_prepared.npz")
-                setUseDefaultDataset(true)
+                // setSelectedDataset("iris_prepared.npz")
+                // setUseDefaultDataset(true)
                 // dataset config for iris
-                setAutoTask((prevAutoTask) => ({
-                    ...prevAutoTask,
-                    datasetConfig: {
-                        ...prevAutoTask.datasetConfig,
-                        x_num: 4,
-                        y_num: 5,
-                    },
-                    layers: prevAutoTask.layers.map((layer, index) =>
-                        index === 0 ? { ...layer, shape: [4] } :
-                            index === 2
-                                ? { ...layer, units: 3 }
-                                : layer
-                    ),
-                }));
+                // setAutoTask((prevAutoTask) => ({
+                //     ...prevAutoTask,
+                //     datasetConfig: {
+                //         ...prevAutoTask.datasetConfig,
+                //         x_num: 4,
+                //         y_num: 5,
+                //     },
+                //     layers: prevAutoTask.layers.map((layer, index) =>
+                //         index === 0 ? { ...layer, shape: [4] } :
+                //             index === 2
+                //                 ? { ...layer, units: 3 }
+                //                 : layer
+                //     ),
+                // }));
 
 
                 break;
@@ -230,9 +236,15 @@ export const AutoDesignPage = () => {
                 //         setFile(defaultFile);
                 //     })
                 //     .catch(error => console.error("Chyba při načítání souboru:", error));
-                setSelectedDataset("cifar10_normalized.npz")
-                setUseDefaultDataset(true)
+                // setSelectedDataset("cifar10_normalized.npz")
+                // setUseDefaultDataset(true)
                 break;
+            case "regression":
+                // setSelectedDataset("")
+                // setAutoTaskSettings("regression")
+                // setUseDefaultDataset(true)
+                break;
+
         }
     }
 
@@ -377,11 +389,11 @@ export const AutoDesignPage = () => {
                         </option>
                     ))}
                 </Form.Select>
-                {useDefaultDataset ? (
+                {/* {useDefaultDataset ? (
                     <p className='mb-0 px-1 text-center'><i>Default file: {selectedDataset}</i></p>
                 ) : (
                     <></>
-                )}
+                )} */}
 
                 <Form.Label>Task type:</Form.Label>
                 <Form.Select
@@ -523,8 +535,10 @@ export const AutoDesignPage = () => {
             <Tippy placement="bottom" content="Sends the task to backend. You will be notified about the result when finished">
                 <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
             </Tippy>
-            <TaskProgressBar isActive={taskActive}
-                setIsActive={setTaskActive} />
+            <div className="auto-model-config-progress-bar">
+                <TaskProgressBar isActive={taskActive}
+                    setIsActive={setTaskActive} />
+            </div>
         </div>
     )
 }
