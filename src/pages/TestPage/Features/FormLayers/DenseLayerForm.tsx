@@ -1,15 +1,16 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { activationFunctions } from '../../../../features/ModelLayers/Activations';
-import { NumericRandomizers, RandomConfig, TextRandomizers } from '../../LayerConfig';
-import { RandomizerSelect } from '../RandomizerSelect';
 import { IDenseLayer } from '../../Models/DenseLayer';
+import { RandomizerSelect } from '../RandomizerSelect';
+import { renderRandomConfig } from '../Randomness/RenderRandomConfig';
+import { NumericRandomizers, TextRandomizers } from '../../Models/RandomConfigModels';
 
 interface Props {
     currentLayer: IDenseLayer;
     handleChange: (key: string, value: any) => void;
     handleRandomToggle: (key: string, type: string) => void;
-    renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
+    // renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
     InputsConst: JSX.Element;
     handleActivationChange: (e: any) => void;
 }
@@ -18,12 +19,12 @@ export const DenseLayerForm: React.FC<Props> = ({
     currentLayer,
     handleChange,
     handleRandomToggle,
-    renderRandomConfig,
+    // renderRandomConfig,
     InputsConst,
     handleActivationChange,
 }) => {
     return (
-        <>
+        <div className='custom-form'>
             <Form.Group controlId={`units-${currentLayer.id}`}>
                 <Form.Label>Units:</Form.Label>
 
@@ -58,7 +59,7 @@ export const DenseLayerForm: React.FC<Props> = ({
                 />
 
 
-                {renderRandomConfig('units', currentLayer.unitsRandom)}
+                {renderRandomConfig('units', currentLayer.unitsRandom, handleChange)}
                 {!currentLayer.unitsRandom && (
                     <Form.Control
                         type="number"
@@ -68,7 +69,7 @@ export const DenseLayerForm: React.FC<Props> = ({
                 )}
             </Form.Group>
             <>
-            {console.log(currentLayer.activationRandom)}
+                {console.log(currentLayer.activationRandom)}
             </>
             <Form.Group controlId={`activation-${currentLayer.id}`}>
                 <Form.Label>Activation:</Form.Label>
@@ -90,7 +91,7 @@ export const DenseLayerForm: React.FC<Props> = ({
                 {/* {renderRandomConfig('activation', { type: "text", options: currentLayer.activationRandom.options })} */}
 
                 {/* prvním parametrem je prvek, který bude randomizován a druhým je proměnná v currentLayer, do které se to ukládá */}
-                {renderRandomConfig('activation', currentLayer.activationRandom)}
+                {renderRandomConfig('activation', currentLayer.activationRandom, handleChange)}
                 {!currentLayer.activationRandom && (
                     <Form.Select
                         as="select"
@@ -106,6 +107,6 @@ export const DenseLayerForm: React.FC<Props> = ({
                 )}
             </Form.Group>
             {InputsConst}
-        </>
+        </div>
     );
 };

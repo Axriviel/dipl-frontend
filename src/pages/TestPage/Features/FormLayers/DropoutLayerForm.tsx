@@ -1,18 +1,19 @@
 import { Form } from "react-bootstrap";
-import { NumericRandomizers, RandomConfig } from "../../LayerConfig";
-import { RandomizerSelect } from "../RandomizerSelect";
 import { IDropoutLayer } from "../../Models/DropoutLayer";
+import { NumericRandomizers } from "../../Models/RandomConfigModels";
+import { RandomizerSelect } from "../RandomizerSelect";
+import { renderRandomConfig } from "../Randomness/RenderRandomConfig";
 
 interface Props {
     currentLayer: IDropoutLayer;
     handleChange: (key: string, value: any) => void;
     handleRandomToggle: (key: string, type: string) => void;
-    renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
+    // renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
     InputsConst: JSX.Element;
 }
 
-export const DropoutLayerForm: React.FC<Props> = ({ currentLayer, handleChange, handleRandomToggle, renderRandomConfig, InputsConst }) => (
-    <>
+export const DropoutLayerForm: React.FC<Props> = ({ currentLayer, handleChange, handleRandomToggle, InputsConst }) => (
+    <div className="custom-form">
         <Form.Group controlId={`dropoutRate-${currentLayer.id}`}>
             <Form.Label>Dropout Rate:</Form.Label>
 
@@ -23,7 +24,7 @@ export const DropoutLayerForm: React.FC<Props> = ({ currentLayer, handleChange, 
             />
 
 
-            {renderRandomConfig('rate', currentLayer.rateRandom)}
+            {renderRandomConfig('rate', currentLayer.rateRandom, handleChange)}
             {!currentLayer.unitsRandom && (
 
                 <Form.Control
@@ -39,5 +40,5 @@ export const DropoutLayerForm: React.FC<Props> = ({ currentLayer, handleChange, 
             )}
         </Form.Group>
         {InputsConst}
-    </>
+    </div>
 );

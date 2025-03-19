@@ -9,7 +9,7 @@ interface InputLayerFormProps {
 
 export const InputLayerForm: React.FC<InputLayerFormProps> = ({ currentLayer, handleChange }) => {
     return (
-        <>
+        <div className="custom-form">
             {/* <Form.Group controlId={`shape-${currentLayer.id}`}>
                 <Form.Label>Input Shape:</Form.Label>
                 <Form.Control
@@ -51,6 +51,6 @@ export const InputLayerForm: React.FC<InputLayerFormProps> = ({ currentLayer, ha
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('sparse', e.target.checked)}
                 />
             </Form.Group>
-        </>
+        </div>
     );
 };

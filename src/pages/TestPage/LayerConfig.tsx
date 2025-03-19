@@ -1,6 +1,6 @@
-import React, { ChangeEventHandler, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Modal } from 'react-bootstrap';
-import { DebouncedTextInput } from '../../components/FormElements/DebouncedTextInput';
+import { BatchNormalizationLayerForm } from './Features/FormLayers/BatchNormLayerForm';
 import { Conv2DLayerForm } from './Features/FormLayers/Conv2DLayerForm';
 import { DenseLayerForm } from './Features/FormLayers/DenseLayerForm';
 import { DropoutLayerForm } from './Features/FormLayers/DropoutLayerForm';
@@ -9,6 +9,8 @@ import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
 import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
 import { LSTMLayerForm } from './Features/FormLayers/LSTMLayerForm';
 import { MaxPooling2DLayerForm } from './Features/FormLayers/MaxPooling2DLayerForm';
+import { renderRandomConfig } from './Features/Randomness/RenderRandomConfig';
+import { IBatchNormalizationLayer } from './Models/BatchNormLayer';
 import { IConv2DLayer } from './Models/Conv2DLayer';
 import { IDenseLayer } from './Models/DenseLayer';
 import { IDropoutLayer } from './Models/DropoutLayer';
@@ -19,38 +21,9 @@ import { LayerParams } from './Models/LayerParams';
 import { ILSTM } from './Models/LSTM';
 import { IMaxPooling2D } from './Models/MaxPooling2D';
 import { IModelSettings } from './Models/ModelSettings';
-import { BatchNormalizationLayerForm } from './Features/FormLayers/BatchNormLayerForm';
-import { IBatchNormalizationLayer } from './Models/BatchNormLayer';
 
 
-//upravit aktualizaci a použít podobný přístup - udělat více interface pro ostatní možnosti a pokusit se to přendat do modálu?
-// Definice struktur pro náhodnost
-export interface IRandomConfigBase {
-  type: 'numeric' | 'text' | "numeric-test";
-}
 
-export interface INumericRandomConfig extends IRandomConfigBase {
-  type: 'numeric';
-  min: number;
-  max: number;
-  step?: number; // Volitelný parametr
-}
-
-export interface ITestNumericRandomConfig extends IRandomConfigBase {
-  type: "numeric-test";
-  min: number;
-  max: number;
-}
-
-
-export interface ITextRandomConfig extends IRandomConfigBase {
-  type: 'text';
-  options: string[];
-}
-
-export type RandomConfig = INumericRandomConfig | ITextRandomConfig | ITestNumericRandomConfig;
-export const NumericRandomizers = ["value", "numeric", "numeric-test"];
-export const TextRandomizers = ["value", "text"];
 
 //using generic type T so i can work with interfaces for specific layers. If not defined, use LayerParams
 interface LayerConfigProps<T extends LayerParams = LayerParams> {
@@ -163,97 +136,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
   };
 
 
-  //returns form options for selected randomness
-  const renderRandomConfig = (key: string, randomConfig: RandomConfig | undefined) => {
-    if (!randomConfig) return null;  // Pokud není náhodnost aktivovaná, nic se nezobrazí
-    console.log(randomConfig)
-
-    switch (randomConfig.type) {
-      case 'numeric':
-        return (
-          <>
-            <Form.Group controlId={`${key}-min`}>
-              <Form.Label>Min Value:</Form.Label>
-              <Form.Control
-                type="number"
-                value={(randomConfig as INumericRandomConfig).min}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(`${key}Random.min`, parseFloat(e.target.value))
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId={`${key}-max`}>
-              <Form.Label>Max Value:</Form.Label>
-              <Form.Control
-                type="number"
-                value={(randomConfig as INumericRandomConfig).max}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(`${key}Random.max`, parseFloat(e.target.value))
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId={`${key}-step`}>
-              <Form.Label>Step (Optional):</Form.Label>
-              <Form.Control
-                type="number"
-                value={(randomConfig as INumericRandomConfig).step || 1}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(`${key}Random.step`, parseFloat(e.target.value))
-                }
-              />
-            </Form.Group>
-          </>
-        );
-
-      case "numeric-test":
-        return (
-          <>
-            <Form.Group controlId={`${key}-min`}>
-              <Form.Label>Min Value:</Form.Label>
-              <Form.Control
-                type="number"
-                value={(randomConfig as ITestNumericRandomConfig).min}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(`${key}Random.min`, parseFloat(e.target.value))
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId={`${key}-max`}>
-              <Form.Label>Max Value:</Form.Label>
-              <Form.Control
-                type="number"
-                value={(randomConfig as ITestNumericRandomConfig).max}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(`${key}Random.max`, parseFloat(e.target.value))
-                }
-              />
-            </Form.Group>
-          </>
-
-        )
-      case 'text':
-        const handleDebouncedChange = useCallback((value: string) => {
-          const newOptions = value ? value.split(',').map(option => option.trim()).filter(option => option !== '') : [];
-          handleChange(`${key}Random.options`, newOptions); // Volání handleChange s novými options
-        }, [key, handleChange]); // Závislosti zůstávají stejné, pokud se nemění key nebo handleChange
-
-        return (
-          <>
-            <Form.Group controlId={`${key}-options`}>
-              <Form.Label>Options:</Form.Label>
-
-              <DebouncedTextInput
-                onChange={handleDebouncedChange} // Použití stabilizované verze onChange
-                value={(randomConfig as ITextRandomConfig).options.join(', ')} // Zobrazení pole jako čárkou oddělený řetězec
-              />
-
-            </Form.Group>
-          </>
-        );
-      default:
-        return null;
-    }
-  };
+ 
 
   const handleInputsChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
@@ -297,7 +180,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             currentLayer={currentLayer as IDenseLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
-            renderRandomConfig={renderRandomConfig}
+            // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
             handleActivationChange={handleActivationChange} //tady by mohl být ten problém. Používám handleActivationChange, ale úpravu tam má jen handlechange
           />
@@ -308,7 +191,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             currentLayer={currentLayer as IConv2DLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
-            renderRandomConfig={renderRandomConfig}
+            // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
           />
         );
@@ -326,7 +209,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
               currentLayer={currentLayer as IGeneratorLayer}
               handleChange={handleChange}
               handleRandomToggle={handleRandomToggle}
-              renderRandomConfig={renderRandomConfig}
+              // renderRandomConfig={renderRandomConfig}
               updateModelParams={updateModelParams}
             />
             {InputsConst}
@@ -338,7 +221,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             currentLayer={currentLayer as IDropoutLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
-            renderRandomConfig={renderRandomConfig}
+            // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
           />
         );
@@ -364,7 +247,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             currentLayer={currentLayer as ILSTM}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
-            renderRandomConfig={renderRandomConfig}
+            // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
           />
         );
@@ -374,7 +257,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             currentLayer={currentLayer as IBatchNormalizationLayer}
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
-            renderRandomConfig={renderRandomConfig}
+            // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
           />
         );
@@ -390,8 +273,8 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
         <Modal.Title>{currentLayer.type} Layer (ID: {currentLayer.id})</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <FormGroup controlId={`id-${currentLayer.id}`}>
-          <Form.Label>Name</Form.Label>
+        <FormGroup className="pb-2" controlId={`id-${currentLayer.id}`}>
+          <Form.Label className='font-weight-600'>Name</Form.Label>
           <Form.Control
             type="text"
             value={currentLayer.name || ''}

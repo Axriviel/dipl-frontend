@@ -51,12 +51,11 @@ export const AutoDesignPage = () => {
             }
         },
         datasetConfig: {
-            x_columns: [],          // Výchozí prázdný seznam
+            x_columns: [],         
             x_num: 0,
             y_columns: [],
             y_num: 0,
-            test_size: 0.2,         // Výchozí hodnota pro testovací sadu
-            // file: null,             // Výchozí hodnota pro soubor
+            test_size: 0.2,         
         }
     });
     const [tags, setTags] = useState<string[]>([])

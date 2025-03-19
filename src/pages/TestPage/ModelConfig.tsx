@@ -39,13 +39,16 @@ export const ModelConfig: React.FC = () => {
     layers: [createInputLayer({ id: "1732203259530" }), createDenseLayer({ id: "1732203259531", units: 1, activation: "sigmoid", inputs: ["1732203259530"] })], settings: {
       opt_algorithm: "random",
       optimizer: 'adam',
+      optimizerRandom: undefined,
       loss: 'binary_crossentropy',
       model_name: "myModel",
       metrics: ['accuracy'],
       monitor_metric: "val_accuracy",
       epochs: 10,
+      epochsRandom: undefined,
       batch_size: 32,
-      max_models: 5,
+      batch_sizeRandom: undefined,
+      max_models: 10,
       es_threshold: 0.7,
       NNI: {
         nni_concurrency: 1,
@@ -61,12 +64,11 @@ export const ModelConfig: React.FC = () => {
       }
     },
     datasetConfig: {
-      x_columns: [],          // Výchozí prázdný seznam
+      x_columns: [],         
       x_num: 8,
       y_columns: [],
       y_num: 9,
-      test_size: 0.2,         // Výchozí hodnota pro testovací sadu
-      // file: null,             // Výchozí hodnota pro soubor
+      test_size: 0.2,         
     }
   }));
 

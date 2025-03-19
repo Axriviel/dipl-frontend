@@ -15,11 +15,12 @@ export const RandomizerSelect: React.FC<Props> = ({
     label = 'Select Random Type' // Výchozí popisek
 }) => {
     return (
-        <Form.Group controlId="randomTypeSelect">
+        <Form.Group className="m-0">
             <Form.Label>{label} <HelpfulTip text="Select which randomization mode to use. Value means no randomization and using direct input value"/></Form.Label>
             <Form.Select
                 as="select"
                 value={value}
+                className="w-50 mb-1"
                 onChange={(e) => { 
                     console.log("Changing to:", e.target.value)
                     onChange(e.target.value)}}

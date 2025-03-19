@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const FlattenLayerForm: React.FC<Props> = ({ InputsConst }) => (
-    <>
-    {InputsConst}
-    </>
+    <div className="custom-form">
+        {InputsConst}
+    </div>
 );

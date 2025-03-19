@@ -3,7 +3,6 @@ import { Button, Form } from 'react-bootstrap';
 import { LayerParams } from '../../Models/LayerParams';
 import { createDenseLayer } from '../Layers/CreateDenseLayer';
 import { createConv2DLayer } from '../Layers/CreateConv2DLayer';
-import { LayerConfig, NumericRandomizers, RandomConfig } from '../../LayerConfig';
 import { IModelSettings } from '../../Models/ModelSettings';
 import { RandomizerSelect } from '../RandomizerSelect';
 import { IGeneratorLayer } from '../../Models/GeneratorLayers';
@@ -14,12 +13,15 @@ import { createLSTMLayer } from '../Layers/CreateLSTMLayer';
 import { createFlattenLayer } from '../Layers/CreateFlattenLayer';
 import { createInputLayer } from '../Layers/CreateInputLayer';
 import "./GeneratorLayerForm.css"
+import { NumericRandomizers } from '../../Models/RandomConfigModels';
+import { renderRandomConfig } from '../Randomness/RenderRandomConfig';
+import { LayerConfig } from '../../LayerConfig';
 
 interface GeneratorLayerFormProps {
   currentLayer: IGeneratorLayer;
   handleChange: (key: string, value: any) => void;
   handleRandomToggle: (key: string, type: string) => void;
-  renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
+  // renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
   updateModelParams: (updatedLayers?: LayerParams[], updatedSettings?: IModelSettings) => void;
 }
 
@@ -27,7 +29,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
   currentLayer,
   handleChange,
   handleRandomToggle,
-  renderRandomConfig,
+  // renderRandomConfig,
   updateModelParams,
 }) => {
   const [selectedLayer, setSelectedLayer] = useState<LayerParams | null>(null);
@@ -104,7 +106,7 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
           onChange={(selectedType: string) => handleRandomToggle('size', selectedType)}
           options={NumericRandomizers} // Můžeš předat jakýkoliv seznam možností
         />
-        {renderRandomConfig('size', currentLayer.sizeRandom)}
+        {renderRandomConfig('size', currentLayer.sizeRandom, handleChange)}
         {!currentLayer.sizeRandom && (
           <Form.Control
             type="number"

@@ -106,6 +106,9 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                     </Form.Group> */}
 
                     {/* Výběr sloupců pro vstupy X */}
+                    <Form.Group controlId="formXColumn">
+                    <Form.Label className='font-weight-600'>Input columns (X)</Form.Label>
+
                     <Form.Select as="select" multiple onChange={handleXColumnsChange} value={selectedXColumns}>
                         {!datasetColumnsLoading ? (
                             columnNames.map((col, index) => (
@@ -115,10 +118,11 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                             <option disabled value={""}>{"Loading ..."}</option>
                         )}
                     </Form.Select>
+                    </Form.Group>
 
                     {/* Výběr sloupce pro výstup Y */}
                     <Form.Group controlId="formYColumn">
-                        <Form.Label>Output Column (Y)</Form.Label>
+                        <Form.Label className='font-weight-600'>Output Column (Y)</Form.Label>
                         <Form.Select as="select" multiple onChange={handleYColumnChange} value={selectedYColumns}>
                             {!datasetColumnsLoading ? (
                                 columnNames.map((col, index) => (
@@ -132,7 +136,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
 
                     {/* Nastavení testovací velikosti */}
                     <Form.Group controlId="formTestSize">
-                        <Form.Label>Test Size <HelpfulTip text='Sets trainTestSplit ratio (e.g. 0.2 selects 20% data as testing and 80% as training)' /></Form.Label>
+                        <Form.Label className='font-weight-600'>Test Size <HelpfulTip text='Sets trainTestSplit ratio (e.g. 0.2 selects 20% data as testing and 80% as training)' /></Form.Label>
                         <Form.Control
                             type="number"
                             step="0.1"
@@ -146,7 +150,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
 
                     <p className='mt-2'>Alternative if you have your columns ordered:</p>
                     <Form.Group controlId="formXNum">
-                        <Form.Label>X col number <HelpfulTip text='Number of input columns from 0 to N (e.g. 4 selects columns 0, 1, 2, 3)' /></Form.Label>
+                        <Form.Label className='font-weight-600'>X col number <HelpfulTip text='Number of input columns from 0 to N (e.g. 4 selects columns 0, 1, 2, 3)' /></Form.Label>
                         <Form.Control
                             type="number"
                             min="1"
@@ -158,7 +162,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
 
                     {/* Nastavení y_num */}
                     <Form.Group controlId="formYNum">
-                        <Form.Label>Y col number <HelpfulTip text='Number of output column. (e.g. 4 selects column 3 as output (counted from 0))' /></Form.Label>
+                        <Form.Label className='font-weight-600'>Y col number <HelpfulTip text='Number of output column. (e.g. 4 selects column 3 as output (counted from 0))' /></Form.Label>
                         <Form.Control
                             type="number"
                             min="1"

@@ -1,14 +1,15 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { NumericRandomizers, RandomConfig } from "../../LayerConfig";
 import { RandomizerSelect } from "../RandomizerSelect";
 import { IBatchNormalizationLayer } from "../../Models/BatchNormLayer";
+import { renderRandomConfig } from "../Randomness/RenderRandomConfig";
+import { NumericRandomizers } from "../../Models/RandomConfigModels";
 
 interface BatchNormalizationLayerFormProps {
     currentLayer: IBatchNormalizationLayer;
     handleChange: (key: string, value: any) => void;
     handleRandomToggle: (key: string, type: string) => void;
-    renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
+    // renderRandomConfig: (key: string, randomConfig: RandomConfig | undefined) => JSX.Element | null;
     InputsConst: JSX.Element;
 }
 
@@ -16,11 +17,11 @@ export const BatchNormalizationLayerForm: React.FC<BatchNormalizationLayerFormPr
     currentLayer,
     handleChange,
     handleRandomToggle,
-    renderRandomConfig,
+    // renderRandomConfig,
     InputsConst,
 }) => {
     return (
-        <>
+        <div className="custom-form">
             {/* Momentum */}
             <Form.Group controlId={`momentum-${currentLayer.id}`}>
                 <Form.Label>Momentum:</Form.Label>
@@ -29,7 +30,7 @@ export const BatchNormalizationLayerForm: React.FC<BatchNormalizationLayerFormPr
                     onChange={(selectedType: string) => handleRandomToggle("momentum", selectedType)}
                     options={NumericRandomizers}
                 />
-                {renderRandomConfig("momentum", currentLayer.momentumRandom)}
+                {renderRandomConfig("momentum", currentLayer.momentumRandom, handleChange)}
                 {!currentLayer.momentumRandom && (
                     <Form.Control
                         type="number"
@@ -50,7 +51,7 @@ export const BatchNormalizationLayerForm: React.FC<BatchNormalizationLayerFormPr
                     onChange={(selectedType: string) => handleRandomToggle("epsilon", selectedType)}
                     options={NumericRandomizers}
                 />
-                {renderRandomConfig("epsilon", currentLayer.epsilonRandom)}
+                {renderRandomConfig("epsilon", currentLayer.epsilonRandom, handleChange)}
                 {!currentLayer.epsilonRandom && (
                     <Form.Control
                         type="number"
@@ -96,6 +97,6 @@ export const BatchNormalizationLayerForm: React.FC<BatchNormalizationLayerFormPr
             </Form.Group>
 
             {InputsConst}
-        </>
+        </div>
     );
 };
