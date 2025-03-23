@@ -1,5 +1,5 @@
-import { RandomConfig } from "../LayerConfig";
 import { LayerParams } from "./LayerParams";
+import { RandomConfig } from "./RandomConfigModels";
 
 export interface ILSTM extends LayerParams {
     units: number,

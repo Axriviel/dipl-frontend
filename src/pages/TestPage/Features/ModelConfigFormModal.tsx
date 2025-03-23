@@ -9,16 +9,19 @@ import { RandomizerSelect } from "./RandomizerSelect";
 import { renderRandomConfig } from "./Randomness/RenderRandomConfig";
 import { NumericRandomizers, RandomConfig, TextRandomizers } from "../Models/RandomConfigModels";
 import { IModelSettings } from "../Models/ModelSettings";
+import { TagsForm } from "../../../features/TagsForm";
 
 interface Props {
     modelParams: IModelParams;
     setModelParams: React.Dispatch<React.SetStateAction<IModelParams>>;
     show: boolean;
     handleClose: () => void;
+    tags: string[];
+    setTags: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 
-export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
+export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose, tags, setTags }) => {
 
     // Funkce pro aktualizaci nastavení
     const updateSettings = (e: any) => {
@@ -391,6 +394,9 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             value={modelParams.settings.es_threshold}
                             onChange={updateSettings}
                         />
+                    </Form.Group>
+                    <Form.Group className="" controlId="tags">
+                        <TagsForm tags={tags} setTags={setTags} />
                     </Form.Group>
                 </Form>
             </Modal.Body>

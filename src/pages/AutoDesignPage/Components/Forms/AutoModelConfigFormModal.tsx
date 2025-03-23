@@ -75,7 +75,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
             </Modal.Header>
 
             <Modal.Body>
-                <Form>
+                <Form className="custom-form">
                     {/* choose optimization algorithm */}
                     <Form.Group controlId="formOptimizer">
                         <Form.Label>Opt Algorithm</Form.Label>

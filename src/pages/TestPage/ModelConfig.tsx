@@ -64,11 +64,11 @@ export const ModelConfig: React.FC = () => {
       }
     },
     datasetConfig: {
-      x_columns: [],         
+      x_columns: [],
       x_num: 8,
       y_columns: [],
       y_num: 9,
-      test_size: 0.2,         
+      test_size: 0.2,
     }
   }));
 
@@ -83,6 +83,7 @@ export const ModelConfig: React.FC = () => {
   const [selectedDataset, setSelectedDataset] = useState<string>("");
   const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
   const [taskActive, setTaskActive] = useState<boolean>(false)
+  const [tags, setTags] = useState<string[]>([])
   const selectableLayers = [
     { id: 1, name: 'Dense' },
     { id: 2, name: 'Conv2D' },
@@ -293,6 +294,13 @@ export const ModelConfig: React.FC = () => {
     console.log(JSON.stringify(modelParams.settings));
     console.log(JSON.stringify(modelParams.datasetConfig));
     console.log(JSON.stringify(selectedDataset));
+    const updatedTags = {
+      "task": "undefined",
+      "dataset": selectedDataset,
+      "metric": modelParams.settings.monitor_metric,
+      "userTags": tags,
+    };
+    console.log(JSON.stringify(updatedTags));
 
     if (!selectedDataset) {
       addAlert("Please select a dataset before submitting", "error");
@@ -311,6 +319,7 @@ export const ModelConfig: React.FC = () => {
     formData.append("layers", JSON.stringify(modelParams.layers));
     formData.append("settings", JSON.stringify(modelParams.settings));
     formData.append("datasetConfig", JSON.stringify(modelParams.datasetConfig));
+    formData.append("tags", JSON.stringify(updatedTags));
 
     addAlert("Task sent to server", "info");
     setTaskActive(true)
@@ -456,6 +465,8 @@ export const ModelConfig: React.FC = () => {
           setModelParams={setModelParams}
           show={showSettingsModal}
           handleClose={handleCloseSettingsModal}
+          tags={tags}
+          setTags={setTags}
         />
 
         <PresetsModal

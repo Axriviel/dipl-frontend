@@ -44,7 +44,7 @@ h3 {
     text-wrap: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .models-panel {
         position: relative;
         border-right: none;
@@ -55,6 +55,13 @@ h3 {
 
     .section-border {
         border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .info-right-section {
+        width: 100%;
+        button {
+            width: 25%
+        }
     }
 
     .metric-chart {

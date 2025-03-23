@@ -9,7 +9,6 @@ import { GeneratorLayerForm } from './Features/FormLayers/GeneratorLayerForm';
 import { InputLayerForm } from './Features/FormLayers/InputLayerForm';
 import { LSTMLayerForm } from './Features/FormLayers/LSTMLayerForm';
 import { MaxPooling2DLayerForm } from './Features/FormLayers/MaxPooling2DLayerForm';
-import { renderRandomConfig } from './Features/Randomness/RenderRandomConfig';
 import { IBatchNormalizationLayer } from './Models/BatchNormLayer';
 import { IConv2DLayer } from './Models/Conv2DLayer';
 import { IDenseLayer } from './Models/DenseLayer';

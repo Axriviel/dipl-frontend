@@ -25,7 +25,6 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
                                         <pre>{JSON.stringify(data.used_params[0], null, 2)}</pre>
                                     </Accordion.Body>
                                 </Accordion.Item>
-                                {console.log(data.used_params[1])}
                                 {data.used_params[1] && Object.keys(data.used_params[1]).length > 0 && (
                                     <Accordion.Item eventKey="580">
                                         <Accordion.Header>Dataset params:</Accordion.Header>

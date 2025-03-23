@@ -12,6 +12,7 @@ import "./AutoDesignPage.css";
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
+import { TagsForm } from "../../features/TagsForm";
 
 
 export const AutoDesignPage = () => {
@@ -19,7 +20,7 @@ export const AutoDesignPage = () => {
         taskType: "binary classification",
         layers: [],
         maxModels: 20,
-        timeOut: 0,
+        timeOut: 10,
         settings: {
             opt_algorithm: "random",
             optimizer: 'adam',
@@ -51,11 +52,11 @@ export const AutoDesignPage = () => {
             }
         },
         datasetConfig: {
-            x_columns: [],         
+            x_columns: [],
             x_num: 0,
             y_columns: [],
             y_num: 0,
-            test_size: 0.2,         
+            test_size: 0.2,
         }
     });
     const [tags, setTags] = useState<string[]>([])
@@ -128,6 +129,7 @@ export const AutoDesignPage = () => {
             };
 
             // Pokud se mění taskType, aktualizujte layers
+            // a nastavení úlohy v settings TBA
             if (name === "taskType") {
                 updatedTask.layers = GetTaskLayers(value);
                 handlePresetFileChange(value)
@@ -260,6 +262,7 @@ export const AutoDesignPage = () => {
         console.log(JSON.stringify(autoTask.layers));
         console.log(JSON.stringify(autoTask.settings));
         console.log(JSON.stringify(autoTask.datasetConfig));
+        console.log(JSON.stringify(autoTask.timeOut));
         console.log("Selected dataset:", selectedDataset);
 
         // Přidání typ úlohy a datasetu jako tagů
@@ -488,13 +491,13 @@ export const AutoDesignPage = () => {
                             onChange={handleDebouncedNumberChange("timeOut")}
                             timeout={500}
                             placeholder="Enter timeout in seconds"
-                            min={0}
-                            step={1}
+                            min={10}
+                            step={10}
                         />
                     </>
                 )}
 
-                <Form.Label>Tags: <HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
+                {/* <Form.Label>Tags: <HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
                 <div className="d-flex">
                     <Form.Control
                         type="text"
@@ -530,7 +533,8 @@ export const AutoDesignPage = () => {
                     ) : (
                         <p>No tags added yet.</p>
                     )}
-                </div>
+                </div> */}
+                <TagsForm tags={tags} setTags={setTags} />
             </Form.Group>
 
 

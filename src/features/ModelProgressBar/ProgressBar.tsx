@@ -31,6 +31,7 @@ export const TaskProgressBar: React.FC<Props> = ({ isActive, setIsActive }) => {
                 const data = await response.json();
 
                 if (data.progress !== undefined && Number.isFinite(data.progress)) {
+                    console.log(data.progress)
                     setProgress(data.progress);
                 } else {
                     console.error("Invalid progress data:", data);
