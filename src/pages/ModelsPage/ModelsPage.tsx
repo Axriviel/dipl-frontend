@@ -16,6 +16,7 @@ import { configData } from "../../config/config";
 import DataModal from "../../components/ModelDetails/ModelDetailsModal";
 import Tippy from "@tippyjs/react";
 import { DownloadJSON } from "../../features/Models/DownloadJSON";
+import { ModelProtocolModal } from "../../components/ModelProtocolModal/ModelProtocolModal";
 // import Tippy from "@tippyjs/react";
 
 
@@ -28,9 +29,11 @@ export const ModelsPage = () => {
     const [modelStructureData, setModelStructureData] = useState<IModelStructureData | null>(null);
 
     const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [showProtocolModal, setShowProtocolModal] = useState(false);
 
     const handleClose = () => setShowDetailsModal(false);
     const handleCloseParams = () => setShowParamsModal(false);
+    const handleCloseProtocol = () => setShowProtocolModal(false);
 
     const handleDownload = () => {
         DownloadModel(selectedModel!.id)
@@ -89,6 +92,13 @@ export const ModelsPage = () => {
     const handleShowParams = async () => {
         try {
             setShowParamsModal(true);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    const handleShowProtocol = async () => {
+        try {
+            setShowProtocolModal(true);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -160,7 +170,7 @@ export const ModelsPage = () => {
                                         key={"model_" + model.id}
                                         className={`list-group-item ${model.id === selectedModel!.id ? 'active' : ''}`}
                                         // onClick={() => setSelectedModel(model)}
-                                        onClick={() => {setSelectedModel(model); console.log(model)}}
+                                        onClick={() => { setSelectedModel(model); console.log(model) }}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         {model.name}
@@ -192,47 +202,58 @@ export const ModelsPage = () => {
                     </div>
 
                     {/* right section */}
-                    <div className="col-md-3 p-3 px-5 d-flex flex-column align-items-left info-right-section">
-                        <h3>{selectedModel?.name}</h3>
-                        {/* {selectedModel.id} */}
-                        {/* <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p> */}
-                        <p><strong>Designer:</strong> {selectedModel?.used_designer}</p>
-                        <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
-                        <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
-                        <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
-                        {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
-                        <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
-                        <p><strong>Protocol:</strong> {selectedModel?.task_protocol.one_hot_encoded_x}</p>
-                        <p><strong>Created:</strong> {selectedModel?.task_protocol.finished_at}</p>
-                        {/* <p><strong>used_tags:</strong> {selectedModel?.used_tags.user_tags}</p> */}
-                        <p><strong>Used tags:</strong> {selectedModel?.used_tags.user_tags ?? "no user defined tags"}</p>
-                        <Tippy content="Display layers summary">
-                            <Button onClick={handleShowDetails} className="m-2">
-                                Summary
-                            </Button>
-                        </Tippy>
-                        <Tippy content="Show model parameters and downloadable JSON" placement="bottom">
-                            <Button onClick={handleShowParams} className="m-2">
-                                Params
-                            </Button>
-                        </Tippy>
+                    <div className="col-md-3 p-3 px-5 d-flex info-right-section-wrapper">
+                        <div className="d-flex flex-column align-items-left info-right-section">
+                            <h3>{selectedModel?.name}</h3>
+                            {/* {selectedModel.id} */}
+                            {/* <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p> */}
+                            <p><strong>Designer:</strong> {selectedModel?.used_designer}</p>
+                            <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
+                            <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
+                            <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
+                            {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
+                            <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
+                            <p><strong>Protocol:</strong> <span className="protocol-ref" onClick={handleShowProtocol}>Here</span></p>
+                            <p><strong>Created:</strong> {selectedModel?.task_protocol.finished_at}</p>
+                            {/* <p><strong>used_tags:</strong> {selectedModel?.used_tags.user_tags}</p> */}
+                            <p><strong>Used tags:</strong> {selectedModel?.used_tags.user_tags ?? "no user defi fsfd af sad afs safd ned tags"}</p>
+                            <Tippy content="Display layers summary">
+                                <Button onClick={handleShowDetails} className="m-2">
+                                    Summary
+                                </Button>
+                            </Tippy>
+                            <Tippy content="Show model parameters and downloadable JSON" placement="bottom">
+                                <Button onClick={handleShowParams} className="m-2">
+                                    Params
+                                </Button>
+                            </Tippy>
 
-                        <Tippy content="Downloads this model in JSON format, which can be uploaded in custom designer to further work with it">
-                            <Button onClick={DownloadJSON(paramsModalData)} disabled={!paramsModalData} className="m-2">Download JSON</Button>
-                        </Tippy>
+                            <Tippy content="Downloads this model in JSON format, which can be uploaded in custom designer to further work with it">
+                                <Button onClick={DownloadJSON(paramsModalData)} disabled={!paramsModalData} className="m-2">Download JSON</Button>
+                            </Tippy>
 
-                        {paramsModalData && <DataModal show={showParamsModal} data={paramsModalData} onClose={handleCloseParams} />}
+                            {paramsModalData && <DataModal show={showParamsModal} data={paramsModalData} onClose={handleCloseParams} />}
 
-                        {/* show modal only when data exist */}
-                        {modelStructureData && (
-                            <ModelStructureModal
-                                paramsButton={handleShowParams}
-                                modelName={selectedModel.name}
-                                data={modelStructureData}
-                                show={showDetailsModal}
-                                onClose={handleClose}
-                            />
-                        )}
+                            {/* show modal only when data exist */}
+                            {modelStructureData && (
+                                <ModelStructureModal
+                                    paramsButton={handleShowParams}
+                                    modelName={selectedModel.name}
+                                    data={modelStructureData}
+                                    show={showDetailsModal}
+                                    onClose={handleClose}
+                                />
+                            )}
+
+                            {selectedModel.task_protocol && (
+                                <ModelProtocolModal
+                                    modelName={selectedModel.name}
+                                    data={selectedModel.task_protocol}
+                                    show={showProtocolModal}
+                                    onClose={handleCloseProtocol}
+                                />
+                            )}
+                        </div>
                     </div>
 
 
