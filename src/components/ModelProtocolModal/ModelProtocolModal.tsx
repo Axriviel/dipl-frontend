@@ -46,6 +46,12 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
             </ul>
             : " none encoded"}
         </p>
+        <p>
+          <strong>Started at:</strong> {data.started_at}
+        </p>
+        <p>
+          <strong>Finished at:</strong> {data.finished_at}
+        </p>
 
       </Modal.Body>
       <Modal.Footer>

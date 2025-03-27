@@ -49,6 +49,8 @@ export const ModelConfig: React.FC = () => {
       batch_size: 32,
       batch_sizeRandom: undefined,
       max_models: 10,
+      use_timeout: false,
+      timeout: 0,
       es_threshold: 0.7,
       NNI: {
         nni_concurrency: 1,
@@ -146,6 +148,8 @@ export const ModelConfig: React.FC = () => {
         epochs: 10,
         batch_size: 32,
         max_models: 5,
+        use_timeout: false,
+        timeout: 0,
         es_threshold: 0.7,
         NNI: {
           nni_concurrency: 1,

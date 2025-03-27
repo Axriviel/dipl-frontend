@@ -1,9 +1,12 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { availableMetrics, availableMonitorMetrics, lossFunctionOptions, optAlgorithmAutoOptions, optimizerOptions } from "../../../../config/config";
 import { GASettingsForm } from "../../../TestPage/Features/Components/GASettingsForm";
 import { IAutoTaskState } from "../../Models/AutoTask";
 import { HelpfulTip } from "../../../../features/Tooltip";
+import Tippy from "@tippyjs/react";
+import { DebouncedNumberInput } from "../../../../components/FormElements/DebouncedNumberInput";
+import { IModelAutoSettings } from "../../Models/ModelAutoSettings";
 
 interface Props {
     modelParams: IAutoTaskState;
@@ -14,6 +17,7 @@ interface Props {
 
 
 export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
+    const [useTimer, setUseTimer] = useState<boolean>(false)
 
     // Funkce pro aktualizaci nastavení
     const updateSettings = (e: any) => {
@@ -67,6 +71,29 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
             }
         }));
     };
+    const handleUseTimer = () => {
+        setUseTimer((prev) => !prev)
+        console.log("setting timer to", !useTimer)
+        setModelParams((prev) => ({
+            ...prev,
+            settings: {
+                ...prev.settings,
+                use_timeout: !useTimer,
+            },
+        }));
+    }
+    const handleDebouncedNumberChange = useCallback((key: keyof IModelAutoSettings) => {
+        return (value: number) => {
+            console.log("setting", key, "to", value)
+            setModelParams((prev) => ({
+                ...prev,
+                settings: {
+                    ...prev.settings,
+                    [key]: value,
+                }
+            }));
+        };
+    }, []);
 
     return (
         <Modal show={show} onHide={handleClose} centered size="lg">
@@ -78,7 +105,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                 <Form className="custom-form">
                     {/* choose optimization algorithm */}
                     <Form.Group controlId="formOptimizer">
-                        <Form.Label>Opt Algorithm</Form.Label>
+                        <Form.Label>Opt Algorithm <HelpfulTip text="Choose the approach for optimization" /></Form.Label>
                         <Form.Select
                             as="select"
                             name="opt_algorithm"
@@ -123,7 +150,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                     </Form.Group>
 
                     <Form.Group controlId="modelName">
-                        <Form.Label>Model Name <HelpfulTip text="Select unique model name. Keeping default results in randomly generated number behind the name."/></Form.Label>
+                        <Form.Label>Model Name <HelpfulTip text="Select unique model name. Keeping default results in randomly generated number behind the name." /></Form.Label>
                         <Form.Control
                             type="text"
                             name="model_name"
@@ -213,6 +240,30 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                             value={modelParams.settings.max_models}
                             onChange={updateSettings}
                         />
+                    </Form.Group>
+                    <Form.Group>
+                        <Tippy content="Limit time for which optimization can run in seconds">
+                            <Form.Check
+                                type="checkbox"
+                                label="Use timeout"
+                                checked={useTimer}
+                                onChange={handleUseTimer}
+                            />
+                        </Tippy>
+
+                        {useTimer && (
+                            <>
+                                <Form.Label>Timeout (seconds):</Form.Label>
+                                <DebouncedNumberInput
+                                    value={modelParams.settings.timeout || 0}
+                                    onChange={handleDebouncedNumberChange("timeout")}
+                                    timeout={500}
+                                    placeholder="Enter timeout in seconds"
+                                    min={10}
+                                    step={10}
+                                />
+                            </>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="es_threshold">
                         <Form.Label>ES threshold</Form.Label>

@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { GASettingsForm } from "./Components/GASettingsForm";
 import { NNISettingsForm } from "./Components/NNISettingsForm";
@@ -10,6 +10,8 @@ import { renderRandomConfig } from "./Randomness/RenderRandomConfig";
 import { NumericRandomizers, RandomConfig, TextRandomizers } from "../Models/RandomConfigModels";
 import { IModelSettings } from "../Models/ModelSettings";
 import { TagsForm } from "../../../features/TagsForm";
+import Tippy from "@tippyjs/react";
+import { DebouncedNumberInput } from "../../../components/FormElements/DebouncedNumberInput";
 
 interface Props {
     modelParams: IModelParams;
@@ -22,6 +24,7 @@ interface Props {
 
 
 export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose, tags, setTags }) => {
+    const [useTimer, setUseTimer] = useState<boolean>(false)
 
     // Funkce pro aktualizaci nastavení
     const updateSettings = (e: any) => {
@@ -117,6 +120,18 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
         });
     };
 
+    const handleUseTimer = () => {
+        setUseTimer((prev) => !prev)
+        console.log("setting timer to", !useTimer)
+        setModelParams((prev) => ({
+            ...prev,
+            settings: {
+                ...prev.settings,
+                use_timeout: !useTimer,
+            },
+        }));
+    }
+
     const handleChange = (key: keyof IModelSettings | string, value: any) => {
         console.log(`Updating ${key} to`, value);
 
@@ -188,6 +203,19 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
         }));
     };
 
+    const handleDebouncedNumberChange = useCallback((key: keyof IModelSettings) => {
+        return (value: number) => {
+            console.log("setting", key, "to", value)
+            setModelParams((prev) => ({
+                ...prev,
+                settings: {
+                    ...prev.settings,
+                    [key]: value,
+                }
+            }));
+        };
+    }, []);
+
     return (
         <Modal show={show} onHide={handleClose} centered size="lg">
             <Modal.Header closeButton>
@@ -198,7 +226,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                 <Form className="custom-form">
                     {/* choose optimization algorithm */}
                     <Form.Group controlId="formOptimizer">
-                        <Form.Label>Opt Algorithm</Form.Label>
+                        <Form.Label>Opt Algorithm <HelpfulTip text="Choose the approach for optimization" /></Form.Label>
                         <Form.Select
                             as="select"
                             name="opt_algorithm"
@@ -384,6 +412,30 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             value={modelParams.settings.max_models}
                             onChange={updateSettings}
                         />
+                    </Form.Group>
+                    <Form.Group>
+                        <Tippy content="Limit time for which optimization can run in seconds">
+                            <Form.Check
+                                type="checkbox"
+                                label="Use timeout"
+                                checked={useTimer}
+                                onChange={handleUseTimer}
+                            />
+                        </Tippy>
+
+                        {useTimer && (
+                            <>
+                                <Form.Label>Timeout (seconds):</Form.Label>
+                                <DebouncedNumberInput
+                                    value={modelParams.settings.timeout || 0}
+                                    onChange={handleDebouncedNumberChange("timeout")}
+                                    timeout={500}
+                                    placeholder="Enter timeout in seconds"
+                                    min={10}
+                                    step={10}
+                                />
+                            </>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="es_threshold">
                         <Form.Label>ES threshold</Form.Label>

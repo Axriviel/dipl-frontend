@@ -3,5 +3,6 @@ export interface ITaskProtocol {
     y_columns: string[],
     one_hot_encoded_x: string[],
     one_hot_encoded_y: string[],
+    started_at: string
     finished_at: string
 }

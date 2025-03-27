@@ -216,7 +216,7 @@ export const ModelsPage = () => {
                             <p><strong>Protocol:</strong> <span className="protocol-ref" onClick={handleShowProtocol}>Here</span></p>
                             <p><strong>Created:</strong> {selectedModel?.task_protocol.finished_at}</p>
                             {/* <p><strong>used_tags:</strong> {selectedModel?.used_tags.user_tags}</p> */}
-                            <p><strong>Used tags:</strong> {selectedModel?.used_tags.user_tags ?? "no user defi fsfd af sad afs safd ned tags"}</p>
+                            <p><strong>Used tags:</strong> {selectedModel?.used_tags.user_tags ?? "no user defined tags"}</p>
                             <Tippy content="Display layers summary">
                                 <Button onClick={handleShowDetails} className="m-2">
                                     Summary

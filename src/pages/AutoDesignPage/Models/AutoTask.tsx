@@ -8,6 +8,5 @@ export interface IAutoTaskState {
     layers: LayerParams[];
     settings: IModelAutoSettings;
     datasetConfig: IDatasetConfig;
-    timeOut?: number;
     maxModels: number;
 }

@@ -20,6 +20,7 @@ import { ListNotifications } from './pages/ListNotifications/ListNotifications';
 import { NotificationProvider } from './features/Notifications/NotificationsContext';
 import { UserDatasetsPage } from './pages/UserDatasetsPage/UserDatasetsPage';
 import 'tippy.js/dist/tippy.css'; // optional
+import { UsageExamplePage } from './pages/UsageExamplePage/UsageExamplePage';
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
                   <Route path="/modelcreator" element={<ModelDesignerPage />} />
                   <Route path="/models" element={<ModelsPage />} />
                   <Route path="/test" element={<ModelConfig />} />
+                  <Route path="/usageexample" element={<UsageExamplePage />} />
                   <Route path="/listNotifications" element={<ListNotifications />} />
                   <Route path="/t" element={<HomePage />} />
                   <Route path="/profile" element={<ProfilePage />} />

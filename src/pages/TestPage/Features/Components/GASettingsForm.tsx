@@ -1,6 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { IModelSettingsGA } from "../../Models/ModelSettingsGA";
+import { HelpfulTip } from "../../../../features/Tooltip";
 
 interface Props {
     gaSettings: IModelSettingsGA;
@@ -13,7 +14,7 @@ export const GASettingsForm: React.FC<Props> = ({ gaSettings, updateGASettings }
     return (
         <>
             <Form.Group controlId="formGAGenerations">
-                <Form.Label>Generations</Form.Label>
+                <Form.Label>Generations <HelpfulTip text="Number of generations for which the evolutions should occur" /></Form.Label>
                 <Form.Control
                     type="number"
                     name="generations"
@@ -23,7 +24,7 @@ export const GASettingsForm: React.FC<Props> = ({ gaSettings, updateGASettings }
             </Form.Group>
 
             <Form.Group controlId="formGAPopulationSize">
-                <Form.Label>Population Size</Form.Label>
+                <Form.Label>Population Size <HelpfulTip text="How many models should exist in the population at the same time" /></Form.Label>
                 <Form.Control
                     type="number"
                     name="populationSize"

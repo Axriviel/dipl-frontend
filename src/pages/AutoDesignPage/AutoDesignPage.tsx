@@ -20,7 +20,6 @@ export const AutoDesignPage = () => {
         taskType: "binary classification",
         layers: [],
         maxModels: 20,
-        timeOut: 10,
         settings: {
             opt_algorithm: "random",
             optimizer: 'adam',
@@ -29,6 +28,8 @@ export const AutoDesignPage = () => {
             metrics: ['accuracy'],
             monitor_metric: "val_accuracy",
             epochs: 10,
+            use_timeout: false,
+            timeout: 0,
             batch_size: 32,
             // batch_sizeRandom: {
             //     "max": 100,
@@ -62,7 +63,7 @@ export const AutoDesignPage = () => {
     const [tags, setTags] = useState<string[]>([])
 
 
-    const [useTimer, setUseTimer] = useState<boolean>(false)
+    // const [useTimer, setUseTimer] = useState<boolean>(false)
     const [datasets, setDatasets] = useState<string[]>([]);
     const [selectedDataset, setSelectedDataset] = useState<string>("");
     const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
@@ -164,15 +165,15 @@ export const AutoDesignPage = () => {
         });
     };
 
-    const handleDebouncedNumberChange = useCallback((key: keyof IAutoTaskState) => {
-        return (value: number) => {
-            console.log(value)
-            setAutoTask((prev) => ({
-                ...prev,
-                [key]: value,
-            }));
-        };
-    }, []);
+    // const handleDebouncedNumberChange = useCallback((key: keyof IAutoTaskState) => {
+    //     return (value: number) => {
+    //         console.log(value)
+    //         setAutoTask((prev) => ({
+    //             ...prev,
+    //             [key]: value,
+    //         }));
+    //     };
+    // }, []);
 
     // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     if (e.target.files) {
@@ -262,7 +263,6 @@ export const AutoDesignPage = () => {
         console.log(JSON.stringify(autoTask.layers));
         console.log(JSON.stringify(autoTask.settings));
         console.log(JSON.stringify(autoTask.datasetConfig));
-        console.log(JSON.stringify(autoTask.timeOut));
         console.log("Selected dataset:", selectedDataset);
 
         // Přidání typ úlohy a datasetu jako tagů
@@ -283,7 +283,6 @@ export const AutoDesignPage = () => {
         formData.append("settings", JSON.stringify(autoTask.settings));
         formData.append("datasetConfig", JSON.stringify(autoTask.datasetConfig));
         formData.append("maxModels", JSON.stringify(autoTask.maxModels));
-        formData.append("timeOut", JSON.stringify(autoTask.timeOut));
         formData.append("tags", JSON.stringify(updatedTags));
 
         addAlert("Task sent to server", "info");
@@ -474,16 +473,16 @@ export const AutoDesignPage = () => {
                     min={1}
                     step={1}
                 /> */}
-                <Tippy content="Limit time for which optimization can run in seconds">
+                {/* <Tippy content="Limit time for which optimization can run in seconds">
                     <Form.Check
                         type="checkbox"
                         label="Use Timer"
                         checked={useTimer}
                         onChange={() => setUseTimer((prev) => !prev)}
                     />
-                </Tippy>
+                </Tippy> */}
 
-                {useTimer && (
+                {/* {useTimer && (
                     <>
                         <Form.Label>Timeout (seconds):</Form.Label>
                         <DebouncedNumberInput
@@ -495,7 +494,7 @@ export const AutoDesignPage = () => {
                             step={10}
                         />
                     </>
-                )}
+                )} */}
 
                 {/* <Form.Label>Tags: <HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
                 <div className="d-flex">

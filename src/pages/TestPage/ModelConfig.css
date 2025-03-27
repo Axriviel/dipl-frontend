@@ -19,10 +19,10 @@
 
 .model-config-progress-bar {
     position: absolute;
-    top: 6rem;
-    left: 50%;
+    bottom: 1rem;
+    left: 47%;
     transform: translateX(-50%);
-    width: 250px;
+    /* width: 250px; */
 }
 
 .download-json-button {

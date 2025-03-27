@@ -67,7 +67,7 @@ export const ListNotifications: React.FC = () => {
 
             <div className='d-flex flex-column align-items-center overflow-auto'>
                 <h1>Notifications</h1>
-                <ul>
+                <ul className='notifications'>
                     {notifications
                         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())  // Seřadí od nejnovější po nejstarší
                         .map(notification => (
@@ -78,7 +78,7 @@ export const ListNotifications: React.FC = () => {
                                     <small>{new Date(notification.timestamp).toLocaleString()}</small>
                                     <p>Read: {notification.was_read ? "Yes" : "No"}</p>
                                     <p>User: {notification.user}</p>
-                                    {isHovered === notification.id ? <div onClick={() => handleMarkAsRead(notification.id, notification.was_read)} className='mark-as-read'>Označit jako přečtené</div> : undefined}
+                                    {isHovered === notification.id ? <div onClick={() => handleMarkAsRead(notification.id, notification.was_read)} className='mark-as-read'>Mark as read</div> : undefined}
                                 </div>
                             </li>
 

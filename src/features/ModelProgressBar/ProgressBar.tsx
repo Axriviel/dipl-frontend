@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { configData } from '../../config/config';
 import "./ProgressBar.css"
+import { Button } from 'react-bootstrap';
+import { useAlert } from '../../components/Alerts/AlertContext';
 
 
 interface Props {
@@ -10,6 +12,7 @@ interface Props {
 
 export const TaskProgressBar: React.FC<Props> = ({ isActive, setIsActive }) => {
     const [progress, setProgress] = useState(0);
+    const { addAlert } = useAlert();
 
     useEffect(() => {
         let interval: number | null = null;
@@ -49,6 +52,7 @@ export const TaskProgressBar: React.FC<Props> = ({ isActive, setIsActive }) => {
             }
         };
 
+
         if (isActive) {
             fetchProgress(); // První načtení ihned
             interval = window.setInterval(fetchProgress, 5000); // Poté každých 5 sekund
@@ -61,11 +65,42 @@ export const TaskProgressBar: React.FC<Props> = ({ isActive, setIsActive }) => {
         };
     }, [isActive]);
 
+    const cancelTask = async () => {
+        try {
+            const response = await fetch(`${configData.API_URL}/api/cancel-task`, {
+                method: 'GET',
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error:", errorData.error);
+                alert(errorData.error); // Můžeš zobrazit chybu uživateli
+                return;
+            }
+
+            const data = await response.json();
+            console.log(data.message); // Můžeš zobrazit zprávu uživateli
+            addAlert(data.message, "info");
+        } catch (error) {
+            console.error('Request failed', error);
+            addAlert('Request failed. Try again later.', "error");
+        }
+    };
+
     return (
-        <div className="task-progress-container">
-            <p className="task-progress-title">Progress: {progress}%</p>
-            <div className="task-progress-wrapper">
-                <div className="task-progress-bar" style={{ width: `${progress}%` }}></div>
+        <div className='d-flex flex-row justify-content-center align-items-center'>
+            <div className="task-progress-container">
+                <p className="task-progress-title">Progress: {progress}%</p>
+                <div className="task-progress-wrapper">
+                    <div className="task-progress-bar" style={{ width: `${progress}%` }}></div>
+                </div>
+            </div>
+            <div>
+                <Button className='cancel-task-button' variant='danger' onClick={cancelTask}>Cancel task</Button>
             </div>
         </div>
     );

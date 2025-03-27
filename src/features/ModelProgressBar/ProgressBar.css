@@ -9,6 +9,10 @@
     color: #333;
 }
 
+.cancel-task-button:hover {
+    transform: none;
+}
+
 .task-progress-title {
     font-size: 14px;
     margin-bottom: 6px;

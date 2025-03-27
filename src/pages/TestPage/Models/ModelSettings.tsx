@@ -2,7 +2,7 @@ import { IModelSettingsGA } from "./ModelSettingsGA";
 import { IModelSettingsNNI } from "./ModelSettingsNNI";
 import { RandomConfig } from "./RandomConfigModels";
 
-export interface IModelSettings{
+export interface IModelSettings {
     opt_algorithm: string,
     optimizer: string,
     optimizerRandom?: RandomConfig;
@@ -15,6 +15,8 @@ export interface IModelSettings{
     batch_size: number,
     batch_sizeRandom?: RandomConfig,
     max_models: number,
+    use_timeout: boolean,
+    timeout?: number,
     es_threshold: number,
     NNI: IModelSettingsNNI,
     GA: IModelSettingsGA

@@ -6,6 +6,7 @@ import { CustomizableDesign } from '../../components/DesignerOptions/Customizabl
 import { FullAutoDesign } from '../../components/DesignerOptions/FullAutoDesign';
 import "./ModelDesignerPage.css";
 import Tippy from '@tippyjs/react';
+import { useNavigate } from 'react-router-dom';
 
 export const ModelDesignerPage: React.FC = () => {
     const [selectedDesigner, handleSelectDesigner] = useState(false)
@@ -32,6 +33,11 @@ export const ModelDesignerPage: React.FC = () => {
     const handleSelectFullAuto = () => {
         handleDesignerChosen(true)
         handleSelectDesigner(true)
+    }
+    const navigate = useNavigate();
+    const handleNavigateToUsageExample = () => {
+        navigate("/usageexample")
+
     }
 
     // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +93,8 @@ export const ModelDesignerPage: React.FC = () => {
                     }
                 </>
             }
+
+            <div className='d-flex justify-content-center'>Usage example page:<span className='mx-1 cursor-pointer' onClick={handleNavigateToUsageExample}>HERE</span> </div>
         </div>
 
         /*
