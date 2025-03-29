@@ -23,7 +23,7 @@ export const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({ show, ha
 
     const handleUpload = () => {
         if (!file) {
-            addAlert("Vyberte soubor před nahráním!", "error");
+            addAlert("Select a file!", "warning");
             return;
         }
 
@@ -47,18 +47,18 @@ export const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({ show, ha
         xhr.onload = () => {
             setIsUploading(false);
             if (xhr.status === 200) {
-                addAlert("Dataset úspěšně nahrán!", "success");
+                addAlert("Dataset successfuly uploaded!", "success");
                 handleClose();
                 onUploadSuccess(); // Aktualizace seznamu datasetů
             } else {
                 const errorResponse = JSON.parse(xhr.responseText);
-                addAlert(errorResponse.error || "Chyba při nahrávání datasetu", "error");
+                addAlert(errorResponse.error || "Error uploading dataset", "error");
             }
         };
 
         xhr.onerror = () => {
             setIsUploading(false);
-            addAlert("Nepodařilo se nahrát dataset. Zkontrolujte připojení k internetu.", "error");
+            addAlert("Dataset could not be uploaded", "error");
         };
 
         xhr.send(formData);
@@ -70,6 +70,7 @@ export const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({ show, ha
                 <Modal.Title>Upload new dataset</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <p>Maximum size of the dataset: <strong>1 MB</strong></p>
                 <Form.Group>
                     <Form.Label>Select file:</Form.Label>
                     <Form.Control type="file" accept=".csv, .npz" onChange={handleFileChange} disabled={isUploading} />

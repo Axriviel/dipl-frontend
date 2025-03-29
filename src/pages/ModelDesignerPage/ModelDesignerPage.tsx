@@ -70,16 +70,20 @@ export const ModelDesignerPage: React.FC = () => {
     return (
         <div>
             {chosenDesigner === false ?
-                <div className='d-flex flex-column align-items-center p-3 my-5 basic-card'>
-                    <h2 className='bordered-down'>Choose the designer</h2>
-                    <div className='mt-1 m-3 d-flex flex-row justify-content-center'>
-                        <Tippy content="Designer allowing manual addition of layers, choice of architecture etc.">
-                            <Button className='mx-3' onClick={handleSelectCustomized}>Custom</Button>
-                        </Tippy>
-                        <Tippy content="Designer that allows automated model creation">
-                            <Button className='mx-3' onClick={handleSelectFullAuto}>Automated</Button>
-                        </Tippy>
+                <div>
+                    <div className='d-flex flex-column align-items-center p-3 my-5 basic-card'>
+                        <h2 className='bordered-down'>Choose the designer</h2>
+                        <div className='mt-1 m-3 d-flex flex-row justify-content-center'>
+                            <Tippy content="Designer allowing manual addition of layers, choice of architecture etc.">
+                                <Button className='mx-3' onClick={handleSelectCustomized}>Custom</Button>
+                            </Tippy>
+                            <Tippy content="Designer that allows automated model creation">
+                                <Button className='mx-3' onClick={handleSelectFullAuto}>Automated</Button>
+                            </Tippy>
+                        </div>
                     </div>
+
+                    <div className='d-flex justify-content-center'>Usage example page:<span className='mx-1 cursor-pointer' onClick={handleNavigateToUsageExample}>HERE</span> </div>
                 </div>
                 :
                 <>
@@ -93,8 +97,6 @@ export const ModelDesignerPage: React.FC = () => {
                     }
                 </>
             }
-
-            <div className='d-flex justify-content-center'>Usage example page:<span className='mx-1 cursor-pointer' onClick={handleNavigateToUsageExample}>HERE</span> </div>
         </div>
 
         /*
