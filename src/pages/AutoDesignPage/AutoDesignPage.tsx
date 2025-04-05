@@ -13,6 +13,7 @@ import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
 import { TagsForm } from "../../features/TagsForm";
+import { TaskInfoOverlay } from "../../components/TaskInfoOverlay/TaskInfoOverlay";
 
 
 export const AutoDesignPage = () => {
@@ -24,9 +25,11 @@ export const AutoDesignPage = () => {
             opt_algorithm: "random",
             optimizer: 'adam',
             loss: 'binary_crossentropy',
-            model_name: "myModel",
+            limit_growth: "none",
+            model_name: "",
+            k_fold: 1,
             metrics: ['accuracy'],
-            monitor_metric: "val_accuracy",
+            monitor_metric: "accuracy",
             epochs: 10,
             use_timeout: false,
             timeout: 0,
@@ -38,7 +41,7 @@ export const AutoDesignPage = () => {
             //     "type": "numeric"
             // },
             max_models: 5,
-            es_threshold: 0.7,
+            es_threshold: 0.4,
             NNI: {
                 nni_concurrency: 1,
                 nni_max_trials: 5,
@@ -56,6 +59,9 @@ export const AutoDesignPage = () => {
             x_columns: [],
             x_num: 0,
             y_columns: [],
+            one_hot_x_columns: [],
+            one_hot_y_columns: [],
+            encode_y: false,
             y_num: 0,
             test_size: 0.2,
         }
@@ -68,8 +74,7 @@ export const AutoDesignPage = () => {
     const [selectedDataset, setSelectedDataset] = useState<string>("");
     const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
     const { addAlert } = useAlert();
-    const [taskActive, setTaskActive] = useState<boolean>(false)
-
+    const [isTaskOverlayOpen, setTaskInfoOverlay] = useState<boolean>(false);
     const [tagInput, setTagInput] = useState<string>("");
 
     const handleAddTag = () => {
@@ -99,20 +104,20 @@ export const AutoDesignPage = () => {
         }));
     }, []); // Prázdné pole závislostí zajistí, že se efekt spustí jen jednou
 
-    // set default dataset
-    useEffect(() => {
-        setUseDefaultDataset(true)
-        setSelectedDataset("pima-indians-diabetes.csv")
-        // if (file === null) {
-        //     fetch('/pima-indians-diabetes.csv')
-        //         .then(response => response.blob())
-        //         .then(blob => {
-        //             const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-        //             setFile(defaultFile);
-        //         })
-        //         .catch(error => console.error("Chyba při načítání souboru:", error));
-        // }
-    }, []);
+    // // set default dataset
+    // useEffect(() => {
+    //     setUseDefaultDataset(true)
+    //     setSelectedDataset("pima-indians-diabetes.csv")
+    //     // if (file === null) {
+    //     //     fetch('/pima-indians-diabetes.csv')
+    //     //         .then(response => response.blob())
+    //     //         .then(blob => {
+    //     //             const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+    //     //             setFile(defaultFile);
+    //     //         })
+    //     //         .catch(error => console.error("Chyba při načítání souboru:", error));
+    //     // }
+    // }, []);
 
     // Zpracování změny výběru datasetu
     const handleDatasetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -182,73 +187,111 @@ export const AutoDesignPage = () => {
     // };
 
     const handlePresetFileChange = (selectedTaskType: string) => {
-        switch (selectedTaskType) {
-            case "binary classification":
-                // fetch('/pima-indians-diabetes.csv')
-                //     .then(response => response.blob())
-                //     .then(blob => {
-                //         const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-                //         setFile(defaultFile);
-                //     })
-                //     .catch(error => console.error("Chyba při načítání souboru:", error));
-                // setSelectedDataset("pima-indians-diabetes.csv")
-                // setUseDefaultDataset(true)
-                // setAutoTask((prevAutoTask) => ({
-                //     ...prevAutoTask,
-                //     datasetConfig: {
-                //         ...prevAutoTask.datasetConfig,
-                //         x_num: 8,
-                //         y_num: 9,
-                //     },
-                // }));
-                break;
-            case "multiclass classification":
-                // fetch('/iris_prepared.npz')
-                //     .then(response => response.blob())
-                //     .then(blob => {
-                //         const defaultFile = new File([blob], "iris_prepared.npz", { type: blob.type });
-                //         setFile(defaultFile);
-                //     })
-                //     .catch(error => console.error("Chyba při načítání souboru:", error));
-                // setSelectedDataset("iris_prepared.npz")
-                // setUseDefaultDataset(true)
-                // dataset config for iris
-                // setAutoTask((prevAutoTask) => ({
-                //     ...prevAutoTask,
-                //     datasetConfig: {
-                //         ...prevAutoTask.datasetConfig,
-                //         x_num: 4,
-                //         y_num: 5,
-                //     },
-                //     layers: prevAutoTask.layers.map((layer, index) =>
-                //         index === 0 ? { ...layer, shape: [4] } :
-                //             index === 2
-                //                 ? { ...layer, units: 3 }
-                //                 : layer
-                //     ),
-                // }));
+        setAutoTask((prevAutoTask) => {
+            let updatedDatasetConfig = {
+                ...prevAutoTask.datasetConfig,
+                encode_y: selectedTaskType === "multiclass classification"
+            };
+
+            // let updatedLayers = prevAutoTask.layers;
+
+            // if (selectedTaskType === "multiclass classification") {
+            //     // updatedLayers = GetTaskLayers("multiclass classification");
+            // } else if (selectedTaskType === "binary classification") {
+            //     // updatedLayers = GetTaskLayers("binary classification");
+            // } else if (selectedTaskType === "image multiclass classification") {
+            //     // updatedLayers = GetTaskLayers("image multiclass classification");
+            // }
+
+            return {
+                ...prevAutoTask,
+                // taskType: selectedTaskType,
+                datasetConfig: updatedDatasetConfig,
+                // layers: updatedLayers
+            };
+        });
+    };
 
 
-                break;
-            case "image multiclass classification":
-                // fetch('/cifar10_normalized.npz')
-                //     .then(response => response.blob())
-                //     .then(blob => {
-                //         const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
-                //         setFile(defaultFile);
-                //     })
-                //     .catch(error => console.error("Chyba při načítání souboru:", error));
-                // setSelectedDataset("cifar10_normalized.npz")
-                // setUseDefaultDataset(true)
-                break;
-            case "regression":
-                // setSelectedDataset("")
-                // setAutoTaskSettings("regression")
-                // setUseDefaultDataset(true)
-                break;
+    // const handlePresetFileChange = (selectedTaskType: string) => {
+    //     setAutoTask((prevAutoTask) => ({
+    //         ...prevAutoTask,
+    //         datasetConfig: {
+    //             ...prevAutoTask.datasetConfig,
+    //             encode_y: false,
+    //         },
+    //     }))
+    //     switch (selectedTaskType) {
+    //         case "binary classification":
+    //             // fetch('/pima-indians-diabetes.csv')
+    //             //     .then(response => response.blob())
+    //             //     .then(blob => {
+    //             //         const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+    //             //         setFile(defaultFile);
+    //             //     })
+    //             //     .catch(error => console.error("Chyba při načítání souboru:", error));
+    //             // setSelectedDataset("pima-indians-diabetes.csv")
+    //             // setUseDefaultDataset(true)
+    //             // setAutoTask((prevAutoTask) => ({
+    //             //     ...prevAutoTask,
+    //             //     datasetConfig: {
+    //             //         ...prevAutoTask.datasetConfig,
+    //             //         x_num: 8,
+    //             //         y_num: 9,
+    //             //     },
+    //             // }));
+    //             break;
+    //         case "multiclass classification":
+    //             // fetch('/iris_prepared.npz')
+    //             //     .then(response => response.blob())
+    //             //     .then(blob => {
+    //             //         const defaultFile = new File([blob], "iris_prepared.npz", { type: blob.type });
+    //             //         setFile(defaultFile);
+    //             //     })
+    //             //     .catch(error => console.error("Chyba při načítání souboru:", error));
+    //             // setSelectedDataset("iris_prepared.npz")
+    //             // setUseDefaultDataset(true)
+    //             // dataset config for iris
+    //             console.log("updating encode_y");
 
-        }
-    }
+    //             setAutoTask((prevAutoTask) => ({
+    //                 ...prevAutoTask,
+    //                 datasetConfig: {
+    //                     ...prevAutoTask.datasetConfig,
+    //                     encode_y: true,
+    //                 },
+    //             }))
+    //             console.log(autoTask.datasetConfig.encode_y)
+
+    //             //     layers: prevAutoTask.layers.map((layer, index) =>
+    //             //         index === 0 ? { ...layer, shape: [4] } :
+    //             //             index === 2
+    //             //                 ? { ...layer, units: 3 }
+    //             //                 : layer
+    //             //     ),
+    //             // }));
+
+
+    //             break;
+    //         case "image multiclass classification":
+    //             // fetch('/cifar10_normalized.npz')
+    //             //     .then(response => response.blob())
+    //             //     .then(blob => {
+    //             //         const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
+    //             //         setFile(defaultFile);
+    //             //     })
+    //             //     .catch(error => console.error("Chyba při načítání souboru:", error));
+    //             // setSelectedDataset("cifar10_normalized.npz")
+    //             // setUseDefaultDataset(true)
+    //             break;
+    //         case "regression":
+    //             // setSelectedDataset("")
+    //             // setAutoTaskSettings("regression")
+    //             // setUseDefaultDataset(true)
+    //             break;
+
+    //     }
+    // }
 
     const handleSubmit = () => {
         if (!selectedDataset) {
@@ -286,7 +329,6 @@ export const AutoDesignPage = () => {
         formData.append("tags", JSON.stringify(updatedTags));
 
         addAlert("Task sent to server", "info");
-        setTaskActive(true)
         // Udržujte referenci na stav, aby se zabránilo aktualizaci odmountované komponenty
         let isMounted = true;
 
@@ -541,10 +583,12 @@ export const AutoDesignPage = () => {
             <Tippy placement="bottom" content="Sends the task to backend. You will be notified about the result when finished">
                 <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
             </Tippy>
-            <div className="auto-model-config-progress-bar">
+            <Button variant="secondary" className="m-2" onClick={() => setTaskInfoOverlay(!isTaskOverlayOpen)}>Status</Button>
+            {/* <div className="auto-model-config-progress-bar">
                 <TaskProgressBar isActive={taskActive}
                     setIsActive={setTaskActive} />
-            </div>
+            </div> */}
+            {isTaskOverlayOpen && <TaskInfoOverlay />}
         </div>
     )
 }

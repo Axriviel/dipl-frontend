@@ -12,7 +12,7 @@ export const GetTaskLayers = (taskType: String) => {
     switch (taskType) {
         case "binary classification":
             return [
-                // input layer, shape is set in the form, this is just some default value
+                // input layer, shape is set automaticaly on BE, this is just some default value
                 createInputLayer({ id: "11111", shape: [8] }),
 
                 // definition of generator layer

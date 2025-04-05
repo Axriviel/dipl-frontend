@@ -2,10 +2,13 @@ import Tippy from '@tippyjs/react';
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useAlert } from '../../components/Alerts/AlertContext.tsx';
+import { TaskInfoOverlay } from '../../components/TaskInfoOverlay/TaskInfoOverlay.tsx';
+import { configData } from '../../config/config.tsx';
 import { DownloadJSON } from '../../features/Models/DownloadJSON.tsx';
 import { GetUserDatasets } from '../../features/UserDatasets/GetDatasets.tsx';
 import { LayerTable } from './Features/Components/LayerTable.tsx';
 import { DatasetConfigModal } from './Features/Dataset/DatasetConfigModal.tsx';
+import { createBatchNormLayer } from './Features/Layers/CreateBatchNormLayer.tsx';
 import { createConv2DLayer } from './Features/Layers/CreateConv2DLayer.tsx';
 import { createDenseLayer } from './Features/Layers/CreateDenseLayer.tsx';
 import { createDropoutLayer } from './Features/Layers/CreateDropoutLayer.tsx';
@@ -24,9 +27,6 @@ import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
-import { configData } from '../../config/config.tsx';
-import { TaskProgressBar } from '../../features/ModelProgressBar/ProgressBar.tsx';
-import { createBatchNormLayer } from './Features/Layers/CreateBatchNormLayer.tsx';
 
 
 
@@ -41,9 +41,11 @@ export const ModelConfig: React.FC = () => {
       optimizer: 'adam',
       optimizerRandom: undefined,
       loss: 'binary_crossentropy',
-      model_name: "myModel",
+      limit_growth: "none",
+      model_name: "",
+      k_fold: 1,
       metrics: ['accuracy'],
-      monitor_metric: "val_accuracy",
+      monitor_metric: "accuracy",
       epochs: 10,
       epochsRandom: undefined,
       batch_size: 32,
@@ -51,7 +53,7 @@ export const ModelConfig: React.FC = () => {
       max_models: 10,
       use_timeout: false,
       timeout: 0,
-      es_threshold: 0.7,
+      es_threshold: 0.4,
       NNI: {
         nni_concurrency: 1,
         nni_max_trials: 5,
@@ -69,6 +71,8 @@ export const ModelConfig: React.FC = () => {
       x_columns: [],
       x_num: 8,
       y_columns: [],
+      one_hot_x_columns: [],
+      one_hot_y_columns: [],
       y_num: 9,
       test_size: 0.2,
     }
@@ -84,8 +88,10 @@ export const ModelConfig: React.FC = () => {
   const [datasets, setDatasets] = useState<string[]>([]);
   const [selectedDataset, setSelectedDataset] = useState<string>("");
   const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
-  const [taskActive, setTaskActive] = useState<boolean>(false)
+  // const [taskActive, setTaskActive] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([])
+  const [isTaskOverlayOpen, setTaskInfoOverlay] = useState<boolean>(false);
+
   const selectableLayers = [
     { id: 1, name: 'Dense' },
     { id: 2, name: 'Conv2D' },
@@ -142,7 +148,9 @@ export const ModelConfig: React.FC = () => {
         opt_algorithm: "random",
         optimizer: 'adam',
         loss: 'binary_crossentropy',
-        model_name: "myModel",
+        limit_growth: "none",
+        model_name: "",
+        k_fold: 1,
         metrics: ['accuracy'],
         monitor_metric: "val_accuracy",
         epochs: 10,
@@ -168,6 +176,8 @@ export const ModelConfig: React.FC = () => {
         x_columns: [],          // Výchozí prázdný seznam
         x_num: 0,
         y_columns: [],
+        one_hot_x_columns: [],
+        one_hot_y_columns: [],
         y_num: 0,
         test_size: 0.2,         // Výchozí hodnota pro testovací sadu
         // file: null,             // Výchozí hodnota pro soubor
@@ -326,7 +336,7 @@ export const ModelConfig: React.FC = () => {
     formData.append("tags", JSON.stringify(updatedTags));
 
     addAlert("Task sent to server", "info");
-    setTaskActive(true)
+    // setTaskActive(true)
     // Odeslání požadavku
     fetch(`${configData.API_URL}/api/save-model`, {
       method: "POST",
@@ -512,12 +522,13 @@ export const ModelConfig: React.FC = () => {
         <Tippy placement='bottom' content="Sends the task to backend. You will be notified about the result when finished">
           <Button onClick={handleSubmit}>Submit Model</Button>
         </Tippy>
+        <Button variant="secondary" className="m-2" onClick={() => setTaskInfoOverlay(!isTaskOverlayOpen)}>Status</Button>
       </div>
-      <div className='model-config-progress-bar'>
+      {/* <div className='model-config-progress-bar'>
         <TaskProgressBar isActive={taskActive}
           setIsActive={setTaskActive} />
-      </div>
-
+      </div> */}
+      {isTaskOverlayOpen && <TaskInfoOverlay />}
       {
         selectedLayer && (
           <LayerConfig

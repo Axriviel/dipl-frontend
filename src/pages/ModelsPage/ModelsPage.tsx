@@ -99,6 +99,8 @@ export const ModelsPage = () => {
     const handleShowProtocol = async () => {
         try {
             setShowProtocolModal(true);
+            console.log("epochs:", selectedModel?.task_protocol.epochs);
+            
         } catch (error) {
             console.error("Error fetching data:", error);
         }

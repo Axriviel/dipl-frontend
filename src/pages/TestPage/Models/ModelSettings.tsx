@@ -7,6 +7,8 @@ export interface IModelSettings {
     optimizer: string,
     optimizerRandom?: RandomConfig;
     loss: string,
+    limit_growth : string,
+    k_fold: number
     model_name: string,
     metrics: string[],
     monitor_metric: string,

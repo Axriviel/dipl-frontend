@@ -23,7 +23,10 @@ export const optimizerOptions = [
 
 //Keras loss function options
 export const lossFunctionOptions = [
-    "binary_crossentropy", "categorical_crossentropy", "mean_squared_error",
+    "binary_crossentropy", "categorical_crossentropy", "sparse_categorical_crossentropy","mean_squared_error",
+]
+export const growthFunctionOptions = [
+    "none", "linear", "log","square",
 ]
 
 //Keras available monitor metrics

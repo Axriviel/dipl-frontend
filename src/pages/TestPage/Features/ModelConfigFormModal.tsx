@@ -3,7 +3,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { GASettingsForm } from "./Components/GASettingsForm";
 import { NNISettingsForm } from "./Components/NNISettingsForm";
 import { IModelParams } from "../Models/ModelParams";
-import { availableMetrics, availableMonitorMetrics, lossFunctionOptions, optAlgorithmOptions, optimizerOptions } from "../../../config/config";
+import { availableMetrics, availableMonitorMetrics, growthFunctionOptions, lossFunctionOptions, optAlgorithmOptions, optimizerOptions } from "../../../config/config";
 import { HelpfulTip } from "../../../features/Tooltip";
 import { RandomizerSelect } from "./RandomizerSelect";
 import { renderRandomConfig } from "./Randomness/RenderRandomConfig";
@@ -318,6 +318,20 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
 
                         </Form.Select>
                     </Form.Group>
+                    {/* select loss function */}
+                    <Form.Group controlId="limit_growth">
+                        <Form.Label>Limit growth Function <HelpfulTip text="Function defining how fast the model reaches the maximum limit (e.g. 1 to 100 units in dense layer will start smaller for some time and grow up to 100)"/></Form.Label>
+                        <Form.Select
+                            name="limit_growth"
+                            value={modelParams.settings.limit_growth}
+                            onChange={updateSettings}
+                        >
+                            {growthFunctionOptions.map(gfo => (
+                                <option key={gfo} value={gfo}>{gfo}</option>
+                            ))}
+
+                        </Form.Select>
+                    </Form.Group>
 
                     {/* Checkboxy pro výběr metrik */}
                     <Form.Group controlId="formMetrics">
@@ -409,6 +423,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         <Form.Control
                             type="number"
                             name="max_models"
+                            min={1}
                             value={modelParams.settings.max_models}
                             onChange={updateSettings}
                         />
@@ -436,6 +451,17 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                                 />
                             </>
                         )}
+                    </Form.Group>
+                    <Form.Group controlId="k_fold">
+                        <Form.Label>N-training <HelpfulTip text="Defines how many times should model be trained to verify its performance. May significantly increase computation time"/></Form.Label>
+                        <Form.Control
+                            type="number"
+                            name="k_fold"
+                            min={1}
+                            max={5}
+                            value={modelParams.settings.k_fold}
+                            onChange={updateSettings}
+                        />
                     </Form.Group>
                     <Form.Group controlId="es_threshold">
                         <Form.Label>ES threshold</Form.Label>
