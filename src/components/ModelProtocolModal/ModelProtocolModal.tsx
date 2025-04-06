@@ -1,8 +1,7 @@
 import React from 'react';
 import { Accordion, Button, Modal, Table } from 'react-bootstrap';
-import Tippy from '@tippyjs/react';
 import { ITaskProtocol } from '../../features/Models/models/TaskProtocol';
-import "./ModelProtocolModal.css"
+import "./ModelProtocolModal.css";
 
 interface Props {
   modelName: string,

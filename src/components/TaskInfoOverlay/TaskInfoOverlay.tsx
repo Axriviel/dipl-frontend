@@ -56,7 +56,7 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
 
                 // Pokud úloha skončila, vypneme progress bar
                 if (!data.isRunning) {
-                    // setIsActive(false);
+                    setIsActive(false);
                 }
             } catch (error) {
                 console.error("Error fetching progress:", error);

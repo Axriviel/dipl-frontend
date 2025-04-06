@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { configData } from '../../config/config';
-import "./ProgressBar.css"
+import "./ProgressBar.css";
 
 
 interface Props {

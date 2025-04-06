@@ -1,19 +1,17 @@
 import Tippy from "@tippyjs/react";
-import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
-import { Badge, Button, Form } from "react-bootstrap";
+import { ChangeEventHandler, useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
+import { TaskInfoOverlay } from "../../components/TaskInfoOverlay/TaskInfoOverlay";
 import { autoTaskTypes, configData } from "../../config/config";
-import { TaskProgressBar } from "../../features/ModelProgressBar/ProgressBar";
-import { HelpfulTip } from "../../features/Tooltip";
+import { TagsForm } from "../../features/TagsForm";
 import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 import { DatasetConfigModal } from "../TestPage/Features/Dataset/DatasetConfigModal";
 import "./AutoDesignPage.css";
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
-import { TagsForm } from "../../features/TagsForm";
-import { TaskInfoOverlay } from "../../components/TaskInfoOverlay/TaskInfoOverlay";
 
 
 export const AutoDesignPage = () => {
@@ -75,18 +73,18 @@ export const AutoDesignPage = () => {
     const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
     const { addAlert } = useAlert();
     const [isTaskOverlayOpen, setTaskInfoOverlay] = useState<boolean>(false);
-    const [tagInput, setTagInput] = useState<string>("");
+    // const [tagInput, setTagInput] = useState<string>("");
 
-    const handleAddTag = () => {
-        if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-            setTags([...tags, tagInput.trim()]);
-            setTagInput("");
-        }
-    };
+    // const handleAddTag = () => {
+    //     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+    //         setTags([...tags, tagInput.trim()]);
+    //         setTagInput("");
+    //     }
+    // };
 
-    const handleRemoveTag = (tag: string) => {
-        setTags(tags.filter(t => t !== tag));
-    };
+    // const handleRemoveTag = (tag: string) => {
+    //     setTags(tags.filter(t => t !== tag));
+    // };
 
     // Load datasets
     useEffect(() => {
