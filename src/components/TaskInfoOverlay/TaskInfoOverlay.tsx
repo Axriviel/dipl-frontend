@@ -13,7 +13,7 @@ interface Props {
 export const TaskInfoOverlay: React.FC<Props> = () => {
     const { addAlert } = useAlert();
     const [taskActive, setTaskActive] = useState<boolean>(false);
-    const [taskFinished, setTaskFinished] = useState<boolean>(false);
+    // const [taskFinished, setTaskFinished] = useState<boolean>(false);
     const [isActive, setIsActive] = useState<boolean>(true);
 
     const [progress, setProgress] = useState(0);
@@ -40,7 +40,7 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
                     if (data.progress === -1) {
                         console.log("-1 progress");
                         setProgress(100)
-                        setTaskFinished(true)
+                        // setTaskFinished(true)
                         setTaskActive(false)
                     }
                     else {
@@ -107,7 +107,7 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
     return (
         <div className="task-info-overlay">
             <div>
-                <strong>Task status:</strong> {taskFinished ? <span task-finished>Finished</span> : taskActive ? <span className="task-active"> Active </span> : <span className="task-inactive"> Not running </span>}
+                <strong>Task status:</strong> {taskActive ? <span className="task-active"> Active </span> : <span className="task-inactive"> Finished </span>}
             </div>
             {/* {taskActive ? */}
             <div>

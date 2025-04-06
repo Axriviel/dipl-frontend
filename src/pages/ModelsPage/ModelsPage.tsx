@@ -67,6 +67,17 @@ export const ModelsPage = () => {
     const [showParamsModal, setShowParamsModal] = useState(false);
     const [paramsModalData, setParamsModalData] = useState(null);
 
+    // refresh data every minute
+    useEffect(() => {
+        const interval = setInterval(() => {
+            console.log("refetch");
+            
+            setRefetch(prev => !prev);
+        },  60 * 1000);
+    
+        return () => clearInterval(interval); 
+    }, []);
+
     useEffect(() => {
         fetchParamsData();
     }, [selectedModel]);
@@ -144,8 +155,11 @@ export const ModelsPage = () => {
     }, [refetch]);
 
     useEffect(() => {
-        if (models.length > 0) {
+        if (models.length > 0 && !selectedModel) {
             setSelectedModel(models[0])
+        }
+        else if(selectedModel){
+            return
         }
         else {
             setSelectedModel(undefined)

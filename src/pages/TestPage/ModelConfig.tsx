@@ -38,7 +38,7 @@ export const ModelConfig: React.FC = () => {
   const [modelParams, setModelParams] = useState<IModelParams>(() => ({
     layers: [createInputLayer({ id: "1732203259530" }), createDenseLayer({ id: "1732203259531", units: 1, activation: "sigmoid", inputs: ["1732203259530"] })], settings: {
       opt_algorithm: "random",
-      optimizer: 'adam',
+      optimizer: 'Adam',
       optimizerRandom: undefined,
       loss: 'binary_crossentropy',
       limit_growth: "none",
@@ -146,7 +146,7 @@ export const ModelConfig: React.FC = () => {
     setModelParams({
       layers: [createInputLayer()], settings: {
         opt_algorithm: "random",
-        optimizer: 'adam',
+        optimizer: 'Adam',
         loss: 'binary_crossentropy',
         limit_growth: "none",
         model_name: "",

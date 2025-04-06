@@ -23,7 +23,7 @@ export const AutoDesignPage = () => {
         maxModels: 20,
         settings: {
             opt_algorithm: "random",
-            optimizer: 'adam',
+            optimizer: 'Adam',
             loss: 'binary_crossentropy',
             limit_growth: "none",
             model_name: "",
