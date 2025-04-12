@@ -243,7 +243,7 @@ export const AutoDesignPage = () => {
     //     }
     // };
 
-    const handlePresetFileChange = (selectedTaskType: string) => {
+    // const handlePresetFileChange = (selectedTaskType: string) => {
         // setAutoTask((prevAutoTask) => {
         //     let updatedDatasetConfig = {
         //         ...prevAutoTask.datasetConfig,
@@ -272,7 +272,7 @@ export const AutoDesignPage = () => {
         //         // layers: updatedLayers
         //     };
         // });
-    };
+    // };
 
     const getSettingsForTaskType = (taskType: string, prevSettings: IModelAutoSettings) => {
         switch (taskType) {

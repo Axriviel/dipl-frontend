@@ -14,7 +14,7 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
     const { addAlert } = useAlert();
     const [taskActive, setTaskActive] = useState<boolean>(false);
     // const [taskFinished, setTaskFinished] = useState<boolean>(false);
-    const [isActive, setIsActive] = useState<boolean>(true);
+    const [isActive] = useState<boolean>(true);
 
     const [progress, setProgress] = useState(0);
     useEffect(() => {
