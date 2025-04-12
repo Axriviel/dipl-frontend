@@ -56,7 +56,7 @@ export const GetTaskLayers = (taskType: String) => {
                 }),
                 createDenseLayer({
                     id: "dense_2",
-                    units: 1,
+                    units: 2,
                     activation: "softmax",
                     inputs: ["22222"],
                 }),

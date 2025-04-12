@@ -6,7 +6,7 @@ import { IUser } from './models/User';
 interface AuthContextType {
     isAuthenticated: boolean;
     user?: IUser;
-    login: (username: string, password: string) => Promise<void>;
+    login: (username: string, password: string) => Promise<boolean>;
     logout: () => Promise<void>;
     fetchUser: () => Promise<void>;
 }
@@ -57,14 +57,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 await fetchUser();
                 addAlert('Successfully logged in!', 'success');
                 //alert("Successfully logged in");
+                return true
             } else {
                 addAlert('Login failed!', 'error'); // 
-                throw new Error('Login failed');
+                return false
+                // throw new Error('Login failed');
             }
         } catch (error) {
             console.error(error);
             addAlert(error + "", 'error');
             setIsAuthenticated(false);
+            return false
         }
     };
 

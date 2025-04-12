@@ -71,11 +71,11 @@ export const ModelsPage = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             console.log("refetch");
-            
+
             setRefetch(prev => !prev);
-        },  60 * 1000);
-    
-        return () => clearInterval(interval); 
+        }, 60 * 1000);
+
+        return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
@@ -111,7 +111,7 @@ export const ModelsPage = () => {
         try {
             setShowProtocolModal(true);
             console.log("epochs:", selectedModel?.task_protocol.epochs);
-            
+
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -123,6 +123,7 @@ export const ModelsPage = () => {
 
             if (result.success) {
                 addAlert(result.message || 'Model successfully deleted', "success");
+                setSelectedModel(models[0]?? undefined)
                 setRefetch(!refetch);
             } else {
                 if (result.status === 409) {
@@ -158,7 +159,7 @@ export const ModelsPage = () => {
         if (models.length > 0 && !selectedModel) {
             setSelectedModel(models[0])
         }
-        else if(selectedModel){
+        else if (selectedModel) {
             return
         }
         else {

@@ -45,6 +45,12 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
             </ul>
             : " none encoded"}
         </div>
+        {data.stopped_by &&
+        <div>
+          <strong>Stopped by</strong>
+          {data.stopped_by ?? ""}
+        </div>
+}
         <div>
           <strong>Started at:</strong> {data.started_at}
         </div>

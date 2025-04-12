@@ -4,7 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
 import { TaskInfoOverlay } from "../../components/TaskInfoOverlay/TaskInfoOverlay";
-import { autoTaskTypes, configData } from "../../config/config";
+import { autoTaskTypes, configData, maximumDepthMax, maximumDepthMin } from "../../config/config";
 import { TagsForm } from "../../features/TagsForm";
 import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 import { DatasetConfigModal } from "../TestPage/Features/Dataset/DatasetConfigModal";
@@ -12,6 +12,8 @@ import "./AutoDesignPage.css";
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
+import { HelpfulTip } from "../../features/Tooltip";
+import { IModelAutoSettings } from "./Models/ModelAutoSettings";
 
 
 export const AutoDesignPage = () => {
@@ -123,25 +125,55 @@ export const AutoDesignPage = () => {
         setUseDefaultDataset(false)
     };
 
+    // const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    //     const { name, value, type } = e.target;
+
+    //     setAutoTask((prevTask) => {
+    //         const updatedTask = {
+    //             ...prevTask,
+    //             [name]: type === "number" ? (value === "" ? undefined : Number(value)) : value,
+    //         };
+
+    //         // Pokud se mění taskType, aktualizujte layers
+    //         // a nastavení úlohy v settings TBA
+    //         if (name === "taskType") {
+    //             updatedTask.layers = GetTaskLayers(value);
+    //             handlePresetFileChange(value)
+    //         }
+
+    //         return updatedTask;
+    //     });
+    // };
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
 
         setAutoTask((prevTask) => {
-            const updatedTask = {
+            const updatedTask: IAutoTaskState = {
                 ...prevTask,
                 [name]: type === "number" ? (value === "" ? undefined : Number(value)) : value,
             };
 
-            // Pokud se mění taskType, aktualizujte layers
-            // a nastavení úlohy v settings TBA
             if (name === "taskType") {
-                updatedTask.layers = GetTaskLayers(value);
-                handlePresetFileChange(value)
+                const updatedDatasetConfig = {
+                    ...prevTask.datasetConfig,
+                    encode_y: value === "multiclass classification"
+                };
+
+                const updatedSettings = getSettingsForTaskType(value, prevTask.settings);
+                const updatedLayers = GetTaskLayers(value);
+
+                return {
+                    ...updatedTask,
+                    datasetConfig: updatedDatasetConfig,
+                    settings: updatedSettings,
+                    layers: updatedLayers,
+                };
             }
 
             return updatedTask;
         });
     };
+
 
     // const handleInputShapeChange = (key: string, value: number[]) => {
     //     setAutoTask((prevState) => {
@@ -168,6 +200,33 @@ export const AutoDesignPage = () => {
         });
     };
 
+    const handleMaxDepthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newMax = Number(e.target.value);
+        if (newMax >= maximumDepthMin && newMax <= maximumDepthMax) {
+            const updatedLayers = autoTask.layers.map(layer => {
+                if (layer.type === "Generator") {
+                    return {
+                        ...layer,
+                        sizeRandom: {
+                            ...layer.sizeRandom,
+                            max: newMax
+                        }
+                    };
+                }
+                return layer;
+            });
+
+            setAutoTask({
+                ...autoTask,
+                layers: updatedLayers
+            })
+        }
+        else {
+            addAlert(`Max depth must be between ${maximumDepthMin} and ${maximumDepthMax}`, "warning")
+        }
+    };
+
+
     // const handleDebouncedNumberChange = useCallback((key: keyof IAutoTaskState) => {
     //     return (value: number) => {
     //         console.log(value)
@@ -185,30 +244,74 @@ export const AutoDesignPage = () => {
     // };
 
     const handlePresetFileChange = (selectedTaskType: string) => {
-        setAutoTask((prevAutoTask) => {
-            let updatedDatasetConfig = {
-                ...prevAutoTask.datasetConfig,
-                encode_y: selectedTaskType === "multiclass classification"
-            };
+        // setAutoTask((prevAutoTask) => {
+        //     let updatedDatasetConfig = {
+        //         ...prevAutoTask.datasetConfig,
+        //         encode_y: selectedTaskType === "multiclass classification"
+        //     };
 
-            // let updatedLayers = prevAutoTask.layers;
+        //     const updatedSettings = getSettingsForTaskType(selectedTaskType, prevAutoTask.settings);
+        //     console.log(updatedSettings);
 
-            // if (selectedTaskType === "multiclass classification") {
-            //     // updatedLayers = GetTaskLayers("multiclass classification");
-            // } else if (selectedTaskType === "binary classification") {
-            //     // updatedLayers = GetTaskLayers("binary classification");
-            // } else if (selectedTaskType === "image multiclass classification") {
-            //     // updatedLayers = GetTaskLayers("image multiclass classification");
-            // }
+        //     // let updatedLayers = prevAutoTask.layers;
 
-            return {
-                ...prevAutoTask,
-                // taskType: selectedTaskType,
-                datasetConfig: updatedDatasetConfig,
-                // layers: updatedLayers
-            };
-        });
+        //     // if (selectedTaskType === "multiclass classification") {
+        //     //     // updatedLayers = GetTaskLayers("multiclass classification");
+        //     // } else if (selectedTaskType === "binary classification") {
+        //     //     // updatedLayers = GetTaskLayers("binary classification");
+        //     // } else if (selectedTaskType === "image multiclass classification") {
+        //     //     // updatedLayers = GetTaskLayers("image multiclass classification");
+        //     // }
+
+        //     return {
+        //         ...prevAutoTask,
+        //         // setAutoTaskSettings()
+        //         // taskType: selectedTaskType,
+        //         settings: updatedSettings,
+        //         datasetConfig: updatedDatasetConfig,
+        //         // layers: updatedLayers
+        //     };
+        // });
     };
+
+    const getSettingsForTaskType = (taskType: string, prevSettings: IModelAutoSettings) => {
+        switch (taskType) {
+            case "binary classification":
+                return {
+                    ...prevSettings,
+                    loss: "binary_crossentropy",
+                    optimizer: "Adam",
+                    opt_algorithm: "random",
+                };
+            case "multiclass classification":
+                return {
+                    ...prevSettings,
+                    loss: "categorical_crossentropy",
+                    optimizer: "Adam",
+                    opt_algorithm: "random",
+                };
+            case "image multiclass classification":
+                return {
+                    ...prevSettings,
+                    loss: "categorical_crossentropy",
+                    optimizer: "Adam",
+                    opt_algorithm: "random",
+                    use_timeout: true,
+                    timeout: 600  // například 10 minut max
+                };
+            case "regression":
+                return {
+                    ...prevSettings,
+                    loss: "mean_squared_error",
+                    optimizer: "Adam",
+                    opt_algorithm: "random",
+                };
+            default:
+                return prevSettings;
+        }
+    };
+
+
 
 
     // const handlePresetFileChange = (selectedTaskType: string) => {
@@ -291,14 +394,29 @@ export const AutoDesignPage = () => {
     //     }
     // }
 
-    const handleSubmit = () => {
+    const isInputCorrect = () => {
         if (!selectedDataset) {
-            addAlert("Please select a dataset before submitting", "error");
-            return;
+            addAlert("Please select a dataset before submitting", "warning");
+            return false;
         }
-        if ((autoTask.datasetConfig.x_num === 0 && autoTask.datasetConfig.y_num === 0) && (autoTask.datasetConfig.x_columns.length === 0 && autoTask.datasetConfig.y_columns.length === 0)) {
+        if (autoTask.datasetConfig.x_columns.length === 0 || autoTask.datasetConfig.y_columns.length === 0) {
             addAlert("You need to specify data in dataset config", "warning")
-            return;
+            return false;
+        }
+        if ((autoTask.taskType === "multiclass classification") && autoTask.layers[2]?.units <= 1) {
+            addAlert("Number of classes cannot be less or equal than one", "warning")
+            return false
+        }
+        if ((autoTask.taskType === "image multiclass classification") && autoTask.layers[3]?.units <= 1) {
+            addAlert("Number of classes cannot be less or equal than one", "warning")
+            return false
+        }
+        return true
+    }
+
+    const handleSubmit = () => {
+        if (!isInputCorrect()) {
+            return
         }
 
         console.log(JSON.stringify(autoTask.layers));
@@ -380,7 +498,6 @@ export const AutoDesignPage = () => {
                             }
                             timeout={500}
                             placeholder="Enter number of classes"
-                            min={1}
                             step={1}
                         />
                     </>
@@ -396,7 +513,6 @@ export const AutoDesignPage = () => {
                             }
                             timeout={500}
                             placeholder="Enter number of classes"
-                            min={1}
                             step={1}
                         />
                     </>
@@ -573,6 +689,22 @@ export const AutoDesignPage = () => {
                         <p>No tags added yet.</p>
                     )}
                 </div> */}
+
+                <Form.Group controlId="maxDepth">
+                    <Form.Label>
+                        Max depth{' '}
+                        <HelpfulTip text={`Defines the maximum amount of hidden layers. Must be between ${maximumDepthMin} and ${maximumDepthMax}`} />
+                    </Form.Label>
+                    <Form.Control
+                        type="number"
+                        name="maxDepth"
+                        value={
+                            autoTask.layers.find(layer => layer.type === "Generator")?.sizeRandom?.max ?? ''
+                        }
+                        onChange={handleMaxDepthChange}
+                    />
+                </Form.Group>
+
                 <TagsForm tags={tags} setTags={setTags} />
             </Form.Group>
 

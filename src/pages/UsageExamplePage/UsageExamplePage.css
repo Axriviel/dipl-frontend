@@ -1,0 +1,26 @@
+.usage-page {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .usage-img {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
+    border: 1px solid #ccc;
+  }
+  
+  .usage-page h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+  
+  .usage-page section {
+    margin-bottom: 2rem;
+  }
+  

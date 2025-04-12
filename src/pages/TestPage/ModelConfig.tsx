@@ -87,7 +87,7 @@ export const ModelConfig: React.FC = () => {
   const [showPresetsModal, setShowPresetModal] = useState<boolean>(false);
   const [datasets, setDatasets] = useState<string[]>([]);
   const [selectedDataset, setSelectedDataset] = useState<string>("");
-  const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
+  const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(false)
   // const [taskActive, setTaskActive] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([])
   const [isTaskOverlayOpen, setTaskInfoOverlay] = useState<boolean>(false);
@@ -283,8 +283,8 @@ export const ModelConfig: React.FC = () => {
 
   // set default dataset
   useEffect(() => {
-    setUseDefaultDataset(true)
-    setSelectedDataset("pima-indians-diabetes.csv")
+    // setUseDefaultDataset(true)
+    // setSelectedDataset("pima-indians-diabetes.csv")
     // if (file === null) {
     //   fetch('/pima-indians-diabetes.csv')
     //     .then(response => response.blob())
@@ -303,6 +303,18 @@ export const ModelConfig: React.FC = () => {
       .catch((error) => console.error("Error fetching datasets:", error));
   }, []);
 
+  const isInputCorrect = () => {
+    if (!selectedDataset && !useDefaultDataset) {
+      addAlert("Please select a dataset before submitting", "warning");
+      return false;
+    }
+    if (modelParams.datasetConfig.x_columns.length === 0 || modelParams.datasetConfig.y_columns.length === 0) {
+      addAlert("You need to specify data in dataset config", "warning")
+      return false;
+    }
+    return true
+  }
+
   const handleSubmit = () => {
     console.log(JSON.stringify(modelParams.layers));
     console.log(JSON.stringify(modelParams.settings));
@@ -316,14 +328,8 @@ export const ModelConfig: React.FC = () => {
     };
     console.log(JSON.stringify(updatedTags));
 
-    if (!selectedDataset) {
-      addAlert("Please select a dataset before submitting", "error");
-      return;
-    }
-
-    if ((modelParams.datasetConfig.x_num === 0 && modelParams.datasetConfig.y_num === 0) && (modelParams.datasetConfig.x_columns.length === 0 && modelParams.datasetConfig.y_columns.length === 0)) {
-      addAlert("You need to specify data in dataset config", "warning")
-      return;
+    if (!isInputCorrect()) {
+      return
     }
 
     // Vytvoření FormData
@@ -390,7 +396,7 @@ export const ModelConfig: React.FC = () => {
         <div className='model-menu-container mb-1'>
           <div className='d-flex flex-column justify-content-center align-items-center'>
             {/* <Form.Label>Select Dataset:</Form.Label> */}
-            <div className='w-75' >
+            <div className='w-75 mb-2' >
               <Tippy content="Dataset used to train model">
                 <Form.Select
                   className="cursor-pointer"

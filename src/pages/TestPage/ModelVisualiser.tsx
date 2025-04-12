@@ -52,6 +52,8 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
   // useEffect, který sleduje změny v 'layers' a přidává nové uzly a hrany
   useEffect(() => {
     // Vytvoření nových uzlů z aktuálních 'layers'
+    console.log("layers changed");
+    
     const newNodes: Node[] = layers.map((layer, index) => ({
       id: layer.id,
       data: { label: `${layer.type} (${layer.name})` },

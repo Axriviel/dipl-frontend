@@ -9,10 +9,10 @@ export const autoTaskTypes = ["binary classification", "multiclass classificatio
 
 // options for Model Configuration form
 //optimization algorithm options for custom designer
-export const optAlgorithmOptions = ["random", "genetic", "nni"];
+export const optAlgorithmOptions = ["random", "genetic", "bayesian", "nni"];
 
 //optimization algorithm options for auto designer
-export const optAlgorithmAutoOptions = ["random", "genetic", "tagging"];
+export const optAlgorithmAutoOptions = ["random", "genetic", "bayesian", "tagging"];
 
 //Keras model optimizers
 export const optimizerOptions = [
@@ -23,10 +23,10 @@ export const optimizerOptions = [
 
 //Keras loss function options
 export const lossFunctionOptions = [
-    "binary_crossentropy", "categorical_crossentropy", "sparse_categorical_crossentropy","mean_squared_error",
+    "binary_crossentropy", "categorical_crossentropy", "sparse_categorical_crossentropy", "mean_squared_error",
 ]
 export const growthFunctionOptions = [
-    "none", "linear", "log","square",
+    "none", "linear", "log", "square",
 ]
 
 //Keras available monitor metrics
@@ -39,3 +39,7 @@ export const availableMonitorMetrics = [
 export const availableMetrics = [
     'accuracy', 'precision', 'recall', 'f1-score', 'AUC', 'mean_squared_error'
 ];
+
+//Automated designer maximum number of layers in generator Max and Min define the interval in which user can set the number
+export const maximumDepthMax = 15
+export const maximumDepthMin = 1

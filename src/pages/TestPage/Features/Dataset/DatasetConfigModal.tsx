@@ -140,7 +140,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                                     <option key={index} value={col}>{col}</option>
                                 ))
                             ) : (
-                                <option disabled value={""}>{"Loading ..."}</option>
+                                <option disabled value={""}>{!datasetName ? "No dataset selected" : "Loading ..."}</option>
                             )}
                         </Form.Select>
                     </Form.Group>
@@ -154,7 +154,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                                     <option key={index} value={col}>{col}</option>
                                 ))
                             ) : (
-                                <option disabled value={""}>{"Loading ..."}</option>
+                                <option disabled value={""}>{!datasetName ? "No dataset selected" : "Loading ..."}</option>
                             )}
                         </Form.Select>
                     </Form.Group>

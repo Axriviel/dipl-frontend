@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthContext/AuthContext';
 import { Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 export const Login: React.FC = () => {
     const { login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        await login(username, password);
+        const result = await login(username, password);
+        if(result){
+            navigate("/")
+        }
     };
 
     return (
