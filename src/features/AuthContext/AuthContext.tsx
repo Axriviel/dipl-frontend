@@ -20,10 +20,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const checkUser = async () => {
             try {
-                await fetchUser();  // Pokud fetchUser uspěje, nastavíme uživatele jako přihlášeného
+                await fetchUser();  //set user logged
                 setIsAuthenticated(true);
             } catch {
-                setIsAuthenticated(false);  // Pokud fetchUser selže, nastavíme uživatele jako odhlášeného
+                setIsAuthenticated(false);  // set user not logged
             }
         };
 
@@ -50,18 +50,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
 
             if (response.ok) {
-                // const data = await response.json();
-                // localStorage.setItem('token', data.access_token); // Uložení tokenu do localStorage
-                // console.log(localStorage.getItem("token"))
                 setIsAuthenticated(true);
                 await fetchUser();
                 addAlert('Successfully logged in!', 'success');
-                //alert("Successfully logged in");
                 return true
             } else {
                 addAlert('Login failed!', 'error'); // 
                 return false
-                // throw new Error('Login failed');
             }
         } catch (error) {
             console.error(error);
@@ -76,15 +71,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const response = await fetch(`${configData.API_URL}/api/user/logout`, {
                 method: 'DELETE',
                 credentials: 'include',
-                // body: JSON.stringify({ user_uuid: localStorage.getItem("token") }),
             });
 
             if (response.ok) {
-                // localStorage.removeItem('token'); // Odebrání tokenu z localStorage
                 setIsAuthenticated(false);
                 setUser(undefined);
                 addAlert('Successfully logged out!', 'success');
-                //alert("Successfully logged out");
             } else {
                 addAlert('Logout failed', "error");
                 throw new Error('Logout failed');
@@ -100,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.log("trying fetch")
             const response = await fetch(`${configData.API_URL}/api/user/getUser`, {
                 method: 'GET',
-                credentials: 'include',  // Odesílá session cookie
+                credentials: 'include',  // session cookie
             });
 
             if (!response.ok) {
@@ -111,14 +103,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 setUser({ id: data.id, username: data.username });
             }
         } catch (error) {
-            // Detekce síťových chyb (kdy server není dostupný)
+            // server not available
             if (error instanceof TypeError) {
                 console.error("Network error: Backend may not be available", error);
             } else {
                 console.error("Error fetching user:", error);
             }
 
-            // Nastavení uživatele jako odhlášeného
             setUser(undefined);
             setIsAuthenticated(false);
             throw error

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 
 interface Props {
-    value: string; // Počáteční hodnota
-    onChange: (value: string) => void; // Funkce, která se zavolá po debouncingu
-    disabled?: boolean; // Nepovinný parametr pro zakázání vstupu
-    className?: string; // Nepovinná třída pro stylování
+    value: string; // starting val
+    onChange: (value: string) => void; 
+    disabled?: boolean; 
+    className?: string; 
 }
 
 export const DebouncedTextArea: React.FC<Props> = ({
@@ -14,21 +14,20 @@ export const DebouncedTextArea: React.FC<Props> = ({
     disabled = false,
     className = '',
 }) => {
-    const [inputValue, setInputValue] = useState(value); // Dočasná hodnota pro textarea
-    const [isInitialRender, setIsInitialRender] = useState(true); // Sledování prvního renderu
+    const [inputValue, setInputValue] = useState(value); 
+    const [isInitialRender, setIsInitialRender] = useState(true); // is first render
 
     // Debouncing useEffect
     useEffect(() => {
         if (isInitialRender) {
-            setIsInitialRender(false); // Nastavíme, že první render proběhl
-            return; // Přerušíme efekt při prvním renderu
+            setIsInitialRender(false); // was first render
+            return; // do not trigger effect on first render
         }
 
         const timer = setTimeout(() => {
-            onChange(inputValue); // Zavoláme onChange až po 300 ms neaktivity
+            onChange(inputValue); // delay before onChange trigger
         }, 300);
 
-        // Zrušíme timeout při každé změně inputu, dokud uživatel nepřestane psát
         return () => clearTimeout(timer);
     }, [inputValue]);
 
@@ -36,7 +35,7 @@ export const DebouncedTextArea: React.FC<Props> = ({
         <Form.Control
             as="textarea"
             value={inputValue}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInputValue(e.target.value)} // Lokální změna inputu
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInputValue(e.target.value)} 
             disabled={disabled}
             className={className}
         />

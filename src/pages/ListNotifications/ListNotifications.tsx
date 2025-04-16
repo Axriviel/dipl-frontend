@@ -16,19 +16,19 @@ export const ListNotifications: React.FC = () => {
 
     const nextPage = () => {
         if (currentPage < totalPages) {
-            setCurrentPage(prevPage => prevPage + 1); // Přejít na další stránku
+            setCurrentPage(prevPage => prevPage + 1); 
         }
     };
 
     const prevPage = () => {
         if (currentPage > 1) {
-            setCurrentPage(prevPage => prevPage - 1); // Přejít na předchozí stránku
+            setCurrentPage(prevPage => prevPage - 1); 
         }
     };
 
     const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setLimit(Number(event.target.value)); // Změní limit na hodnotu zvolené v selectu
-        setCurrentPage(1); // Vrátí se na první stránku při změně limitu
+        setLimit(Number(event.target.value)); 
+        setCurrentPage(1); 
     };
 
     const handleMarkAsRead = async (notificationId: number, notificationWasRead: boolean) => {
@@ -38,12 +38,6 @@ export const ListNotifications: React.FC = () => {
             if (result.success) {
                 addAlert(result.message, "success");
                 fetchNotifications();
-                // Aktualizace seznamu notifikací (např. refetch nebo ruční úprava)
-                // setNotifications(prevNotifications =>
-                //     prevNotifications.map(notification =>
-                //         notification.id === notificationId ? { ...notification, was_read: true } : notification
-                //     )
-                // );
             } else {
                 addAlert(result.message, "error");
             }
@@ -69,22 +63,19 @@ export const ListNotifications: React.FC = () => {
                 <h1>Notifications</h1>
                 <ul className='notifications'>
                     {notifications
-                        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())  // Seřadí od nejnovější po nejstarší
+                        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())  // order from newest
                         .map(notification => (
 
                             <li key={notification.id} onMouseEnter={() => setIsHovered(notification.id)} onMouseLeave={() => setIsHovered(-1)} className={`notification m-4 ${!notification.was_read ? "notification-read" : "notification-unread"}`}>
                                 <div className='d-flex flex-column flex-wrap'>
                                     <p className=''>{notification.message}</p>
                                     <small>{new Date(notification.timestamp).toLocaleString()}</small>
-                                    <p>Read: {notification.was_read ? "Yes" : "No"}</p>
-                                    <p>User: {notification.user}</p>
                                     {isHovered === notification.id ? <div onClick={() => handleMarkAsRead(notification.id, notification.was_read)} className='mark-as-read'>Mark as read</div> : undefined}
                                 </div>
                             </li>
 
                         ))}
                 </ul>
-                {/* Ovládací prvky pro stránkování */}
                 <div className="my-1">
                     <button onClick={prevPage} disabled={currentPage === 1}>
                         Previous

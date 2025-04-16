@@ -23,7 +23,6 @@ export const FeedbackPage = () => {
 
         try {
             await SendFeedback(data);
-            //console.log("Feedback successfully sent");
             setIsSent(true);
             addAlert("Feedback successfuly sent", "success");
         } catch (error) {
@@ -51,16 +50,8 @@ export const FeedbackPage = () => {
                     <Form.Label>Feedback:</Form.Label>
 
                     <DebouncedTextArea value={feedback} disabled={isSent} className="w-100"
-                        onChange={(value: string) => setFeedback(value)} // Callback, když se změna potvrzuje po debounce
+                        onChange={(value: string) => setFeedback(value)} 
                     />
-                    {/* <Form.Control
-                        as="textarea"
-                        value={feedback}
-                        onChange={(e) => { setFeedback(e.target.value); console.log(feedback) }}
-                        disabled={isSent ? true : false}
-                        required
-                        className="w-100"
-                    /> */}
                 </Form.Group>
 
                 <Button variant="primary" type="submit" disabled={isSent}>

@@ -44,7 +44,7 @@ export const GASettingsForm: React.FC<Props> = ({ gaSettings, updateGASettings }
             </Form.Group>
 
             <Form.Group controlId="formGAMutationRate">
-                <Form.Label>Mutation Rate</Form.Label>
+                <Form.Label>Mutation Rate <HelpfulTip text="Defines a chance for mutation to happen (results in changing model parameters)" /></Form.Label>
                 <Form.Control
                     type="number"
                     step="0.01"

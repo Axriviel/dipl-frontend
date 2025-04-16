@@ -88,7 +88,6 @@ export const ModelConfig: React.FC = () => {
   const [datasets, setDatasets] = useState<string[]>([]);
   const [selectedDataset, setSelectedDataset] = useState<string>("");
   const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(false)
-  // const [taskActive, setTaskActive] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([])
   const [isTaskOverlayOpen, setTaskInfoOverlay] = useState<boolean>(false);
 
@@ -173,14 +172,13 @@ export const ModelConfig: React.FC = () => {
         }
       },
       datasetConfig: {
-        x_columns: [],          // Výchozí prázdný seznam
+        x_columns: [],
         x_num: 0,
         y_columns: [],
         one_hot_x_columns: [],
         one_hot_y_columns: [],
         y_num: 0,
-        test_size: 0.2,         // Výchozí hodnota pro testovací sadu
-        // file: null,             // Výchozí hodnota pro soubor
+        test_size: 0.2,
       }
     })
   }
@@ -218,7 +216,7 @@ export const ModelConfig: React.FC = () => {
   const handleClosePresetModal = () => setShowPresetModal(false);
 
   const handleOpenDatasetSettingsModal = () => setShowDatasetSettingsModal(true);
-  const handleCloseDatasetModal = () => setShowDatasetSettingsModal(false);  // Zavření modálního okna datasetu
+  const handleCloseDatasetModal = () => setShowDatasetSettingsModal(false);
 
 
   // Handler pro kliknutí na uzel v ModelVisualizer
@@ -235,12 +233,7 @@ export const ModelConfig: React.FC = () => {
     setModelParams((prev) => ({ ...prev, layers: updatedLayers }));
   };
 
-  // Přidání handleru pro výběr souboru
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     setFile(e.target.files[0]);
-  //   }
-  // };
+
   const handleDatasetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDataset(e.target.value);
     setUseDefaultDataset(false)
@@ -249,7 +242,7 @@ export const ModelConfig: React.FC = () => {
   const handleDelete = (id: string) => {
     const idToDelete = id;
 
-    // Filtruje vrstvy a odstraní aktuální vrstvu
+    // remove layer 
     const updatedLayers = modelParams.layers.filter(layer => layer.id !== idToDelete);
 
     // remove deleted layer id from inputs of other layers
@@ -281,20 +274,20 @@ export const ModelConfig: React.FC = () => {
     }
   };
 
-  // set default dataset
-  useEffect(() => {
-    // setUseDefaultDataset(true)
-    // setSelectedDataset("pima-indians-diabetes.csv")
-    // if (file === null) {
-    //   fetch('/pima-indians-diabetes.csv')
-    //     .then(response => response.blob())
-    //     .then(blob => {
-    //       const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-    //       setFile(defaultFile);
-    //     })
-    //     .catch(error => console.error("Chyba při načítání souboru:", error));
-    // }
-  }, []);
+  // set default dataset - unused atm
+  // useEffect(() => {
+  // setUseDefaultDataset(true)
+  // setSelectedDataset("pima-indians-diabetes.csv")
+  // if (file === null) {
+  //   fetch('/pima-indians-diabetes.csv')
+  //     .then(response => response.blob())
+  //     .then(blob => {
+  //       const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
+  //       setFile(defaultFile);
+  //     })
+  //     .catch(error => console.error("Chyba při načítání souboru:", error));
+  // }
+  // }, []);
 
   // Load datasets
   useEffect(() => {
@@ -332,7 +325,6 @@ export const ModelConfig: React.FC = () => {
       return
     }
 
-    // Vytvoření FormData
     const formData = new FormData();
     formData.append("datasetFile", selectedDataset);
     formData.append("useDefaultDataset", useDefaultDataset ? "true" : "false");
@@ -343,7 +335,6 @@ export const ModelConfig: React.FC = () => {
 
     addAlert("Task sent to server", "info");
     // setTaskActive(true)
-    // Odeslání požadavku
     fetch(`${configData.API_URL}/api/save-model`, {
       method: "POST",
       credentials: "include",
@@ -351,20 +342,17 @@ export const ModelConfig: React.FC = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          // Zpracování chyby odpovědi
           return response.json().then((errorData) => {
             throw new Error(`Error ${response.status}: ${errorData.error}`);
           });
         }
-        return response.json(); // Vrácení dat z odpovědi
+        return response.json();
       })
       .then((result) => {
-        // Zpracování úspěšné odpovědi
         addAlert(result.message, "success");
         console.log("Model successfully sent to backend:", result);
       })
       .catch((error) => {
-        // Zpracování chyby
         if (error instanceof Error) {
           addAlert(error.message, "error");
           console.error("Error sending model to backend:", error.message);
@@ -380,7 +368,6 @@ export const ModelConfig: React.FC = () => {
   return (
     <div className='m-2 d-flex flex-row flex-wrap justify-content-center align-items-center'>
       <div className='model-visualizer'>
-        {/* <h3>Model Visualizer</h3> */}
 
         <ModelVisualizer layers={modelParams.layers} onNodeClick={handleNodeClick} onLayersChange={handleLayersChange} />
       </div>
@@ -388,14 +375,9 @@ export const ModelConfig: React.FC = () => {
       {/* right pannel for layer selection etc. */}
       <div className='d-flex flex-column align-items-center flex-fill layer-list'>
         <h2>Model Configuration</h2>
-        {/* <div className='reset-button d-flex flex-row'>
-          <PresetSelector preset={preset} handlePresetChange={handlePresetChange} />
-          <Button onClick={handleResetAll} className='mx-2'>Reset</Button>
-        </div> */}
 
         <div className='model-menu-container mb-1'>
           <div className='d-flex flex-column justify-content-center align-items-center'>
-            {/* <Form.Label>Select Dataset:</Form.Label> */}
             <div className='w-75 mb-2' >
               <Tippy content="Dataset used to train model">
                 <Form.Select
@@ -462,9 +444,9 @@ export const ModelConfig: React.FC = () => {
         <Tippy content="Download currently defined model as JSON">
           <Button className="m-1 download-json-button" onClick={DownloadJSON({
             creation_config: [
-              modelParams.layers,      // Vrstva modelu
-              modelParams.settings,    // Nastavení modelu
-              modelParams.datasetConfig // Konfigurace datasetu
+              modelParams.layers,
+              modelParams.settings,
+              modelParams.datasetConfig
             ]
           })}>
             Download JSON
@@ -479,7 +461,6 @@ export const ModelConfig: React.FC = () => {
           show={showDatasetSettingsModal}
           handleClose={handleCloseDatasetModal} />
 
-        {/* Modální okno pro úpravu nastavení modelu */}
         <ModelConfigForm
           modelParams={modelParams}
           setModelParams={setModelParams}
@@ -501,39 +482,17 @@ export const ModelConfig: React.FC = () => {
           }}
         />
 
-
-        {/* <select className='p-1 m-1' value={newLayerType} onChange={(e) => setNewLayerType(e.target.value)}>
-            {selectableLayers.map((layer) => (
-              <option key={layer.id} value={layer.name}>
-                {layer.name}
-              </option>
-            ))}
-          </select> */}
-
         <LayerTable
           layers={modelParams.layers}
           handleLayerClick={handleLayerClick}
           handleDelete={handleDelete}
         />
-        {/* {modelParams.layers.map((layer) => (
-          <Button
-            key={layer.id}
-            onClick={() => handleLayerClick(layer)}
-            className="m-2"
-            variant="primary"
-          >
-            {layer.type} Layer (ID: {layer.id})
-          </Button>
-        ))} */}
         <Tippy placement='bottom' content="Sends the task to backend. You will be notified about the result when finished">
           <Button onClick={handleSubmit}>Submit Model</Button>
         </Tippy>
         <Button variant="secondary" className="m-2" onClick={() => setTaskInfoOverlay(!isTaskOverlayOpen)}>Status</Button>
       </div>
-      {/* <div className='model-config-progress-bar'>
-        <TaskProgressBar isActive={taskActive}
-          setIsActive={setTaskActive} />
-      </div> */}
+
       {isTaskOverlayOpen && <TaskInfoOverlay />}
       {
         selectedLayer && (

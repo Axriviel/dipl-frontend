@@ -54,9 +54,6 @@ export const LoadJsonModel: React.FC<LoadJsonModelProps> = ({ setModelParams }) 
                 onChange={handleFileChange}
                 ref={fileInputRef}
             />
-            {/* <Button className="mt-2" onClick={() => fileInputRef.current?.click()}>
-                Select JSON File
-            </Button> */}
             <span>Upload mode: {useReplace ? "replacement" : "pure"} <HelpfulTip text="Replacement mode replaces generators with used layers and sets every parameter to used value. Pure mode uses abstract setup."></HelpfulTip></span>
             <Form.Check
                 type="checkbox"
@@ -65,11 +62,10 @@ export const LoadJsonModel: React.FC<LoadJsonModelProps> = ({ setModelParams }) 
                 onChange={() => setUseReplace(!useReplace)}
                 className="mt-2"
             />
-            {/* Potvrzovací tlačítko pro nahrání souboru */}
             <Button
                 className="mt-2 w-50"
                 onClick={handleUpload}
-                disabled={!selectedFile} // Neaktivní, pokud není vybraný soubor
+                disabled={!selectedFile}
             >
                 Confirm Upload
             </Button>

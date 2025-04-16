@@ -2,12 +2,9 @@
     padding: 20px;
     border-radius: 10px;
     background-color: aliceblue;
-    /* Světle šedá */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 400px;
-    /* Maximální šířka */
     text-align: center;
-    /* Středování textu */
 }
 
 .info-card:hover {
@@ -16,13 +13,9 @@
 
 .info-image {
     max-width: 100%;
-    /* Aby se obrázek přizpůsobil šířce */
     height: auto;
-    /* Aby se zachoval poměr stran */
     border-radius: 8px;
-    /* Zaoblení rohů */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Jemný stín */
 }
 
 .info-content {

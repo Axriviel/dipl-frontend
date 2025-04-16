@@ -60,10 +60,6 @@ export const ModelsPage = () => {
         }
     };
 
-    // const handleShowParams = () => {
-    //     window.location.href = `${configData.API_URL}/api/get-params/${selectedModel?.id}`;
-    // }
-
     const [showParamsModal, setShowParamsModal] = useState(false);
     const [paramsModalData, setParamsModalData] = useState(null);
 
@@ -123,7 +119,7 @@ export const ModelsPage = () => {
 
             if (result.success) {
                 addAlert(result.message || 'Model successfully deleted', "success");
-                setSelectedModel(models[0]?? undefined)
+                setSelectedModel(models[0] ?? undefined)
                 setRefetch(!refetch);
             } else {
                 if (result.status === 409) {
@@ -222,17 +218,13 @@ export const ModelsPage = () => {
                     <div className="col-md-3 p-3 px-5 d-flex info-right-section-wrapper">
                         <div className="d-flex flex-column align-items-left info-right-section">
                             <h3>{selectedModel?.name}</h3>
-                            {/* {selectedModel.id} */}
-                            {/* <p><strong>Accuracy:</strong> {selectedModel?.accuracy}</p> */}
                             <p><strong>Designer:</strong> {selectedModel?.used_designer}</p>
                             <p><strong>Metric:</strong> {selectedModel?.watched_metric}</p>
                             <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
                             <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
-                            {/* <p><strong>Error:</strong> {selectedModel?.error}</p> */}
                             <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
                             <p><strong>Protocol:</strong> <span className="protocol-ref" onClick={handleShowProtocol}>Here</span></p>
                             <p><strong>Created:</strong> {selectedModel?.task_protocol.finished_at}</p>
-                            {/* <p><strong>used_tags:</strong> {selectedModel?.used_tags.user_tags}</p> */}
                             <p><strong>Used tags:</strong> {selectedModel?.used_tags.user_tags ?? "no user defined tags"}</p>
                             <Tippy content="Display layers summary">
                                 <Button onClick={handleShowDetails} className="m-2">

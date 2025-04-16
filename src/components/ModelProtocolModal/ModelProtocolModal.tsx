@@ -46,11 +46,11 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
             : " none encoded"}
         </div>
         {data.stopped_by &&
-        <div>
-          <strong>Stopped by</strong>
-          {data.stopped_by ?? ""}
-        </div>
-}
+          <div>
+            <strong>Stopped by</strong>
+            {data.stopped_by ?? ""}
+          </div>
+        }
         <div>
           <strong>Started at:</strong> {data.started_at}
         </div>
@@ -124,7 +124,7 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
                     <strong>Limits:</strong>
                     <ul>
                       <details>
-                      <summary>Show all used limits</summary>
+                        <summary>Show all used limits</summary>
                         {epoch.limits.map((limit: any, idx: number) => (
                           <li key={idx}>
                             {Object.entries(limit).map(([k, v]) => (
@@ -144,6 +144,7 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
                       <th>Timestamp</th>
                       <th>Result</th>
                       <th>Layers</th>
+                      <th>History</th>
                       <th>Parameters</th>
                     </tr>
                   </thead>
@@ -168,7 +169,28 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
                                 {model.architecture.map((layer: any, i: number) => (
                                   <li key={i}>
                                     <strong>{layer.layer_type}</strong> ({layer.layer_name}) – {layer.num_params} params
-                                    {layer.output_shape && <> – <em>{layer.output_shape}</em></>}
+                                    {layer.output_shape && <>{layer.neurons && (
+                                      <em>- {layer.neurons} neurons</em>
+                                    )}</>}
+                                  </li>
+                                ))}
+                              </ul>
+                            </details>
+                          ) : (
+                            "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {model.history && model.history.length > 0 ? (
+                            <details>
+                              <summary>{model.history.length} epochs</summary>
+                              <ul className="mb-0">
+                                {model.history.map((entry: any, i: number) => (
+                                  <li key={i}>
+                                    <strong>Epoch {entry.epoch}:</strong>{" "}
+                                    {entry.value !== undefined
+                                      ? entry.value.toFixed(4)
+                                      : `train: ${entry.train_value?.toFixed(4)}, val: ${entry.val_value?.toFixed(4)}`}
                                   </li>
                                 ))}
                               </ul>
@@ -182,9 +204,66 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
                             <details>
                               <summary>{Object.keys(model.parameters).length} parameters</summary>
                               <ul className="mb-0">
-                                {Object.entries(model.parameters).map(([key, value], idx) => (
-                                  <li key={idx}><strong>{key}:</strong> {JSON.stringify(value)}</li>
-                                ))}
+                                {Array.isArray(model.parameters) ? (
+                                  <>
+                                    {/* Parametry typu 0 */}
+                                    {model.parameters[0] && Object.keys(model.parameters[0]).length > 0 && (
+                                      <li>
+                                        <strong>Model parameters:</strong>
+                                        <ul>
+                                          {Object.entries(model.parameters[0]).map(([key, value], i) => (
+                                            <li key={`mp-${i}`}><strong>{key}:</strong> {JSON.stringify(value)}</li>
+                                          ))}
+                                        </ul>
+                                      </li>
+                                    )}
+
+                                    {/* Parametry typu 1 */}
+                                    {model.parameters[1] && Object.keys(model.parameters[1]).length > 0 && (
+                                      <li>
+                                        <strong>Training parameters:</strong>
+                                        <ul>
+                                          {Object.entries(model.parameters[1]).map(([key, value], i) => (
+                                            <li key={`tp-${i}`}><strong>{key}:</strong> {JSON.stringify(value)}</li>
+                                          ))}
+                                        </ul>
+                                      </li>
+                                    )}
+
+                                    {/* Parametry typu 2 */}
+                                    {model.parameters[2] && Array.isArray(model.parameters[2]) && model.parameters[2].length > 0 && (
+                                      <li>
+                                        <strong>Generator config:</strong>
+                                        <ul>
+                                          {model.parameters[2].map((gen: any, gi: number) => (
+                                            <li key={`gen-${gi}`}>
+                                              <details>
+                                                <summary>Generator {gi + 1}</summary>
+                                                <ul>
+                                                  <li><strong>Layers sequence:</strong> {JSON.stringify(gen.layers_sequence)}</li>
+                                                  <li><strong>Used layers:</strong>
+                                                    <pre className="">{JSON.stringify(gen.used_layers, null, 2)}</pre>
+                                                  </li>
+                                                  <li><strong>Used parameters:</strong>
+                                                    <pre className="">{JSON.stringify(gen.used_parameters, null, 2)}</pre>
+                                                  </li>
+                                                  <li><strong>Used rules:</strong>
+                                                    <pre className="">{JSON.stringify(gen.used_rules, null, 2)}</pre>
+                                                  </li>
+                                                </ul>
+                                              </details>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </li>
+                                    )}
+                                  </>
+                                ) : (
+                                  Object.entries(model.parameters).map(([key, value], idx) => (
+                                    <li key={idx}><strong>{key}:</strong> {JSON.stringify(value)}</li>
+                                  ))
+                                )}
+
                               </ul>
                             </details>
                           ) : "N/A"}

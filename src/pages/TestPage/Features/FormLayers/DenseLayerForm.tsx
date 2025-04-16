@@ -28,34 +28,10 @@ export const DenseLayerForm: React.FC<Props> = ({
             <Form.Group controlId={`units-${currentLayer.id}`}>
                 <Form.Label>Units:</Form.Label>
 
-
-                {/* <Form.Check
-                    type="checkbox"
-                    label="Randomize Units"
-                    checked={!!currentLayer.unitsRandom}
-                    onChange={() => handleRandomToggle('units', "numeric-test")}
-                /> */}
-                {/* <Form.Control
-                    as="select"
-                    value={currentLayer.unitsRandom ? currentLayer.unitsRandom.type : 'value'}
-                    onChange={(e: any) => {
-                        const selectedType = e.target.value;
-
-                        handleRandomToggle('units', selectedType as string);
-
-                    }}
-                >
-                    {NumericRandomizers.map((option) => (
-                        <option key={option} value={option}>
-                            {option === 'value' ? 'Value' : option}
-                        </option>
-                    ))}
-                </Form.Control> */}
-
                 <RandomizerSelect
                     value={currentLayer.unitsRandom ? currentLayer.unitsRandom.type : 'value'}
                     onChange={(selectedType: string) => handleRandomToggle('units', selectedType)}
-                    options={NumericRandomizers} // Můžeš předat jakýkoliv seznam možností
+                    options={NumericRandomizers}
                 />
 
 
@@ -73,24 +49,11 @@ export const DenseLayerForm: React.FC<Props> = ({
             </>
             <Form.Group controlId={`activation-${currentLayer.id}`}>
                 <Form.Label>Activation:</Form.Label>
-                {/* <Form.Check
-                    type="checkbox"
-                    label="Randomize Activation"
-                    checked={!!currentLayer.activationRandom}
-                    onChange={() => handleRandomToggle('activation', "text")}
-                /> */}
-
-
-
-                {/* vytvoření selektoru -> options jsou zde randomizační možnosti a podle toho se následně dotváří celá část formuláře*/}
                 <RandomizerSelect
                     value={currentLayer.activationRandom ? currentLayer.activationRandom.type : 'value'}
                     onChange={(selectedType: string) => handleRandomToggle('activation', selectedType)}
                     options={TextRandomizers}
                 />
-                {/* {renderRandomConfig('activation', { type: "text", options: currentLayer.activationRandom.options })} */}
-
-                {/* prvním parametrem je prvek, který bude randomizován a druhým je proměnná v currentLayer, do které se to ukládá */}
                 {renderRandomConfig('activation', currentLayer.activationRandom, handleChange)}
                 {!currentLayer.activationRandom && (
                     <Form.Select

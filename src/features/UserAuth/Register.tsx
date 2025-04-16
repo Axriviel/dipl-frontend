@@ -26,7 +26,6 @@ export const Register: React.FC = () => {
             if (response.ok) {
                 await login(username, password);
                 addAlert("Successfuly registered", "success")
-                //alert("Successfuly registered")
             } else {
                 addAlert("Registration failed", "error")
                 console.error('Registration failed');

@@ -46,7 +46,8 @@ export const ModelStructureModal: React.FC<Props> = ({ modelName, data, show, on
           <Button onClick={paramsButton} className="m-2">
             Params
           </Button>
-        </Tippy>        <Button variant="secondary" onClick={onClose}>
+        </Tippy>
+        <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
       </Modal.Footer>

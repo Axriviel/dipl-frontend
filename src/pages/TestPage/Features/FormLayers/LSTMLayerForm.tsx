@@ -23,7 +23,6 @@ export const LSTMLayerForm: React.FC<Props> = ({
 }) => {
     return (
         <div className="custom-form">
-            {/* Randomizace pro units */}
             <Form.Group controlId={`units-${currentLayer.id}`}>
                 <Form.Label>Units:</Form.Label>
                 <RandomizerSelect

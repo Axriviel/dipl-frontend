@@ -1,11 +1,14 @@
+import Tippy from "@tippyjs/react";
 import { ChangeEvent, useCallback, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { availableMetrics, availableMonitorMetrics, growthFunctionOptions, lossFunctionOptions, optAlgorithmAutoOptions, optimizerOptions } from "../../../../config/config";
-import { GASettingsForm } from "../../../TestPage/Features/Components/GASettingsForm";
-import { IAutoTaskState } from "../../Models/AutoTask";
-import { HelpfulTip } from "../../../../features/Tooltip";
-import Tippy from "@tippyjs/react";
 import { DebouncedNumberInput } from "../../../../components/FormElements/DebouncedNumberInput";
+import { availableMetrics, availableMonitorMetrics, growthFunctionOptions, lossFunctionOptions, optAlgorithmAutoOptions, optimizerOptions } from "../../../../config/config";
+import { HelpfulTip } from "../../../../features/Tooltip";
+import { GASettingsForm } from "../../../TestPage/Features/Components/GASettingsForm";
+import { RandomizerSelect } from "../../../TestPage/Features/RandomizerSelect";
+import { renderRandomConfig } from "../../../TestPage/Features/Randomness/RenderRandomConfig";
+import { NumericRandomizers, RandomConfig, TextRandomizers } from "../../../TestPage/Models/RandomConfigModels";
+import { IAutoTaskState } from "../../Models/AutoTask";
 import { IModelAutoSettings } from "../../Models/ModelAutoSettings";
 
 interface Props {
@@ -19,7 +22,6 @@ interface Props {
 export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose }) => {
     const [useTimer, setUseTimer] = useState<boolean>(false)
 
-    // Funkce pro aktualizaci nastavení
     const updateSettings = (e: any) => {
         const { name, value } = e.target;
         setModelParams(prev => ({
@@ -56,12 +58,93 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
         }));
     };
 
-    // Funkce pro výběr metrik pomocí checkboxů
+    const handleChange = (key: keyof IModelAutoSettings | string, value: any) => {
+        console.log(`Updating ${key} to`, value);
+
+        setModelParams((prev) => {
+            if (typeof key === "string" && key.includes("Random")) {
+                const [randomKey, property] = key.split(".") as [keyof IModelAutoSettings, string];
+
+                if (!(randomKey in prev.settings)) {
+                    console.error(`Key ${randomKey} does not exist in IModelSettings`);
+                    return prev;
+                }
+
+                const randomConfig = (prev.settings[randomKey] as RandomConfig) || {};
+
+                const updatedRandomConfig = {
+                    ...randomConfig,
+                    [property]: value,
+                };
+
+                return {
+                    ...prev,
+                    settings: {
+                        ...prev.settings,
+                        [randomKey]: updatedRandomConfig,
+                    },
+                };
+            }
+
+            if (key in prev.settings) {
+                return {
+                    ...prev,
+                    settings: {
+                        ...prev.settings,
+                        [key]: value,
+                    },
+                };
+            }
+
+            console.error(`Key ${key} does not exist in IModelSettings`);
+            return prev;
+        });
+    };
+
+    const handleRandomToggle = (key: string, type: string) => {
+        setModelParams((prev) => {
+            const randomEnabled = prev.settings.hasOwnProperty(`${key}Random`);
+            console.log("Current randomEnabled:", randomEnabled);
+            console.log("nastavuji " + key + " na " + type);
+
+            if (type === 'value') {
+                return {
+                    ...prev,
+                    settings: {
+                        ...prev.settings,
+                        [`${key}Random`]: undefined,
+                    }
+                };
+            }
+
+            return {
+                ...prev,
+                settings: {
+                    ...prev.settings,
+                    [`${key}Random`]: randomEnabled
+                        ? (() => {
+                            switch (type) {
+                                case 'numeric':
+                                    return { type: 'numeric', min: 1, max: 100, step: 1 };
+                                case 'numeric-test':
+                                    return { type: 'numeric-test', min: 1, max: 100 };
+                                case 'text':
+                                    return { type: 'text', options: ['option1', 'option2'] };
+                                default:
+                                    throw new Error(`Unsupported type: ${type}`);
+                            }
+                        })()
+                        : undefined
+                }
+            };
+        });
+    };
+
     const handleMetricsChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
         const updatedMetrics = checked
-            ? [...modelParams.settings.metrics, value]  // Přidání metriky
-            : modelParams.settings.metrics.filter(metric => metric !== value);  // Odebrání metriky
+            ? [...modelParams.settings.metrics, value]  // add metric
+            : modelParams.settings.metrics.filter(metric => metric !== value);  // remove one
 
         setModelParams(prev => ({
             ...prev,
@@ -95,6 +178,16 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
         };
     }, []);
 
+    const handleActivationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setModelParams((prev) => ({
+            ...prev,
+            settings: {
+                ...prev.settings,
+                optimizer: e.target.value,
+            },
+        }));
+    };
+
     return (
         <Modal show={show} onHide={handleClose} centered size="lg">
             <Modal.Header closeButton>
@@ -118,14 +211,6 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Specifická sekce pro NNI */}
-                    {/* {modelParams.settings.opt_algorithm === "nni" && (
-                        <NNISettingsAutoForm
-                            nniSettings={modelParams.settings.NNI}
-                            updateNNISettings={(e) => updateOptimizerSpecificSettings(e, "NNI")}
-                        />
-                    )} */}
-
                     {/* Genetics specific section */}
                     {modelParams.settings.opt_algorithm === "genetic" && (
                         <GASettingsForm
@@ -134,19 +219,29 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                         />
                     )}
 
-                    {/* Výběr optimalizátoru */}
                     <Form.Group controlId="formOptimizer">
                         <Form.Label>Optimizer</Form.Label>
-                        <Form.Select
-                            as="select"
-                            name="optimizer"
-                            value={modelParams.settings.optimizer}
-                            onChange={updateSettings}
-                        >
-                            {optimizerOptions.map(opt => (
-                                <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                        </Form.Select>
+                        <RandomizerSelect
+                            value={modelParams.settings.optimizerRandom ? modelParams.settings.optimizerRandom.type : 'value'}
+                            onChange={(selectedType: string) => handleRandomToggle('optimizer', selectedType)}
+                            options={TextRandomizers}
+                        />
+
+                        {/* prvním parametrem je prvek, který bude randomizován a druhým je proměnná v currentLayer, do které se to ukládá */}
+                        {renderRandomConfig('optimizer', modelParams.settings.optimizerRandom, handleChange)}
+                        {!modelParams.settings.optimizerRandom && (
+                            <Form.Select
+                                as="select"
+                                value={modelParams.settings.optimizer || ''}
+                                onChange={handleActivationChange}
+                            >
+                                {optimizerOptions.map((fn) => (
+                                    <option key={fn} value={fn}>
+                                        {fn}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        )}
                     </Form.Group>
 
                     <Form.Group controlId="modelName">
@@ -189,7 +284,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Checkboxy pro výběr metrik */}
+                    {/* Checkbox for metrics */}
                     <Form.Group controlId="formMetrics">
                         <Form.Label>Metrics</Form.Label>
                         {availableMetrics.map(metric => (
@@ -203,7 +298,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                             />
                         ))}
                     </Form.Group>
-                    {/* Výběr monitorovací metriky */}
+
                     <Form.Group controlId="formMonitorMetric">
                         <Form.Label>Monitor Metric</Form.Label>
                         <Form.Select
@@ -225,28 +320,46 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Nastavení epoch a batch size */}
+                    {/* epoch and batch size */}
                     <Form.Group controlId="formEpochs">
                         <Form.Label>Epochs</Form.Label>
-                        <Form.Control
-                            type="number"
-                            name="epochs"
-                            value={modelParams.settings.epochs}
-                            onChange={updateSettings}
+                        <RandomizerSelect
+                            value={modelParams.settings.epochsRandom ? modelParams.settings.epochsRandom.type : 'value'}
+                            onChange={(selectedType: string) => handleRandomToggle('epochs', selectedType)}
+                            options={NumericRandomizers}
                         />
-                    </Form.Group>
 
+
+                        {renderRandomConfig('epochs', modelParams.settings.epochsRandom, handleChange)}
+                        {!modelParams.settings.epochsRandom && (
+                            <Form.Control
+                                type="number"
+                                name="epochs"
+                                value={modelParams.settings.epochs || 10}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('epochs', parseInt(e.target.value))}
+                            />
+                        )}
+                    </Form.Group>
                     <Form.Group controlId="formBatchSize">
                         <Form.Label>Batch Size</Form.Label>
-                        <Form.Control
-                            type="number"
-                            name="batch_size"
-                            value={modelParams.settings.batch_size}
-                            onChange={updateSettings}
-                        />
-                    </Form.Group>
 
-                    <Form.Group controlId="formBatchSize">
+
+                        <RandomizerSelect
+                            value={modelParams.settings.batch_sizeRandom ? modelParams.settings.batch_sizeRandom.type : "value"}
+                            onChange={(selectedType: string) => handleRandomToggle("batch_size", selectedType)}
+                            options={NumericRandomizers}
+                        />
+                        {renderRandomConfig("batch_size", modelParams.settings.batch_sizeRandom, handleChange)}
+                        {!modelParams.settings.batch_sizeRandom && (
+                            <Form.Control
+                                type="number"
+                                name="batch_size"
+                                value={modelParams.settings.batch_size}
+                                onChange={updateSettings}
+                            />
+                        )}
+                    </Form.Group>
+                    <Form.Group controlId="max_models">
                         <Form.Label>Max models</Form.Label>
                         <Form.Control
                             type="number"
@@ -281,7 +394,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                         )}
                     </Form.Group>
                     <Form.Group controlId="k_fold">
-                        <Form.Label>N-training <HelpfulTip text="Defines how many times should model be trained to verify its performance. May significantly increase computation time"/></Form.Label>
+                        <Form.Label>N-training <HelpfulTip text="Defines how many times should model be trained to verify its performance. May significantly increase computation time" /></Form.Label>
                         <Form.Control
                             type="number"
                             name="k_fold"

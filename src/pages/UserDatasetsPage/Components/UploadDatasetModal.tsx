@@ -32,9 +32,9 @@ export const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({ show, ha
 
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `${configData.API_URL}/api/dataset/upload`, true);
-        xhr.withCredentials = true; // Zajistí připojení k session
+        xhr.withCredentials = true; // connect to session
 
-        // Sledujeme průběh nahrávání
+        // upload progress
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable) {
                 const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -49,7 +49,7 @@ export const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({ show, ha
             if (xhr.status === 200) {
                 addAlert("Dataset successfuly uploaded!", "success");
                 handleClose();
-                onUploadSuccess(); // Aktualizace seznamu datasetů
+                onUploadSuccess();
             } else {
                 const errorResponse = JSON.parse(xhr.responseText);
                 addAlert(errorResponse.error || "Error uploading dataset", "error");

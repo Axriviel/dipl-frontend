@@ -45,22 +45,16 @@
     position: sticky;
     top: 0;
     background: white;
-    /* Důležité! Bez toho by header překryl text */
     z-index: 100;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .layer-id {
     max-width: 150px;
-    /* Nastav maximální šířku */
     white-space: nowrap;
-    /* Zabrání zalomení textu */
     overflow: hidden;
-    /* Skryje přetekající část */
     text-overflow: ellipsis;
-    /* Přidá "..." pokud je text příliš dlouhý */
     cursor: pointer;
-    /* Změní kurzor na ukazatel */
 
 }
 
@@ -88,6 +82,7 @@
 @media (max-width: 1100px) {
     .model-visualizer {
         width: 100vh;
+        height: 50vh
     }
 
     .model-config-progress-bar {
@@ -95,12 +90,26 @@
     }
 
     .download-json-button {
-        bottom: 0;
+        bottom: 1;
     }
 
     .layer-list {
-        height: auto;
+        width: 100vw;
+        max-width: none;
         border: none;
         overflow: visible;
+    }
+
+    .model-menu-container {
+        width: 100%;
+    }
+
+    .layer-table {
+        width: 100% !important;
+        max-width: none;
+    }
+
+    .react-flow {
+        height: 50% !important;
     }
 }

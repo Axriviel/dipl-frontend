@@ -7,15 +7,14 @@ interface NotificationContextType {
     notifications: INotification[];
     hasNewNotification: boolean;
     fetchNotifications: () => void;
-    setHasNewNotification: React.Dispatch<React.SetStateAction<boolean>>;  // Přímo předáváme setter
-    totalPages: number; // Celkový počet stránek
-    currentPage: number; // Aktuální stránka
-    setCurrentPage: React.Dispatch<React.SetStateAction<number>>; // Setter pro stránku
-    setLimit: React.Dispatch<React.SetStateAction<number>>; // Setter pro stránku
+    setHasNewNotification: React.Dispatch<React.SetStateAction<boolean>>; 
+    totalPages: number; 
+    currentPage: number; 
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>; 
+    setLimit: React.Dispatch<React.SetStateAction<number>>; 
 
 }
 
-// Typ pro props NotificationProvider, který obsahuje children
 interface NotificationProviderProps {
     children: ReactNode;
 }
@@ -34,9 +33,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     const { user, isAuthenticated } = useAuth();
     const [notifications, setNotifications] = useState<INotification[]>([]);
     const [hasNewNotification, setHasNewNotification] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1); // Aktuální stránka
-    const [totalPages, setTotalPages] = useState(1); // Celkový počet stránek
-    const [limit, setLimit] = useState(5); // Počet notifikací na stránku
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [totalPages, setTotalPages] = useState(1); 
+    const [limit, setLimit] = useState(5); 
 
     const fetchNotifications = () => {
         if (user && isAuthenticated) {
@@ -48,11 +47,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
                 .then(data => {
                     const hasUnreadNotifications = data.notifications.some((n: INotification) => !n.was_read);
                     setHasNewNotification(hasUnreadNotifications)
-                    // if (notifications.length < data.notifications.length) {
-                    // setHasNewNotification(true);
-                    // }
                     setNotifications(data.notifications);
-                    setTotalPages(data.totalPages); // Nastavení celkového počtu stránek
+                    setTotalPages(data.totalPages); 
                 })
                 .catch(error => {
                     console.error("Error fetching notifications:", error);
@@ -61,16 +57,15 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     };
     useEffect(() => {
         if (user) {
-            // První načtení notifikací
             fetchNotifications();
             console.log("fetch notifikací proveden " + new Date().toLocaleString());
 
-            // Periodické dotazování každých 60 sekund
+            // renew notifications every 60 seconds
             const interval = setInterval(() => {
                 fetchNotifications();
                 console.log("fetch notifikací proveden " + new Date().toLocaleString());
 
-            }, 60000); // 60 sekund
+            }, 60000); 
 
             return () => clearInterval(interval);
         }

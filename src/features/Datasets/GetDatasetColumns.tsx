@@ -20,7 +20,7 @@ export const getDatasetColumns = async (datasetName: string, isDefaultDataset: b
             throw new Error("Invalid response format: missing 'columns' field");
         }
 
-        return data.columns; // Vrací pouze seznam sloupců
+        return data.columns;
     } catch (error) {
         console.error("Error fetching column names:", error);
         return null; // Vrátíme null při chybě, aby frontend nepadal

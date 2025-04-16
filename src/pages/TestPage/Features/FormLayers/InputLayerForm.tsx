@@ -10,15 +10,6 @@ interface InputLayerFormProps {
 export const InputLayerForm: React.FC<InputLayerFormProps> = ({ currentLayer, handleChange }) => {
     return (
         <div className="custom-form">
-            {/* <Form.Group controlId={`shape-${currentLayer.id}`}>
-                <Form.Label>Input Shape:</Form.Label>
-                <Form.Control
-                    type="text"
-                    value={currentLayer.shape ? currentLayer.shape.join(',') : ''} // Zobrazení pole jako řetězce                    
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleChange('shape', e.target.value.split(',').map(Number)) // Převod řetězce na pole čísel
-                    } />
-            </Form.Group> */}
 
             <Form.Group controlId={`batch_size-${currentLayer.id}`}>
                 <Form.Label>Batch Size (Optional):</Form.Label>

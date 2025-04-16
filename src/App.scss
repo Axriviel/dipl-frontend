@@ -37,18 +37,9 @@ body {
   &:active {
     transform: translateY(2px);
     background-color: rgb(211, 57, 57) !important;
-    /* Jemné posunutí dolů při stisknutí */
   }
 }
 
-// .nav-button {
-//   @extend .cute-button;
-//   background-color: rgb(218, 30, 61);
-
-//   &:hover {
-//     text-decoration: underline;
-//   }
-// }
 
 .mini-map {}
 
@@ -86,7 +77,6 @@ body {
   }
 }
 
-// 🔹 Primární tlačítko (Bootstrap primary)
 .btn-primary {
   background: linear-gradient(135deg, #007bff, #0056b3);
   color: #fff;
@@ -100,7 +90,6 @@ body {
   }
 }
 
-// 🔹 Sekundární tlačítko (Bootstrap secondary)
 .btn-secondary {
   background: linear-gradient(135deg, #6c757d, #343a40);
   color: #fff;
@@ -114,7 +103,6 @@ body {
   }
 }
 
-// 🔹 Úspěšné tlačítko (Bootstrap success)
 .btn-success {
   background: linear-gradient(135deg, #28a745, #1e7e34);
   color: #fff;
@@ -128,7 +116,6 @@ body {
   }
 }
 
-// 🔹 Nebezpečné tlačítko (Bootstrap danger)
 .btn-danger {
   background: linear-gradient(135deg, #dc3545, #b52a38);
   color: #fff;
@@ -142,7 +129,6 @@ body {
   }
 }
 
-// 🔹 Tlačítko s efektem skla (Glassmorphism)
 .btn-glass {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);

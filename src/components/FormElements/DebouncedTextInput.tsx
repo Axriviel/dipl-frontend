@@ -9,20 +9,18 @@ interface Props {
 
 // default timeout 300 ms
 export const DebouncedTextInput: React.FC<Props> = ({ value, onChange, timeout = 300 }) => {
-    const [inputValue, setInputValue] = useState(value); // Dočasná hodnota pro input
-    const [isInitialRender, setIsInitialRender] = useState(true); // Stav pro sledování prvního renderu
+    const [inputValue, setInputValue] = useState(value);
+    const [isInitialRender, setIsInitialRender] = useState(true);
 
-    // Uložíme změny až po určité době neaktivity
     useEffect(() => {
         if (isInitialRender) {
-            setIsInitialRender(false); // Nastavíme, že první render proběhl
-            return; // Přerušíme efekt při prvním renderu
+            setIsInitialRender(false);
+            return;
 
         } const timer = setTimeout(() => {
-            onChange(inputValue); // Zavoláme onChange až po 300 ms neaktivity
+            onChange(inputValue);
         }, timeout);
 
-        // Zrušíme timeout při každé změně inputu, dokud uživatel nepřestane psát
         return () => clearTimeout(timer);
     }, [inputValue]);
 
@@ -30,7 +28,7 @@ export const DebouncedTextInput: React.FC<Props> = ({ value, onChange, timeout =
         <Form.Control
             type="text"
             value={inputValue}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)} // Lokální změna inputu
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)} 
         />
     );
 };

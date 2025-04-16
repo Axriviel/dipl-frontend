@@ -55,10 +55,6 @@ export const Cifar10Preset = async (setModelParams: Function, setSelectedDataset
   });
 
   try {
-    // const response = await fetch("/cifar10_normalized.npz");
-    // const blob = await response.blob();
-    // const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
-    // setFile(defaultFile);
     setSelectedDataset("cifar10_normalized.npz")
   } catch (error) {
     console.error("Error loading file:", error);

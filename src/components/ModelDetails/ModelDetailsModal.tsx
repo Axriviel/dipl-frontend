@@ -1,5 +1,6 @@
 import React from "react";
 import { Accordion, Button, Modal } from "react-bootstrap";
+import { HelpfulTip } from "../../features/Tooltip";
 
 type ModalProps = {
     show: boolean;
@@ -16,39 +17,71 @@ const DataModal: React.FC<ModalProps> = ({ show, onClose, data }) => {
             <Modal.Body>
                 <Accordion>
                     <Accordion.Item eventKey="770">
-                        <Accordion.Header>Used Params</Accordion.Header>
+                        <Accordion.Header className="d-flex">Used parameters<span className="flex-grow-1"></span> <HelpfulTip text="Contains all parameters which were used to create the model" /></Accordion.Header>
                         <Accordion.Body>
-                            <Accordion>
-                                <Accordion.Item eventKey="690">
-                                    <Accordion.Header>Model Params</Accordion.Header>
-                                    <Accordion.Body>
-                                        <pre>{JSON.stringify(data.used_params[0], null, 2)}</pre>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                {data.used_params[1] && Object.keys(data.used_params[1]).length > 0 && (
-                                    <Accordion.Item eventKey="580">
-                                        <Accordion.Header>Dataset params:</Accordion.Header>
-                                        <Accordion.Body className="d-flex flex-column justify-content-center">
-                                            <pre>{JSON.stringify(data.used_params[1], null, 2)}</pre>
+                            <Accordion flush>
+                                {/* Model Params */}
+                                {data.used_params[0] && Object.keys(data.used_params[0]).length > 0 && (
+                                    <Accordion.Item eventKey="modelParams">
+                                        <Accordion.Header className="d-flex">Model Params <span className="flex-grow-1"></span> <HelpfulTip text="Parameters which were used in the layers of the model (excluding generator layer and its structures)" /></Accordion.Header>
+                                        <Accordion.Body>
+                                            <ul>
+                                                {Object.entries(data.used_params[0]).map(([key, value]) => (
+                                                    <li key={key}>
+                                                        <strong>{key}:</strong> {JSON.stringify(value)}
+                                                    </li>
+                                                ))}
+                                            </ul>
                                         </Accordion.Body>
                                     </Accordion.Item>
                                 )}
 
+                                {/* Dataset Params */}
+                                {data.used_params[1] && Object.keys(data.used_params[1]).length > 0 && (
+                                    <Accordion.Item eventKey="datasetParams">
+                                        <Accordion.Header className="d-flex">Config Params <span className="flex-grow-1"></span> <HelpfulTip text="Parameters which were used in model config" /></Accordion.Header>
+                                        <Accordion.Body>
+                                            <ul>
+                                                {Object.entries(data.used_params[1]).map(([key, value]) => (
+                                                    <li key={key}>
+                                                        <strong>{key}:</strong> {JSON.stringify(value)}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                )}
+
+                                {/* Generator Params */}
                                 {data.used_params[2] && data.used_params[2].length > 0 &&
-                                    data.used_params[2].map((item: any, index: any) => (
-                                        <Accordion.Item eventKey={index.toString()} key={index}>
-                                            <Accordion.Header>Generator params {index + 1}</Accordion.Header>
-                                            <Accordion.Body className="d-flex flex-column justify-content-center">
-                                                <pre>{JSON.stringify(item, null, 2)}</pre>
+                                    data.used_params[2].map((gen: any, index: number) => (
+                                        <Accordion.Item eventKey={`gen-${index}`} key={`gen-${index}`}>
+                                            <Accordion.Header className="d-flex">Generator {index + 1} <span className="flex-grow-1"></span> <HelpfulTip text="Parameters which were used in the layers of the model (excluding generator layer and its structures)" /></Accordion.Header>
+                                            <Accordion.Body>
+                                                <div className="mb-2">
+                                                    <strong>Layers sequence:</strong>
+                                                    <pre>{JSON.stringify(gen.layers_sequence, null, 2)}</pre>
+                                                </div>
+                                                <div className="mb-2">
+                                                    <strong>Used layers:</strong>
+                                                    <pre>{JSON.stringify(gen.used_layers, null, 2)}</pre>
+                                                </div>
+                                                <div className="mb-2">
+                                                    <strong>Used parameters:</strong>
+                                                    <pre>{JSON.stringify(gen.used_parameters, null, 2)}</pre>
+                                                </div>
+                                                <div>
+                                                    <strong>Used rules:</strong>
+                                                    <pre>{JSON.stringify(gen.used_rules, null, 2)}</pre>
+                                                </div>
                                             </Accordion.Body>
                                         </Accordion.Item>
-                                    ))
-                                }
+                                    ))}
                             </Accordion>
                         </Accordion.Body>
                     </Accordion.Item>
                     <Accordion.Item eventKey="771">
-                        <Accordion.Header>Creation Config</Accordion.Header>
+                        <Accordion.Header className="d-flex">Creation config<span className="flex-grow-1"></span> <HelpfulTip text="Complete JSON structure which was used to create the model" /></Accordion.Header>
                         <Accordion.Body className="d-flex flex-column justify-content-center">
                             <pre>{JSON.stringify(data, null, 2)}</pre>
                         </Accordion.Body>

@@ -16,6 +16,6 @@ export const GetUserDatasets = async (): Promise<IUserDataset> => {
         return await response.json();
     } catch (error) {
         console.error("Error fetching user datasets:", error);
-        return { datasets: [] }; // Vrátíme prázdný seznam v případě chyby
+        return { datasets: [] };
     }
 };

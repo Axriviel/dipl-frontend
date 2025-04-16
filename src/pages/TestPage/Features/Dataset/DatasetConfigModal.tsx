@@ -17,7 +17,7 @@ interface DatasetConfigModalProps {
 }
 
 export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetName, isDefaultDataset, datasetParams, setDatasetConfig, show, handleClose }) => {
-    const [columnNames, setColumnNames] = useState<string[]>([]); // Seznam názvů sloupců
+    const [columnNames, setColumnNames] = useState<string[]>([]);
     const [datasetColumnsLoading, setDatasetColumnsLoading] = useState<boolean>(true)
     const [selectedXColumns, setSelectedXColumns] = useState<string[]>([]);
     const [selectedYColumns, setSelectedYColumns] = useState<string[]>([]);
@@ -26,9 +26,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
     const [showOneHotEncodeX, setShowOneHotEncodeX] = useState<boolean>(false);
     const [showOneHotEncodeY, setShowOneHotEncodeY] = useState<boolean>(false);
 
-    // Synchronizace výběru při otevření modalu
     useEffect(() => {
-        console.log("effect")
         if (datasetParams?.x_columns) {
             setSelectedXColumns(datasetParams.x_columns);
         }
@@ -37,7 +35,6 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
         }
     }, [datasetParams, show]);
 
-    // Funkce pro načtení sloupců z datasetu po nahrání
     useEffect(() => {
         if (!datasetName) return;
         setDatasetColumnsLoading(true);
@@ -49,7 +46,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                 }
                 setDatasetColumnsLoading(false);
             })
-            .catch(() => setDatasetColumnsLoading(false)); // Ošetření chyby
+            .catch(() => setDatasetColumnsLoading(false));
     }, [datasetName]);
 
     const handleOneHotColumnsChange = (
@@ -58,14 +55,12 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
     ) => {
         const selected = Array.from(e.target.selectedOptions, option => option.value);
 
-        // Lokální set podle targetu
         if (target === 'one_hot_x_columns') {
             setOneHotEncodeX(selected);
         } else {
             setOneHotEncodeY(selected);
         }
 
-        // Zápis do datasetConfig
         setDatasetConfig(prev => ({
             ...prev,
             datasetConfig: {
@@ -74,7 +69,6 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
             }
         }));
     };
-    // Výběr vstupních sloupců (X)
     const handleXColumnsChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedColumns = Array.from(e.target.selectedOptions, option => option.value);
         setDatasetConfig(prev => ({
@@ -105,8 +99,8 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
         setDatasetConfig(prev => ({
             ...prev,
             datasetConfig: {
-                ...prev.datasetConfig, // Zachováme všechny ostatní hodnoty v `datasetConfig`
-                [name]: numericValue // Aktualizujeme konkrétní hodnotu (např. `x_num`, `y_num`)
+                ...prev.datasetConfig,
+                [name]: numericValue
             }
         }));
     };
@@ -119,18 +113,7 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
             </Modal.Header>
             <Modal.Body>
                 <Form className='custom-form'>
-                    {/* Nahrání datasetu */}
-                    {/* <Form.Group controlId="formFileUpload">
-                        <Form.Label>Upload Dataset</Form.Label>
-                        <Form.Control
-                            disabled
-                            type="file"
-                            accept=".csv,.tsv,.npy,.npz,.h5"
-                            onChange={handleFileChange}
-                        />
-                    </Form.Group> */}
 
-                    {/* Výběr sloupců pro vstupy X */}
                     <Form.Group controlId="formXColumn">
                         <Form.Label className='font-weight-600'>Input columns (X)</Form.Label>
 
@@ -145,7 +128,6 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Výběr sloupce pro výstup Y */}
                     <Form.Group controlId="formYColumn">
                         <Form.Label className='font-weight-600'>Output Column (Y)</Form.Label>
                         <Form.Select as="select" multiple onChange={handleYColumnChange} value={selectedYColumns}>
@@ -212,7 +194,6 @@ export const DatasetConfigModal: React.FC<DatasetConfigModalProps> = ({ datasetN
                         </Form.Group>
                     }
 
-                    {/* Nastavení testovací velikosti */}
                     <Form.Group controlId="formTestSize">
                         <Form.Label className='font-weight-600'>Test Size <HelpfulTip text='Sets trainTestSplit ratio (e.g. 0.2 selects 20% data as testing and 80% as training)' /></Form.Label>
                         <Form.Control

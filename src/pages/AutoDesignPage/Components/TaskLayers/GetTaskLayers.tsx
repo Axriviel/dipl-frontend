@@ -6,7 +6,6 @@ import { createFlattenLayer } from "../../../TestPage/Features/Layers/CreateFlat
 import { createGeneratorLayer } from "../../../TestPage/Features/Layers/CreateGeneratorLayer";
 import { createInputLayer } from "../../../TestPage/Features/Layers/CreateInputLayer";
 
-// tohle by asi bylo nejlepší ty returny vyházet do samostatných souborů a tady volat danou komponentu pro každý case
 // function to return setup based on generator task
 export const GetTaskLayers = (taskType: String) => {
     switch (taskType) {
@@ -128,6 +127,6 @@ export const GetTaskLayers = (taskType: String) => {
             ];
 
         default:
-            return []; // Vracení prázdného pole pro neznámé typy
+            return []; //return empty array for unknwon types
     }
 };

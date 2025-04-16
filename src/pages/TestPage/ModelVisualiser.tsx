@@ -12,8 +12,8 @@ interface LayerParams {
 
 interface ModelVisualizerProps {
   layers: LayerParams[];
-  onNodeClick: (node: Node) => void; // Nová prop pro obsluhu kliknutí na uzel
-  onLayersChange: (updatedLayers: LayerParams[]) => void; // Přidání callbacku pro aktualizaci vrstev
+  onNodeClick: (node: Node) => void;
+  onLayersChange: (updatedLayers: LayerParams[]) => void;
 }
 
 const markerEndConfig = {
@@ -25,14 +25,14 @@ const markerEndConfig = {
 const edgeType = "default"; //bezier doesnt seem to work although it is in the guide. Default should be bezier anyway
 
 const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, onLayersChange }) => {
-  // Vytvoření uzlů (nodes) pro každou vrstvu
+  // create nodes for each layer
   const initialNodes: Node[] = layers.map((layer, index) => ({
     id: layer.id,
     data: { label: `${layer.type} (${layer.name})` },
     position: { x: 150 * index, y: 100 * index },
   }));
 
-  // Vytvoření propojení mezi uzly (edges)
+  // create edges
   const initialEdges: Edge[] = layers.flatMap(layer =>
     layer.inputs.map(inputId => ({
       id: `e${inputId}-${layer.id}`,
@@ -49,19 +49,14 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // useEffect, který sleduje změny v 'layers' a přidává nové uzly a hrany
   useEffect(() => {
-    // Vytvoření nových uzlů z aktuálních 'layers'
-    console.log("layers changed");
-    
     const newNodes: Node[] = layers.map((layer, index) => ({
       id: layer.id,
       data: { label: `${layer.type} (${layer.name})` },
-      // Výchozí pozice pro nové uzly
       position: { x: 150 * index % 2, y: 100 * index },
     }));
 
-    // Vytvoření nových hran z aktuálních 'layers'
+    // create new edges from 'layers'
     const newEdges: Edge[] = layers.flatMap(layer =>
       layer.inputs.map(inputId => ({
         id: `e${inputId}-${layer.id}`,
@@ -71,7 +66,7 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
         type: edgeType,
         markerEnd: markerEndConfig,
 
-        //nastavení čáry jako takové
+        //set line itself
         // style: {
         // strokeWidth: 1,
         // stroke: '#FF0072',
@@ -80,34 +75,44 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
     );
 
 
-    // Aktualizace uzlů – přidá nové uzly a odebere ty, které už neexistují v `layers`
     setNodes(prevNodes => {
-      // Získání ID všech existujících uzlů
       const newNodeIds = new Set(newNodes.map(node => node.id));
 
-      // Aktualizace stavu uzlů
       return [
-        ...prevNodes.filter(node => newNodeIds.has(node.id)), // zachová pouze uzly, které jsou v `layers`
-        ...newNodes.filter(node => !prevNodes.some(prevNode => prevNode.id === node.id)), // přidá nové uzly
+        // keep layers that were not updated
+        ...prevNodes.map(prevNode => {
+          const correspondingNewNode = newNodes.find(n => n.id === prevNode.id);
+          if (correspondingNewNode) {
+            if (prevNode.data.label !== correspondingNewNode.data.label) {
+              return {
+                ...prevNode,
+                data: { ...prevNode.data, label: correspondingNewNode.data.label },
+              };
+            }
+            return prevNode;
+          }
+          return prevNode;
+        }).filter(node => newNodeIds.has(node.id)), //remove no longer existing nodes
+
+        // add new nodes
+        ...newNodes.filter(node => !prevNodes.some(prevNode => prevNode.id === node.id)),
       ];
     });
 
-    // Aktualizace hran – přidá nové hrany a odebere ty, které už neexistují v `layers`
+
+    // update edges
     setEdges(prevEdges => {
-      // Získání ID všech nových hran
       const newEdgeIds = new Set(newEdges.map(edge => edge.id));
 
-      // Aktualizace stavu hran
       return [
-        ...prevEdges.filter(edge => newEdgeIds.has(edge.id)), // zachová pouze existující hrany
-        ...newEdges.filter(edge => !prevEdges.some(prevEdge => prevEdge.id === edge.id)), // přidá nové hrany
+        ...prevEdges.filter(edge => newEdgeIds.has(edge.id)), // keep existing ones
+        ...newEdges.filter(edge => !prevEdges.some(prevEdge => prevEdge.id === edge.id)), // add new edges
       ];
     });
   }, [layers]);
 
-  // Handler pro vytvoření nové hrany
+  // create new connection
   const onConnect: OnConnect = (connection) => {
-    // Přidání nové hrany do stavu 'edges'
     setEdges((eds) => [
       ...eds,
       {
@@ -118,7 +123,7 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
       },
     ]);
 
-    // Aktualizace 'inputs' cílové vrstvy
+    // update inputs
     onLayersChange(
       layers.map((layer) => {
         if (layer.id === connection.target) {
@@ -134,11 +139,10 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
     );
   };
 
-  // Handler pro smazání hrany
+  // delete edge
   const onEdgesDelete: OnEdgesDelete = (deletedEdges) => {
     deletedEdges.forEach((edge) => {
       const { source, target } = edge;
-      // Aktualizace 'inputs' cílové vrstvy
       onLayersChange(
         layers.map((layer) => {
           if (layer.id === target) {
@@ -152,7 +156,6 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
       );
     });
 
-    // Odstranění hran ze stavu 'edges'
     setEdges((eds) => eds.filter((e) => !deletedEdges.find((de) => de.id === e.id)));
   };
 
@@ -166,8 +169,8 @@ const ModelVisualizer: React.FC<ModelVisualizerProps> = ({ layers, onNodeClick, 
         onConnect={onConnect}
         onEdgesDelete={onEdgesDelete}
         deleteKeyCode={['Backspace', 'Delete']}
-        // fitView={true}
-        // fitViewOptions={{minZoom: 1.2, maxZoom: 1.2}}
+      // fitView={true}
+      // fitViewOptions={{minZoom: 1.2, maxZoom: 1.2}}
       >
         <MiniMap className={"mini-map"} position='top-right' />
         <Background />

@@ -2,17 +2,16 @@ import Tippy from "@tippyjs/react";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useAlert } from "../../components/Alerts/AlertContext";
-import { DebouncedNumberInput } from "../../components/FormElements/DebouncedNumberInput";
 import { TaskInfoOverlay } from "../../components/TaskInfoOverlay/TaskInfoOverlay";
 import { autoTaskTypes, configData, maximumDepthMax, maximumDepthMin } from "../../config/config";
 import { TagsForm } from "../../features/TagsForm";
+import { HelpfulTip } from "../../features/Tooltip";
 import { GetUserDatasets } from "../../features/UserDatasets/GetDatasets";
 import { DatasetConfigModal } from "../TestPage/Features/Dataset/DatasetConfigModal";
 import "./AutoDesignPage.css";
 import { AutoModelConfigForm } from "./Components/Forms/AutoModelConfigFormModal";
 import { GetTaskLayers } from "./Components/TaskLayers/GetTaskLayers";
 import { IAutoTaskState } from "./Models/AutoTask";
-import { HelpfulTip } from "../../features/Tooltip";
 import { IModelAutoSettings } from "./Models/ModelAutoSettings";
 
 
@@ -24,22 +23,19 @@ export const AutoDesignPage = () => {
         settings: {
             opt_algorithm: "random",
             optimizer: 'Adam',
+            optimizerRandom: undefined,
             loss: 'binary_crossentropy',
-            limit_growth: "none",
+            limit_growth: "square",
             model_name: "",
             k_fold: 1,
             metrics: ['accuracy'],
             monitor_metric: "accuracy",
             epochs: 10,
+            epochsRandom: undefined,
             use_timeout: false,
             timeout: 0,
             batch_size: 32,
-            // batch_sizeRandom: {
-            //     "max": 100,
-            //     "min": 1,
-            //     "step": 1,
-            //     "type": "numeric"
-            // },
+            batch_sizeRandom: undefined,
             max_models: 5,
             es_threshold: 0.4,
             NNI: {
@@ -69,24 +65,11 @@ export const AutoDesignPage = () => {
     const [tags, setTags] = useState<string[]>([])
 
 
-    // const [useTimer, setUseTimer] = useState<boolean>(false)
     const [datasets, setDatasets] = useState<string[]>([]);
     const [selectedDataset, setSelectedDataset] = useState<string>("");
     const [useDefaultDataset, setUseDefaultDataset] = useState<boolean>(true)
     const { addAlert } = useAlert();
     const [isTaskOverlayOpen, setTaskInfoOverlay] = useState<boolean>(false);
-    // const [tagInput, setTagInput] = useState<string>("");
-
-    // const handleAddTag = () => {
-    //     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-    //         setTags([...tags, tagInput.trim()]);
-    //         setTagInput("");
-    //     }
-    // };
-
-    // const handleRemoveTag = (tag: string) => {
-    //     setTags(tags.filter(t => t !== tag));
-    // };
 
     // Load datasets
     useEffect(() => {
@@ -95,55 +78,21 @@ export const AutoDesignPage = () => {
             .catch((error) => console.error("Error fetching datasets:", error));
     }, []);
 
-    // Načtení výchozích vrstev při prvním renderu
+    // load default on first load
     useEffect(() => {
         const layers = GetTaskLayers("binary classification");
         setAutoTask(prevTask => ({
             ...prevTask,
             layers
         }));
-    }, []); // Prázdné pole závislostí zajistí, že se efekt spustí jen jednou
+    }, []);
 
-    // // set default dataset
-    // useEffect(() => {
-    //     setUseDefaultDataset(true)
-    //     setSelectedDataset("pima-indians-diabetes.csv")
-    //     // if (file === null) {
-    //     //     fetch('/pima-indians-diabetes.csv')
-    //     //         .then(response => response.blob())
-    //     //         .then(blob => {
-    //     //             const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-    //     //             setFile(defaultFile);
-    //     //         })
-    //     //         .catch(error => console.error("Chyba při načítání souboru:", error));
-    //     // }
-    // }, []);
-
-    // Zpracování změny výběru datasetu
     const handleDatasetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedDataset(e.target.value);
         setUseDefaultDataset(false)
     };
 
-    // const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    //     const { name, value, type } = e.target;
 
-    //     setAutoTask((prevTask) => {
-    //         const updatedTask = {
-    //             ...prevTask,
-    //             [name]: type === "number" ? (value === "" ? undefined : Number(value)) : value,
-    //         };
-
-    //         // Pokud se mění taskType, aktualizujte layers
-    //         // a nastavení úlohy v settings TBA
-    //         if (name === "taskType") {
-    //             updatedTask.layers = GetTaskLayers(value);
-    //             handlePresetFileChange(value)
-    //         }
-
-    //         return updatedTask;
-    //     });
-    // };
     const handleInputChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
 
@@ -175,30 +124,19 @@ export const AutoDesignPage = () => {
     };
 
 
-    // const handleInputShapeChange = (key: string, value: number[]) => {
+
+
+    // change key and value in specific layer
+    // const handleLayerUnitsChange = (key: string, layer: number, value: number | string) => {
     //     setAutoTask((prevState) => {
-    //         // Pokud layers ještě nemá žádný prvek, přidáme výchozí vrstvu
     //         const layers = [...prevState.layers];
-    //         // Pokud první vrstva existuje, upravíme její hodnotu shape
-    //         layers[0] = {
-    //             ...layers[0],
+    //         layers[layer] = {
+    //             ...layers[layer],
     //             [key]: value,
     //         };
     //         return { ...prevState, layers };
     //     });
     // };
-
-    // change key and value in specific layer
-    const handleLayerUnitsChange = (key: string, layer: number, value: number | string) => {
-        setAutoTask((prevState) => {
-            const layers = [...prevState.layers];
-            layers[layer] = {
-                ...layers[layer],
-                [key]: value,
-            };
-            return { ...prevState, layers };
-        });
-    };
 
     const handleMaxDepthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newMax = Number(e.target.value);
@@ -227,51 +165,37 @@ export const AutoDesignPage = () => {
     };
 
 
-    // const handleDebouncedNumberChange = useCallback((key: keyof IAutoTaskState) => {
-    //     return (value: number) => {
-    //         console.log(value)
-    //         setAutoTask((prev) => ({
-    //             ...prev,
-    //             [key]: value,
-    //         }));
-    //     };
-    // }, []);
-
-    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     if (e.target.files) {
-    //         setFile(e.target.files[0]);  // Uložíme soubor do stavu
-    //     }
-    // };
+    // might be used again at some point for dynamic changes based on selection
 
     // const handlePresetFileChange = (selectedTaskType: string) => {
-        // setAutoTask((prevAutoTask) => {
-        //     let updatedDatasetConfig = {
-        //         ...prevAutoTask.datasetConfig,
-        //         encode_y: selectedTaskType === "multiclass classification"
-        //     };
+    // setAutoTask((prevAutoTask) => {
+    //     let updatedDatasetConfig = {
+    //         ...prevAutoTask.datasetConfig,
+    //         encode_y: selectedTaskType === "multiclass classification"
+    //     };
 
-        //     const updatedSettings = getSettingsForTaskType(selectedTaskType, prevAutoTask.settings);
-        //     console.log(updatedSettings);
+    //     const updatedSettings = getSettingsForTaskType(selectedTaskType, prevAutoTask.settings);
+    //     console.log(updatedSettings);
 
-        //     // let updatedLayers = prevAutoTask.layers;
+    //     // let updatedLayers = prevAutoTask.layers;
 
-        //     // if (selectedTaskType === "multiclass classification") {
-        //     //     // updatedLayers = GetTaskLayers("multiclass classification");
-        //     // } else if (selectedTaskType === "binary classification") {
-        //     //     // updatedLayers = GetTaskLayers("binary classification");
-        //     // } else if (selectedTaskType === "image multiclass classification") {
-        //     //     // updatedLayers = GetTaskLayers("image multiclass classification");
-        //     // }
+    //     // if (selectedTaskType === "multiclass classification") {
+    //     //     // updatedLayers = GetTaskLayers("multiclass classification");
+    //     // } else if (selectedTaskType === "binary classification") {
+    //     //     // updatedLayers = GetTaskLayers("binary classification");
+    //     // } else if (selectedTaskType === "image multiclass classification") {
+    //     //     // updatedLayers = GetTaskLayers("image multiclass classification");
+    //     // }
 
-        //     return {
-        //         ...prevAutoTask,
-        //         // setAutoTaskSettings()
-        //         // taskType: selectedTaskType,
-        //         settings: updatedSettings,
-        //         datasetConfig: updatedDatasetConfig,
-        //         // layers: updatedLayers
-        //     };
-        // });
+    //     return {
+    //         ...prevAutoTask,
+    //         // setAutoTaskSettings()
+    //         // taskType: selectedTaskType,
+    //         settings: updatedSettings,
+    //         datasetConfig: updatedDatasetConfig,
+    //         // layers: updatedLayers
+    //     };
+    // });
     // };
 
     const getSettingsForTaskType = (taskType: string, prevSettings: IModelAutoSettings) => {
@@ -282,6 +206,8 @@ export const AutoDesignPage = () => {
                     loss: "binary_crossentropy",
                     optimizer: "Adam",
                     opt_algorithm: "random",
+                    limit_growth: "square"
+
                 };
             case "multiclass classification":
                 return {
@@ -289,6 +215,7 @@ export const AutoDesignPage = () => {
                     loss: "categorical_crossentropy",
                     optimizer: "Adam",
                     opt_algorithm: "random",
+                    limit_growth: "square"
                 };
             case "image multiclass classification":
                 return {
@@ -297,7 +224,8 @@ export const AutoDesignPage = () => {
                     optimizer: "Adam",
                     opt_algorithm: "random",
                     use_timeout: true,
-                    timeout: 600  // například 10 minut max
+                    timeout: 600, // default 10 minutes
+                    limit_growth: "square"
                 };
             case "regression":
                 return {
@@ -310,89 +238,6 @@ export const AutoDesignPage = () => {
                 return prevSettings;
         }
     };
-
-
-
-
-    // const handlePresetFileChange = (selectedTaskType: string) => {
-    //     setAutoTask((prevAutoTask) => ({
-    //         ...prevAutoTask,
-    //         datasetConfig: {
-    //             ...prevAutoTask.datasetConfig,
-    //             encode_y: false,
-    //         },
-    //     }))
-    //     switch (selectedTaskType) {
-    //         case "binary classification":
-    //             // fetch('/pima-indians-diabetes.csv')
-    //             //     .then(response => response.blob())
-    //             //     .then(blob => {
-    //             //         const defaultFile = new File([blob], "pima-indians-diabetes.csv", { type: blob.type });
-    //             //         setFile(defaultFile);
-    //             //     })
-    //             //     .catch(error => console.error("Chyba při načítání souboru:", error));
-    //             // setSelectedDataset("pima-indians-diabetes.csv")
-    //             // setUseDefaultDataset(true)
-    //             // setAutoTask((prevAutoTask) => ({
-    //             //     ...prevAutoTask,
-    //             //     datasetConfig: {
-    //             //         ...prevAutoTask.datasetConfig,
-    //             //         x_num: 8,
-    //             //         y_num: 9,
-    //             //     },
-    //             // }));
-    //             break;
-    //         case "multiclass classification":
-    //             // fetch('/iris_prepared.npz')
-    //             //     .then(response => response.blob())
-    //             //     .then(blob => {
-    //             //         const defaultFile = new File([blob], "iris_prepared.npz", { type: blob.type });
-    //             //         setFile(defaultFile);
-    //             //     })
-    //             //     .catch(error => console.error("Chyba při načítání souboru:", error));
-    //             // setSelectedDataset("iris_prepared.npz")
-    //             // setUseDefaultDataset(true)
-    //             // dataset config for iris
-    //             console.log("updating encode_y");
-
-    //             setAutoTask((prevAutoTask) => ({
-    //                 ...prevAutoTask,
-    //                 datasetConfig: {
-    //                     ...prevAutoTask.datasetConfig,
-    //                     encode_y: true,
-    //                 },
-    //             }))
-    //             console.log(autoTask.datasetConfig.encode_y)
-
-    //             //     layers: prevAutoTask.layers.map((layer, index) =>
-    //             //         index === 0 ? { ...layer, shape: [4] } :
-    //             //             index === 2
-    //             //                 ? { ...layer, units: 3 }
-    //             //                 : layer
-    //             //     ),
-    //             // }));
-
-
-    //             break;
-    //         case "image multiclass classification":
-    //             // fetch('/cifar10_normalized.npz')
-    //             //     .then(response => response.blob())
-    //             //     .then(blob => {
-    //             //         const defaultFile = new File([blob], "cifar10_normalized.npz", { type: blob.type });
-    //             //         setFile(defaultFile);
-    //             //     })
-    //             //     .catch(error => console.error("Chyba při načítání souboru:", error));
-    //             // setSelectedDataset("cifar10_normalized.npz")
-    //             // setUseDefaultDataset(true)
-    //             break;
-    //         case "regression":
-    //             // setSelectedDataset("")
-    //             // setAutoTaskSettings("regression")
-    //             // setUseDefaultDataset(true)
-    //             break;
-
-    //     }
-    // }
 
     const isInputCorrect = () => {
         if (!selectedDataset) {
@@ -424,7 +269,6 @@ export const AutoDesignPage = () => {
         console.log(JSON.stringify(autoTask.datasetConfig));
         console.log("Selected dataset:", selectedDataset);
 
-        // Přidání typ úlohy a datasetu jako tagů
         const updatedTags = {
             "task": autoTask.taskType,
             "dataset": selectedDataset,
@@ -433,7 +277,6 @@ export const AutoDesignPage = () => {
         };
         console.log(JSON.stringify(updatedTags));
 
-        // Vytvoření FormData
         const formData = new FormData();
         formData.append("datasetFile", selectedDataset);
         formData.append("useDefaultDataset", useDefaultDataset ? "true" : "false");
@@ -445,7 +288,6 @@ export const AutoDesignPage = () => {
         formData.append("tags", JSON.stringify(updatedTags));
 
         addAlert("Task sent to server", "info");
-        // Udržujte referenci na stav, aby se zabránilo aktualizaci odmountované komponenty
         let isMounted = true;
 
         fetch(`${configData.API_URL}/api/models/save-auto-model`, {
@@ -476,7 +318,6 @@ export const AutoDesignPage = () => {
                 }
             });
 
-        // Zajistíme, že po odmountování komponenty se zabrání změnám stavu
         return () => {
             isMounted = false;
         };
@@ -484,44 +325,44 @@ export const AutoDesignPage = () => {
 
 
 
-    //definice přendat do jiného souboru?
-    const renderMethodSpecificFields = () => {
-        switch (autoTask.taskType) {
-            case 'image multiclass classification':
-                return (
-                    <>
-                        <Form.Label>Output classes:</Form.Label>
-                        <DebouncedNumberInput
-                            value={autoTask.layers[3]?.units}
-                            onChange={(value: number) =>
-                                handleLayerUnitsChange('units', 3, value)
-                            }
-                            timeout={500}
-                            placeholder="Enter number of classes"
-                            step={1}
-                        />
-                    </>
-                );
-            case 'multiclass classification':
-                return (
-                    <>
-                        <Form.Label>Output classes:</Form.Label>
-                        <DebouncedNumberInput
-                            value={autoTask.layers[2]?.units}
-                            onChange={(value: number) =>
-                                handleLayerUnitsChange('units', 2, value)
-                            }
-                            timeout={500}
-                            placeholder="Enter number of classes"
-                            step={1}
-                        />
-                    </>
-                );
+    // moved mostly to BE, currently unused
+    // const renderMethodSpecificFields = () => {
+    //     switch (autoTask.taskType) {
+    //         case 'image multiclass classification':
+    //             return (
+    //                 <>
+    //                     {/* <Form.Label>Output classes:</Form.Label>
+    //                     <DebouncedNumberInput
+    //                         value={autoTask.layers[3]?.units}
+    //                         onChange={(value: number) =>
+    //                             handleLayerUnitsChange('units', 3, value)
+    //                         }
+    //                         timeout={500}
+    //                         placeholder="Enter number of classes"
+    //                         step={1}
+    //                     /> */}
+    //                 </>
+    //             );
+    //         case 'multiclass classification':
+    //             return (
+    //                 <>
+    //                     {/* <Form.Label>Output classes:</Form.Label>
+    //                     <DebouncedNumberInput
+    //                         value={autoTask.layers[2]?.units}
+    //                         onChange={(value: number) =>
+    //                             handleLayerUnitsChange('units', 2, value)
+    //                         }
+    //                         timeout={500}
+    //                         placeholder="Enter number of classes"
+    //                         step={1}
+    //                     /> */}
+    //                 </>
+    //             );
 
-            default:
-                return null;
-        }
-    };
+    //         default:
+    //             return null;
+    //     }
+    // };
 
     const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
     const [showDatasetSettingsModal, setShowDatasetSettingsModal] = useState<boolean>(false);
@@ -531,7 +372,7 @@ export const AutoDesignPage = () => {
 
 
     const handleOpenDatasetSettingsModal = () => setShowDatasetSettingsModal(true);
-    const handleCloseDatasetModal = () => setShowDatasetSettingsModal(false);  // Zavření modálního okna datasetu
+    const handleCloseDatasetModal = () => setShowDatasetSettingsModal(false);
 
     return (
         <div className="d-flex flex-column align-items-center">
@@ -550,11 +391,7 @@ export const AutoDesignPage = () => {
                         </option>
                     ))}
                 </Form.Select>
-                {/* {useDefaultDataset ? (
-                    <p className='mb-0 px-1 text-center'><i>Default file: {selectedDataset}</i></p>
-                ) : (
-                    <></>
-                )} */}
+
 
                 <Form.Label>Task type:</Form.Label>
                 <Form.Select
@@ -583,112 +420,12 @@ export const AutoDesignPage = () => {
                     show={showDatasetSettingsModal}
                     handleClose={handleCloseDatasetModal} />
 
-                {/* Modální okno pro úpravu nastavení modelu */}
                 <AutoModelConfigForm
                     modelParams={autoTask}
                     setModelParams={setAutoTask}
                     show={showSettingsModal}
                     handleClose={handleCloseSettingsModal}
                 />
-
-                {/* <Form.Label>Opt method:</Form.Label>
-                <Form.Control
-                    as="select"
-                    name="optMethod"
-                    value={autoTask.settings.opt_algorithm || ''}
-                    onChange={handleInputChange}
-                >
-                    {AutoOptMethods.map(method => (
-                        <option key={method} value={method}>{method}</option>
-                    ))}
-                </Form.Control> */}
-
-                {/* <Form.Label className="mt-2">Input Shape: <HelpfulTip text="Input shape defines the dimensions of input data for a neural network.
-                For example for images: (height, width, channels), e.g., (28, 28, 3) for an RGB image or for 
-                tabular data: (number of features), e.g., (10) for a dataset with 10 columns."/>
-                </Form.Label>
-                <Form.Control
-                    type="text"
-                    value={autoTask.layers[0]?.shape ? autoTask.layers[0].shape.join(',') : ''} // Zobrazení pole jako řetězce
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputShapeChange('shape', e.target.value.split(',').map(Number)) // Převod řetězce na pole čísel
-                    }
-                /> */}
-
-                {renderMethodSpecificFields()}
-
-
-
-                {/* <Form.Label>Max Models:</Form.Label>
-
-                <DebouncedNumberInput
-                    value={autoTask.maxModels}
-                    onChange={handleDebouncedNumberChange("maxModels")}
-                    timeout={500}
-                    placeholder="Enter maximum number of models"
-                    min={1}
-                    step={1}
-                /> */}
-                {/* <Tippy content="Limit time for which optimization can run in seconds">
-                    <Form.Check
-                        type="checkbox"
-                        label="Use Timer"
-                        checked={useTimer}
-                        onChange={() => setUseTimer((prev) => !prev)}
-                    />
-                </Tippy> */}
-
-                {/* {useTimer && (
-                    <>
-                        <Form.Label>Timeout (seconds):</Form.Label>
-                        <DebouncedNumberInput
-                            value={autoTask.timeOut || 0}
-                            onChange={handleDebouncedNumberChange("timeOut")}
-                            timeout={500}
-                            placeholder="Enter timeout in seconds"
-                            min={10}
-                            step={10}
-                        />
-                    </>
-                )} */}
-
-                {/* <Form.Label>Tags: <HelpfulTip text="Model tags which are primarily used in tagging opt. method" /></Form.Label>
-                <div className="d-flex">
-                    <Form.Control
-                        type="text"
-                        placeholder="Enter a tag and press Add"
-                        value={tagInput}
-                        onChange={(e) => setTagInput(e.target.value)}
-                    // onKeyPress={(e) => {
-                    //     if (e.key === "Enter") {
-                    //         e.preventDefault();
-                    //         handleAddTag();
-                    //     }
-                    // }
-                    // }
-                    />
-                    <Button className="ms-2" onClick={handleAddTag}>
-                        Add
-                    </Button>
-                </div>
-
-                <div className="mt-2 d-flex flex-wrap tags-container">
-                    {tags.length > 0 ? (
-                        tags.map((tag, index) => (
-                            <Badge
-                                key={index}
-                                bg="primary"
-                                className="tag mx-1"
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleRemoveTag(tag)}
-                            >
-                                {tag} ✖
-                            </Badge>
-                        ))
-                    ) : (
-                        <p>No tags added yet.</p>
-                    )}
-                </div> */}
 
                 <Form.Group controlId="maxDepth">
                     <Form.Label>
@@ -714,10 +451,6 @@ export const AutoDesignPage = () => {
                 <Button className="m-2" onClick={handleSubmit}>Submit Model</Button>
             </Tippy>
             <Button variant="secondary" className="m-2" onClick={() => setTaskInfoOverlay(!isTaskOverlayOpen)}>Status</Button>
-            {/* <div className="auto-model-config-progress-bar">
-                <TaskProgressBar isActive={taskActive}
-                    setIsActive={setTaskActive} />
-            </div> */}
             {isTaskOverlayOpen && <TaskInfoOverlay />}
         </div>
     )

@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 
 interface Props {
-    value: number; // Hodnota vstupu
-    onChange: (value: number) => void; // Callback při změně
-    timeout?: number; // Čas debounce (defaultně 300 ms)
-    placeholder?: string; // Placeholder pro vstupní pole
-    min?: number; // Minimální hodnota
-    max?: number; // Maximální hodnota
-    step?: number; // Krok pro vstup
+    value: number; 
+    onChange: (value: number) => void; 
+    timeout?: number; 
+    placeholder?: string; 
+    min?: number; 
+    max?: number; 
+    step?: number;
 }
 
 export const DebouncedNumberInput: React.FC<Props> = ({

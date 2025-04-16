@@ -2,17 +2,17 @@ import { Form } from "react-bootstrap";
 import { HelpfulTip } from "../../../features/Tooltip";
 
 interface Props {
-    value: string; // Aktuální hodnota randomizeru
-    onChange: any; // Funkce volaná při změně hodnoty
-    options: string[]; // Možnosti randomizeru
-    label?: string; // Nepovinný popisek
+    value: string; 
+    onChange: any; 
+    options: string[]; 
+    label?: string; 
 }
 
 export const RandomizerSelect: React.FC<Props> = ({
     value,
     onChange,
     options,
-    label = 'Select Random Type' // Výchozí popisek
+    label = 'Select Random Type' 
 }) => {
     return (
         <Form.Group className="m-0">

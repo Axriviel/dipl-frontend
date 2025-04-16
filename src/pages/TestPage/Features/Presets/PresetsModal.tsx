@@ -29,7 +29,7 @@ export const PresetsModal: React.FC<PresetModalProps> = ({ show, handleClose, pr
                         <Form.Label>Preset selection <HelpfulTip text='Loads selected preset into the designer' /></Form.Label>
                         <PresetSelector preset={preset} handlePresetChange={handlePresetChange} />
                         <Tippy content="Reset the whole page to the most basic setup possible">
-                            <Button onClick={handleResetAll} className=' w-75 mt-2' variant="danger">Reset</Button>
+                            <Button onClick={handleResetAll} className=' w-75 mt-2' variant="danger">Reset<HelpfulTip text="Reset the designer into the most basic form"/></Button>
                         </Tippy>
                     </div>
                 </div>

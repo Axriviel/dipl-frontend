@@ -1,24 +1,17 @@
 .feedback-container {
     background-color: #e3f2fd;
-    /* Světle modrá, příjemná na pohled */
     border: 2px solid #90caf9;
-    /* Světle modrý rámeček */
     border-radius: 15px;
-    /* Zaoblené rohy */
     box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-    /* Jemný modrý stín */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: 2rem;
-    /* Prostor uvnitř kontejneru */
     width: 40rem;
     margin: 0 auto;
-    /* Horizontální zarovnání na střed */
 }
 
 .feedback-container:hover {
     transform: scale(1.01);
     box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
-    /* Zvýrazněný stín při hoveru */
 }
 
 
@@ -45,24 +38,6 @@
     box-shadow: 0 0 5px rgba(66, 165, 245, 0.5);
     outline: none;
 }
-
-/* form button[type="submit"] {
-    background: linear-gradient(90deg, #42a5f5, #1e88e5);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    padding: 0.7rem 1.5rem;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
-}
-
-form button[type="submit"]:hover {
-    background: linear-gradient(90deg, #1e88e5, #1565c0);
-    transform: scale(1.05);
-} */
-
 
 @media(max-width: 768px) {
     .feedback-container {

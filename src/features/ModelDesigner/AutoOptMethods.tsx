@@ -1,1 +1,0 @@
-export const AutoOptMethods = ["random", "genetic", "special"]

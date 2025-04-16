@@ -50,17 +50,6 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
 
   const handleDeleteClick = () => {
     handleDelete!(currentLayer.id);
-
-    // // Filtruje vrstvy a odstraní aktuální vrstvu
-    // const updatedLayers = allLayers.filter(layer => layer.id !== idToDelete);
-
-    // // remove deleted layer id from inputs of other layers
-    // const cleanedLayers = updatedLayers.map(layer => ({
-    //   ...layer,
-    //   inputs: layer.inputs.filter(inputId => inputId !== idToDelete)
-    // }));
-
-    // updateModelParams(cleanedLayers);
     handleClose();
   };
 
@@ -69,26 +58,23 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
 
     setCurrentLayer((prevLayer) => {
       if (key.includes("Random")) {
-        const [randomKey, property] = key.split('.'); // Např. 'activationRandom.options'
+        const [randomKey, property] = key.split('.');
 
-        const randomConfig = prevLayer[randomKey] || {}; // Inicializace randomConfig, pokud neexistuje
+        const randomConfig = prevLayer[randomKey] || {}; // Inicializace randomConfig, if it does not exist
 
-        // Vytvoř nový objekt randomConfig s novou hodnotou
         const updatedRandomConfig = {
           ...randomConfig,
-          [property]: value, // Aktualizuj specifickou vlastnost (např. options)
+          [property]: value, // update specific key (e.g. options)
         };
 
         const updatedLayer = {
           ...prevLayer,
-          [randomKey]: updatedRandomConfig, // Aktualizuj celou část randomizeru
+          [randomKey]: updatedRandomConfig, 
         };
 
-        console.log("Updated layer:", updatedLayer); // Debugging - ukazuje nový stav layeru
-        return updatedLayer; // Vracíme aktualizovaný stav
+        return updatedLayer; 
       }
 
-      // Normální aktualizace mimo random config
       return { ...prevLayer, [key]: value };
     });
   };
@@ -96,14 +82,9 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
   //toggle random for a parameter and creates default values based on randomization type
   const handleRandomToggle = (key: string, type: string) => {
     setCurrentLayer((prevLayer) => {
-      // Ověření, zda klíč existuje v aktuální vrstvě
       const randomEnabled = prevLayer.hasOwnProperty(`${key}Random`);
-      console.log("Current randomEnabled:", randomEnabled);  // Debugging
-
-      console.log("nastavuji " + key + " na " + type)
 
       if (type === 'value') {
-        // Vypnutí náhodnosti
         return {
 
           ...prevLayer,
@@ -114,22 +95,22 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
       return {
         ...prevLayer,
         [`${key}Random`]: randomEnabled
-          ? (() => {   // Inline funkce pro přiřazení podle typu
+          ? (() => {   
             switch (type) {
               case 'numeric':
-                return { type: 'numeric', min: 1, max: 100, step: 1 };  // Výchozí hodnoty pro 'numeric'
+                return { type: 'numeric', min: 1, max: 100, step: 1 };  
 
               case 'numeric-test':
-                return { type: 'numeric-test', min: 1, max: 100 };  // Výchozí hodnoty pro 'numeric-test'
+                return { type: 'numeric-test', min: 1, max: 100 };  
 
               case 'text':
-                return { type: 'text', options: ['option1', 'option2'] };  // Výchozí hodnoty pro 'text'
+                return { type: 'text', options: ['option1', 'option2'] }; 
 
               default:
-                throw new Error(`Unsupported type: ${type}`);  // Ošetření neznámého typu
+                throw new Error(`Unsupported type: ${type}`);  
             }
-          })() //závorky způsobí vyhodnocení funkce, musí zde být
-          : undefined  // Pokud se vypne náhodnost, odstraní konfiguraci
+          })() 
+          : undefined  
       };
     });
   };
@@ -181,7 +162,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             handleRandomToggle={handleRandomToggle}
             // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
-            handleActivationChange={handleActivationChange} //tady by mohl být ten problém. Používám handleActivationChange, ale úpravu tam má jen handlechange
+            handleActivationChange={handleActivationChange} 
           />
         );
       case 'Conv2D':

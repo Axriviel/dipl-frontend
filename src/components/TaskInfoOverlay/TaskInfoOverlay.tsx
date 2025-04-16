@@ -24,7 +24,7 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
             try {
                 const response = await fetch(`${configData.API_URL}/api/task-progress`, {
                     method: "GET",
-                    credentials: "include", // Povolení odesílání cookies
+                    credentials: "include", 
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -40,7 +40,6 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
                     if (data.progress === -1) {
                         console.log("-1 progress");
                         setProgress(100)
-                        // setTaskFinished(true)
                         setTaskActive(false)
                     }
                     else {
@@ -54,7 +53,6 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
                     setProgress(0);
                 }
 
-                // Pokud úloha skončila, vypneme progress bar
                 if (!data.isRunning) {
                     // setIsActive(false);
                 }
@@ -62,14 +60,13 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
                 console.error("Error fetching progress:", error);
                 setTaskActive(false)
                 setProgress(0);
-                // setIsActive(false); 
             }
         };
 
 
         if (isActive) {
-            fetchProgress(); // První načtení ihned
-            interval = window.setInterval(fetchProgress, 5000); // Poté každých 5 sekund
+            fetchProgress(); 
+            interval = window.setInterval(fetchProgress, 5000); // how often to fetch progress
         }
 
         return () => {

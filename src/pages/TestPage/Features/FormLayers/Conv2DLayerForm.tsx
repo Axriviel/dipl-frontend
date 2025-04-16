@@ -28,7 +28,7 @@ export const Conv2DLayerForm: React.FC<Conv2DLayerFormProps> = ({
                 <RandomizerSelect
                     value={currentLayer.filtersRandom ? currentLayer.filtersRandom.type : 'value'}
                     onChange={(selectedType: string) => handleRandomToggle('filters', selectedType)}
-                    options={NumericRandomizers} // Můžeš předat jakýkoliv seznam možností
+                    options={NumericRandomizers} 
                 />
 
                 {renderRandomConfig('filters', currentLayer.filtersRandom, handleChange)}

@@ -5,7 +5,7 @@ import { DebouncedTextInput } from "../../../../components/FormElements/Debounce
 
  //returns form options for selected randomness
  export const renderRandomConfig = (key: string, randomConfig: RandomConfig | undefined, handleChange: (key: string, value: any) => void) => {
-    if (!randomConfig) return null;  // Pokud není náhodnost aktivovaná, nic se nezobrazí
+    if (!randomConfig) return null;  
     console.log(randomConfig)
 
     switch (randomConfig.type) {
@@ -74,8 +74,8 @@ import { DebouncedTextInput } from "../../../../components/FormElements/Debounce
       case 'text':
         const handleDebouncedChange = useCallback((value: string) => {
           const newOptions = value ? value.split(',').map(option => option.trim()).filter(option => option !== '') : [];
-          handleChange(`${key}Random.options`, newOptions); // Volání handleChange s novými options
-        }, [key, handleChange]); // Závislosti zůstávají stejné, pokud se nemění key nebo handleChange
+          handleChange(`${key}Random.options`, newOptions); 
+        }, [key, handleChange]); 
 
         return (
           <>
@@ -83,8 +83,8 @@ import { DebouncedTextInput } from "../../../../components/FormElements/Debounce
               <Form.Label>Options:</Form.Label>
 
               <DebouncedTextInput
-                onChange={handleDebouncedChange} // Použití stabilizované verze onChange
-                value={(randomConfig as ITextRandomConfig).options.join(', ')} // Zobrazení pole jako čárkou oddělený řetězec
+                onChange={handleDebouncedChange} 
+                value={(randomConfig as ITextRandomConfig).options.join(', ')} 
               />
 
             </Form.Group>

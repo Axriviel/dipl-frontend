@@ -18,7 +18,7 @@ export const MaxPooling2DLayerForm: React.FC<Props> = ({ currentLayer, handleCha
             timeout={700}
             onChange={(value) => {
                 const parsedValue = value.split(',').map(Number);
-                handleChange('pool_size', parsedValue); // Odeslání změny přes handleChange
+                handleChange('pool_size', parsedValue); 
             }}
         />
     </Form.Group>

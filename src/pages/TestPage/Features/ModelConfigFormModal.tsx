@@ -26,7 +26,6 @@ interface Props {
 export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, show, handleClose, tags, setTags }) => {
     const [useTimer, setUseTimer] = useState<boolean>(false)
 
-    // Funkce pro aktualizaci nastavení
     const updateSettings = (e: any) => {
         const { name, value } = e.target;
         setModelParams(prev => ({
@@ -39,24 +38,6 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
         }));
     };
 
-
-    // // Funkce pro aktualizaci specifických NNI nastavení
-    // const updateNNISettings = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    //     const { name, value } = e.target;
-    //     const parsedValue = name === "nni_max_trials" || name === "nni_concurrency" ? Number(value) : value;
-
-    //     setModelParams(prev => ({
-    //         ...prev,
-    //         settings: {
-    //             ...prev.settings,
-    //             NNI: {
-    //                 ...prev.settings.NNI,
-    //                 [name]: parsedValue
-    //             }
-    //         }
-    //     }));
-    // };
-    // Funkce pro aktualizaci specifických NNI nastavení
     const updateOptimizerSpecificSettings = (
         e: any,
         section: "NNI" | "GA"
@@ -144,11 +125,11 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     return prev;
                 }
 
-                const randomConfig = (prev.settings[randomKey] as RandomConfig) || {}; // Zajištění správného typu
+                const randomConfig = (prev.settings[randomKey] as RandomConfig) || {};
 
                 const updatedRandomConfig = {
                     ...randomConfig,
-                    [property]: value, // Aktualizuj specifickou vlastnost (např. options)
+                    [property]: value,
                 };
 
                 return {
@@ -160,7 +141,6 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                 };
             }
 
-            // Normální aktualizace mimo random config
             if (key in prev.settings) {
                 return {
                     ...prev,
@@ -187,13 +167,11 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
     };
 
 
-    // Funkce pro výběr metrik pomocí checkboxů
     const handleMetricsChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
         const updatedMetrics = checked
-            ? [...modelParams.settings.metrics, value]  // Přidání metriky
-            : modelParams.settings.metrics.filter(metric => metric !== value);  // Odebrání metriky
-
+            ? [...modelParams.settings.metrics, value]
+            : modelParams.settings.metrics.filter(metric => metric !== value);
         setModelParams(prev => ({
             ...prev,
             settings: {
@@ -239,7 +217,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Specifická sekce pro NNI */}
+                    {/* specific for NNI */}
                     {modelParams.settings.opt_algorithm === "nni" && (
                         <NNISettingsForm
                             nniSettings={modelParams.settings.NNI}
@@ -267,27 +245,14 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     </Form.Group>
 
 
-                    {/* Výběr optimalizátoru */}
                     <Form.Group controlId="formOptimizer">
                         <Form.Label>Optimizer</Form.Label>
-                        {/* <Form.Select
-                            name="optimizer"
-                            value={modelParams.settings.optimizer}
-                            onChange={updateSettings}
-                        >
-                            {optimizerOptions.map(opt => (
-                                <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                        </Form.Select> */}
 
                         <RandomizerSelect
                             value={modelParams.settings.optimizerRandom ? modelParams.settings.optimizerRandom.type : 'value'}
                             onChange={(selectedType: string) => handleRandomToggle('optimizer', selectedType)}
                             options={TextRandomizers}
                         />
-                        {/* {renderRandomConfig('activation', { type: "text", options: currentLayer.activationRandom.options })} */}
-
-                        {/* prvním parametrem je prvek, který bude randomizován a druhým je proměnná v currentLayer, do které se to ukládá */}
                         {renderRandomConfig('optimizer', modelParams.settings.optimizerRandom, handleChange)}
                         {!modelParams.settings.optimizerRandom && (
                             <Form.Select
@@ -320,7 +285,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     </Form.Group>
                     {/* select loss function */}
                     <Form.Group controlId="limit_growth">
-                        <Form.Label>Limit growth Function <HelpfulTip text="Function defining how fast the model reaches the maximum limit (e.g. 1 to 100 units in dense layer will start smaller for some time and grow up to 100)"/></Form.Label>
+                        <Form.Label>Limit growth Function <HelpfulTip text="Function defining how fast the model reaches the maximum limit (e.g. 1 to 100 units in dense layer will start smaller for some time and grow up to 100)" /></Form.Label>
                         <Form.Select
                             name="limit_growth"
                             value={modelParams.settings.limit_growth}
@@ -333,7 +298,6 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Checkboxy pro výběr metrik */}
                     <Form.Group controlId="formMetrics">
                         <Form.Label>Metrics</Form.Label>
                         {availableMetrics.map(metric => (
@@ -347,7 +311,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                             />
                         ))}
                     </Form.Group>
-                    {/* Výběr monitorovací metriky */}
+
                     <Form.Group controlId="formMonitorMetric">
                         <Form.Label>Monitor Metric</Form.Label>
                         <Form.Select
@@ -368,19 +332,12 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         </Form.Select>
                     </Form.Group>
 
-                    {/* Nastavení epoch a batch size */}
                     <Form.Group controlId="formEpochs">
                         <Form.Label>Epochs</Form.Label>
-                        {/* <Form.Control
-                            type="number"
-                            name="epochs"
-                            value={modelParams.settings.epochs}
-                            onChange={updateSettings}
-                        /> */}
                         <RandomizerSelect
                             value={modelParams.settings.epochsRandom ? modelParams.settings.epochsRandom.type : 'value'}
                             onChange={(selectedType: string) => handleRandomToggle('epochs', selectedType)}
-                            options={NumericRandomizers} // Můžeš předat jakýkoliv seznam možností
+                            options={NumericRandomizers} 
                         />
 
 
@@ -396,12 +353,6 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                     </Form.Group>
                     <Form.Group controlId="formBatchSize">
                         <Form.Label>Batch Size</Form.Label>
-                        {/* <Form.Control
-                            type="number"
-                            name="batch_size"
-                            value={modelParams.settings.batch_size}
-                            onChange={updateSettings}
-                        /> */}
 
                         <RandomizerSelect
                             value={modelParams.settings.batch_sizeRandom ? modelParams.settings.batch_sizeRandom.type : "value"}
@@ -453,7 +404,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         )}
                     </Form.Group>
                     <Form.Group controlId="k_fold">
-                        <Form.Label>N-training <HelpfulTip text="Defines how many times should model be trained to verify its performance. May significantly increase computation time"/></Form.Label>
+                        <Form.Label>N-training <HelpfulTip text="Defines how many times should model be trained to verify its performance. May significantly increase computation time" /></Form.Label>
                         <Form.Control
                             type="number"
                             name="k_fold"
