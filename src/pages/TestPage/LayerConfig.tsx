@@ -20,6 +20,7 @@ import { LayerParams } from './Models/LayerParams';
 import { ILSTM } from './Models/LSTM';
 import { IMaxPooling2D } from './Models/MaxPooling2D';
 import { IModelSettings } from './Models/ModelSettings';
+import { HelpfulTip } from '../../features/Tooltip';
 
 
 
@@ -69,10 +70,10 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
 
         const updatedLayer = {
           ...prevLayer,
-          [randomKey]: updatedRandomConfig, 
+          [randomKey]: updatedRandomConfig,
         };
 
-        return updatedLayer; 
+        return updatedLayer;
       }
 
       return { ...prevLayer, [key]: value };
@@ -95,28 +96,28 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
       return {
         ...prevLayer,
         [`${key}Random`]: randomEnabled
-          ? (() => {   
+          ? (() => {
             switch (type) {
               case 'numeric':
-                return { type: 'numeric', min: 1, max: 100, step: 1 };  
+                return { type: 'numeric', min: 1, max: 100, step: 1 };
 
               case 'numeric-test':
-                return { type: 'numeric-test', min: 1, max: 100 };  
+                return { type: 'numeric-test', min: 1, max: 100 };
 
               case 'text':
-                return { type: 'text', options: ['option1', 'option2'] }; 
+                return { type: 'text', options: ['option1', 'option2'] };
 
               default:
-                throw new Error(`Unsupported type: ${type}`);  
+                throw new Error(`Unsupported type: ${type}`);
             }
-          })() 
-          : undefined  
+          })()
+          : undefined
       };
     });
   };
 
 
- 
+
 
   const handleInputsChange: ChangeEventHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
@@ -130,7 +131,9 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
   const InputsConst = (
     <Form.Group controlId={`inputs-${currentLayer.id}`}>
 
-      <Form.Label> {isGenerator ? "Possible follows:" : "Inputs:"}</Form.Label>
+      <Form.Label> {isGenerator ? "Possible follows:" : "Inputs:"}
+        <HelpfulTip text={isGenerator ? "Layers which can follow the currently selected one" : "Which layer leads into the currently selected one"} />
+      </Form.Label>
       <Form.Control
         as="select"
         multiple
@@ -162,7 +165,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             handleRandomToggle={handleRandomToggle}
             // renderRandomConfig={renderRandomConfig}
             InputsConst={InputsConst}
-            handleActivationChange={handleActivationChange} 
+            handleActivationChange={handleActivationChange}
           />
         );
       case 'Conv2D':
@@ -254,7 +257,7 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
       </Modal.Header>
       <Modal.Body>
         <FormGroup className="pb-2" controlId={`id-${currentLayer.id}`}>
-          <Form.Label className='font-weight-600'>Name</Form.Label>
+          <Form.Label className='font-weight-600'>Name <HelpfulTip text="Name of the layer which you can see in the designer" /></Form.Label>
           <Form.Control
             type="text"
             value={currentLayer.name || ''}

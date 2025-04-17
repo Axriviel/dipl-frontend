@@ -337,7 +337,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         <RandomizerSelect
                             value={modelParams.settings.epochsRandom ? modelParams.settings.epochsRandom.type : 'value'}
                             onChange={(selectedType: string) => handleRandomToggle('epochs', selectedType)}
-                            options={NumericRandomizers} 
+                            options={NumericRandomizers}
                         />
 
 
@@ -370,7 +370,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         )}
                     </Form.Group>
                     <Form.Group controlId="max_models">
-                        <Form.Label>Limit - max models</Form.Label>
+                        <Form.Label>Limit - max models <HelpfulTip text="How many models should be created in the process of optimization (is overriden by specific genetic settings" /></Form.Label>
                         <Form.Control
                             type="number"
                             name="max_models"
@@ -391,7 +391,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
 
                         {useTimer && (
                             <>
-                                <Form.Label>Timeout (seconds):</Form.Label>
+                                <Form.Label>Timeout (seconds)  <HelpfulTip text="When the time is up, the best currently found model is returned and the task is terminated" /></Form.Label>
                                 <DebouncedNumberInput
                                     value={modelParams.settings.timeout || 0}
                                     onChange={handleDebouncedNumberChange("timeout")}
@@ -415,7 +415,7 @@ export const ModelConfigForm: React.FC<Props> = ({ modelParams, setModelParams, 
                         />
                     </Form.Group>
                     <Form.Group controlId="es_threshold">
-                        <Form.Label>ES threshold</Form.Label>
+                        <Form.Label>ES threshold <HelpfulTip text="Threshold defining the minimum required metric to continue multiple trainings" /></Form.Label>
                         <Form.Control
                             type="number"
                             step="0.01"

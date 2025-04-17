@@ -104,10 +104,10 @@ export const TaskInfoOverlay: React.FC<Props> = () => {
     return (
         <div className="task-info-overlay">
             <div>
-                <strong>Task status:</strong> {taskActive ? <span className="task-active"> Active </span> : <span className="task-inactive"> Finished </span>}
+                <strong className="text-center">Task status:</strong> {taskActive ? <span className="task-active"> Active </span> : <span className="task-inactive"> Finished </span>}
             </div>
             {/* {taskActive ? */}
-            <div>
+            <div className="d-flex flex-column align-items-center">
                 <TaskProgressBar progress={progress} />
                 <Button className='cancel-task-button' variant='danger' onClick={cancelTask}>Cancel task</Button>
             </div>

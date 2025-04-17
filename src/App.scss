@@ -144,6 +144,12 @@ body {
   }
 }
 
+.modal-blurred .modal-content {
+  filter: blur(3px) brightness(0.8);
+  pointer-events: none; /* zakáže interakce se spodním modalem */
+  transition: filter 0.3s ease;
+}
+
 .custom-form>div {
   padding: 0.5rem;
 

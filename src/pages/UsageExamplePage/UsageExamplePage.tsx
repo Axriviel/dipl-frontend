@@ -36,7 +36,7 @@ export const UsageExamplePage = () => {
                     Proceed to the <strong>Designer</strong> page. Here, choose between two approaches:
                 </p>
                 <ul>
-                    <li><strong>Automated Design</strong> – for users who prefer automatic architecture selection.</li>
+                    <li><strong>Automated Design</strong> – for users who prefer automatic architecture creation including layer parameters.</li>
                     <li><strong>Semi-Automated Design</strong> – for users who want more control over layers, structure, and parameters.</li>
                 </ul>
             </section>
@@ -68,12 +68,12 @@ export const UsageExamplePage = () => {
                     <li>Configure training parameters: epochs, batch size, max models.</li>
                     <li>Optionally add a time limit for model creation.</li>
                     <li>
-                        Set a <strong>growth limit function</strong> to control how model complexity grows over time
+                        Set a growth limit function to control how model complexity grows over time
                         (<code>none</code>, <code>linear</code>, <code>log</code>, <code>square</code>).
                     </li>
                     <li>Define an early stopping threshold.</li>
                     <li>
-                        If using the Genetic Algorithm, extra fields appear: number of generations, population size, mutation rate, etc.
+                        If using certain algorithms, extra fields appear, that are necessary to set the algorithm up.
                     </li>
                 </ul>
                 <img src={model_settings} alt="Model settings" className="usage-img" />
@@ -106,7 +106,7 @@ export const UsageExamplePage = () => {
 
                 <img src={layer_modal} alt="Layer configuration modal" className="usage-img" />
                 <p>
-                    Clicking a layer opens a modal window to configure:
+                    Clicking a layer opens a modal window to configure (some examples, the exact items depend on the layer):
                 </p>
                 <ul>
                     <li>Layer name</li>

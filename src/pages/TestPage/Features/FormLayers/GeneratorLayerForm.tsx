@@ -93,6 +93,11 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
   const handleLayerClick = (layer: LayerParams) => {
     setSelectedLayer(layer);
     setShowLayerConfig(true);
+
+    const modals = document.querySelectorAll(".modal.show");
+    if (modals.length >= 1) {
+      modals[0].classList.add("modal-blurred");
+    }
   };
 
   return (
@@ -186,7 +191,13 @@ export const GeneratorLayerForm: React.FC<GeneratorLayerFormProps> = ({
           allLayers={currentLayer.possibleLayers}
           updateModelParams={updateModelParams}
           show={showLayerConfig}
-          handleClose={() => setShowLayerConfig(false)}
+          handleClose={() => {
+            setShowLayerConfig(false);
+          
+            // 💡 Odeber zašedění z původního modalu
+            const modals = document.querySelectorAll(".modal.modal-blurred");
+            modals.forEach((modal) => modal.classList.remove("modal-blurred"));
+          }}
         />
       )}
     </>

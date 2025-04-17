@@ -32,7 +32,12 @@ export const ModelsPage = () => {
     const [showProtocolModal, setShowProtocolModal] = useState(false);
 
     const handleClose = () => setShowDetailsModal(false);
-    const handleCloseParams = () => setShowParamsModal(false);
+    const handleCloseParams = () => {
+        setShowParamsModal(false);
+
+        const blurredModals = document.querySelectorAll(".modal.modal-blurred");
+        blurredModals.forEach(modal => modal.classList.remove("modal-blurred"));
+    };
     const handleCloseProtocol = () => setShowProtocolModal(false);
 
     const handleDownload = () => {
@@ -99,6 +104,10 @@ export const ModelsPage = () => {
     const handleShowParams = async () => {
         try {
             setShowParamsModal(true);
+            const modals = document.querySelectorAll(".modal.show");
+            if (modals.length >= 1) {
+                modals[modals.length - 1].classList.add("modal-blurred");
+            }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
