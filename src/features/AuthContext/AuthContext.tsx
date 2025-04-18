@@ -30,9 +30,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         checkUser();
     }, []);
 
-    useEffect(() => {
-        console.log(isAuthenticated)
-    }, [isAuthenticated]);
+    // useEffect(() => {
+    //     console.log(isAuthenticated)
+    // }, [isAuthenticated]);
 
 
     const { addAlert } = useAlert();
@@ -89,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const fetchUser = async () => {
         try {
-            console.log("trying fetch")
+            // console.log("trying fetch")
             const response = await fetch(`${configData.API_URL}/api/user/getUser`, {
                 method: 'GET',
                 credentials: 'include',  // session cookie

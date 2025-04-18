@@ -115,7 +115,7 @@ export const ModelsPage = () => {
     const handleShowProtocol = async () => {
         try {
             setShowProtocolModal(true);
-            console.log("epochs:", selectedModel?.task_protocol.epochs);
+            // console.log("epochs:", selectedModel?.task_protocol.epochs);
 
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -192,7 +192,7 @@ export const ModelsPage = () => {
                                         key={"model_" + model.id}
                                         className={`list-group-item ${model.id === selectedModel!.id ? 'active' : ''}`}
                                         // onClick={() => setSelectedModel(model)}
-                                        onClick={() => { setSelectedModel(model); console.log(model) }}
+                                        onClick={() => { setSelectedModel(model)}}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         {model.name}

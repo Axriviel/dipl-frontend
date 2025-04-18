@@ -59,7 +59,7 @@ export const UserDatasetsPage = () => {
             .then((data) => {
                 setDatasetDetails(data);
                 setDetailsLoading(false)
-                console.log(data)
+                // console.log(data)
             })
             .catch((error) => {
                 console.error("Error fetching dataset details:", error);

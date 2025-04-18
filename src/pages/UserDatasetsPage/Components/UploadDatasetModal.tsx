@@ -70,7 +70,7 @@ export const UploadDatasetModal: React.FC<UploadDatasetModalProps> = ({ show, ha
                 <Modal.Title>Upload new dataset</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>Maximum size of the dataset: <strong>1 MB</strong></p>
+                {/* <p>Maximum size of the dataset: <strong>1 MB</strong></p> */}
                 <Form.Group>
                     <Form.Label>Select file:</Form.Label>
                     <Form.Control type="file" accept=".csv, .npz" onChange={handleFileChange} disabled={isUploading} />
