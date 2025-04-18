@@ -8,6 +8,20 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5173
+# Vytvoř produkční build React aplikace
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+# Použij oficiální nginx image jako základ pro produkční server
+FROM nginx:1.27.0-alpine
+
+# Zkopíruj sestavený React build z předchozího kroku
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Zkopíruj vlastní konfiguraci Nginx (volitelné)
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Exponuj port, na kterém poběží aplikace
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
