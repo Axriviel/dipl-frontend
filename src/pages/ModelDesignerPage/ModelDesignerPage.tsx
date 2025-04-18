@@ -46,7 +46,7 @@ export const ModelDesignerPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className='d-flex justify-content-center'>Usage example page:<span className='mx-1 cursor-pointer' onClick={handleNavigateToUsageExample}>HERE</span> </div>
+                    <div className='d-flex justify-content-center'>Usage example page:<span className='mx-1 pointer-underline' onClick={handleNavigateToUsageExample}>HERE</span> </div>
                 </div>
                 :
                 <>

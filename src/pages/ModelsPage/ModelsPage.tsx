@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import imgUrl from "../../assets/bj.jpeg";
+import imgUrl from "../../assets/empty_state.png";
 import { useAlert } from "../../components/Alerts/AlertContext";
 import { MetricLineChart } from "../../components/Charts/MetricLineChart";
 import { DataNeededInfo } from "../../components/DataNeededInfo/DataNeededInfo";
@@ -232,7 +232,7 @@ export const ModelsPage = () => {
                             <p><strong>Metric_value:</strong> {selectedModel?.metric_value}</p>
                             <p><strong>Opt method:</strong> {selectedModel?.used_opt_method}</p>
                             <p><strong>Dataset:</strong> {selectedModel?.dataset}</p>
-                            <p><strong>Protocol:</strong> <span className="protocol-ref" onClick={handleShowProtocol}>Here</span></p>
+                            <p><strong>Protocol:</strong> <span className="pointer-underline" onClick={handleShowProtocol}>HERE</span></p>
                             <p><strong>Created:</strong> {selectedModel?.task_protocol.finished_at}</p>
                             <p><strong>Used tags:</strong> {selectedModel?.used_tags.user_tags ?? "no user defined tags"}</p>
                             <Tippy content="Display layers summary">

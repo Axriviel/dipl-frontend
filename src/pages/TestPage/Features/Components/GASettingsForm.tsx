@@ -56,6 +56,19 @@ export const GASettingsForm: React.FC<Props> = ({ gaSettings, updateGASettings }
                 />
             </Form.Group>
 
+            <Form.Group controlId="formGAAdditionRate">
+                <Form.Label>Addition rate <HelpfulTip text="Defines the ammount of models that will be added to population in each generation to freshen up the genomes (highly advised to use in tandem with growth limit functions)" /></Form.Label>
+                <Form.Control
+                    type="number"
+                    step="1"
+                    min="1"
+                    max="20"
+                    name="additionRate"
+                    value={gaSettings.additionRate}
+                    onChange={updateGASettings}
+                />
+            </Form.Group>
+
             <Form.Group controlId="formGASelectionMethod">
                 <Form.Label>Selection Method</Form.Label>
                 <Form.Control

@@ -46,13 +46,15 @@ export const ModelConfig: React.FC = () => {
       k_fold: 1,
       metrics: ['accuracy'],
       monitor_metric: "accuracy",
-      epochs: 10,
+      epochs: 20,
       epochsRandom: undefined,
       batch_size: 32,
       batch_sizeRandom: undefined,
       max_models: 10,
       use_timeout: false,
       timeout: 0,
+      es_patience: 10,
+      es_delta: 0.01,
       es_threshold: 0.4,
       NNI: {
         nni_concurrency: 1,
@@ -64,6 +66,7 @@ export const ModelConfig: React.FC = () => {
         populationSize: 5,
         numParents: 2,
         mutationRate: 0.3,
+        additionRate: 1,
         selectionMethod: "Tournament"
       }
     },
@@ -154,10 +157,12 @@ export const ModelConfig: React.FC = () => {
         monitor_metric: "val_accuracy",
         epochs: 10,
         batch_size: 32,
-        max_models: 5,
+        max_models: 10,
         use_timeout: false,
         timeout: 0,
-        es_threshold: 0.7,
+        es_patience: 10,
+        es_delta: 0.01,
+        es_threshold: 0.4,
         NNI: {
           nni_concurrency: 1,
           nni_max_trials: 5,
@@ -168,6 +173,7 @@ export const ModelConfig: React.FC = () => {
           populationSize: 5,
           numParents: 2,
           mutationRate: 0.3,
+          additionRate: 1,
           selectionMethod: "Tournament"
         }
       },

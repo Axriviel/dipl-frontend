@@ -150,6 +150,11 @@ body {
   transition: filter 0.3s ease;
 }
 
+.pointer-underline {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .custom-form>div {
   padding: 0.5rem;
 
