@@ -30,13 +30,15 @@ export const AutoDesignPage = () => {
             k_fold: 1,
             metrics: ['accuracy'],
             monitor_metric: "accuracy",
-            epochs: 10,
+            epochs: 20,
             epochsRandom: undefined,
             use_timeout: false,
             timeout: 0,
             batch_size: 32,
             batch_sizeRandom: undefined,
-            max_models: 5,
+            max_models: 10,
+            es_patience: 10,
+            es_delta: 0.01,
             es_threshold: 0.4,
             NNI: {
                 nni_concurrency: 1,
@@ -48,6 +50,7 @@ export const AutoDesignPage = () => {
                 populationSize: 5,
                 numParents: 2,
                 mutationRate: 0.3,
+                additionRate: 1,
                 selectionMethod: "Tournament"
             }
         },

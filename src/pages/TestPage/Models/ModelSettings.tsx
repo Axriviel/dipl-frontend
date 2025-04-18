@@ -19,6 +19,8 @@ export interface IModelSettings {
     max_models: number,
     use_timeout: boolean,
     timeout?: number,
+    es_patience: number,
+    es_delta: number,
     es_threshold: number,
     NNI: IModelSettingsNNI,
     GA: IModelSettingsGA

@@ -40,7 +40,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
     ) => {
         const { name, value } = e.target;
         const parsedValue =
-            ["nni_max_trials", "nni_concurrency", "generations", "populationSize", "numParents"].includes(name)
+            ["nni_max_trials", "nni_concurrency", "generations", "populationSize", "numParents", "additionRate"].includes(name)
                 ? Number(value)
                 : name === "mutationRate"
                     ? parseFloat(value)
@@ -360,7 +360,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                         )}
                     </Form.Group>
                     <Form.Group controlId="max_models">
-                        <Form.Label>Max models <HelpfulTip text="How many models should be created in the process of optimization (is overriden by specific genetic settings)"/></Form.Label>
+                        <Form.Label>Max models <HelpfulTip text="How many models should be created in the process of optimization (is overriden by specific genetic settings)" /></Form.Label>
                         <Form.Control
                             type="number"
                             name="max_models"
@@ -381,7 +381,7 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
 
                         {useTimer && (
                             <>
-                                <Form.Label>Timeout (seconds) <HelpfulTip text="When the time is up, the best currently found model is returned and the task is terminated"/></Form.Label>
+                                <Form.Label>Timeout (seconds) <HelpfulTip text="When the time is up, the best currently found model is returned and the task is terminated" /></Form.Label>
                                 <DebouncedNumberInput
                                     value={modelParams.settings.timeout || 0}
                                     onChange={handleDebouncedNumberChange("timeout")}
@@ -404,6 +404,32 @@ export const AutoModelConfigForm: React.FC<Props> = ({ modelParams, setModelPara
                             onChange={updateSettings}
                         />
                     </Form.Group>
+                    <Form.Group controlId="es_patience">
+                        <Form.Label>ES patience <HelpfulTip text="Defines how many training epochs will early stopping wait to stop the model training if metric does not change by min delta" /></Form.Label>
+                        <Form.Control
+                            type="number"
+                            step="1"
+                            min="1"
+                            max="50"
+                            name="es_patience"
+                            value={modelParams.settings.es_patience}
+                            onChange={updateSettings}
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="es_delta">
+                        <Form.Label>ES delta <HelpfulTip text="Defines by how much does the metric need to change in order for early stopping not to start gathering patience and potentialy stopping the model" /></Form.Label>
+                        <Form.Control
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            max="0.5"
+                            name="es_delta"
+                            value={modelParams.settings.es_delta}
+                            onChange={updateSettings}
+                        />
+                    </Form.Group>
+
                     <Form.Group controlId="es_threshold">
                         <Form.Label>ES threshold <HelpfulTip text="Threshold defining the minimum required metric to continue multiple trainings" /></Form.Label>
                         <Form.Control
