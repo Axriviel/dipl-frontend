@@ -27,6 +27,8 @@ import { LayerParams } from './Models/LayerParams.tsx';
 import { IModelParams } from './Models/ModelParams.tsx';
 import { IModelSettings } from './Models/ModelSettings.tsx';
 import ModelVisualizer from './ModelVisualiser.tsx';
+import { createConv1DLayer } from './Features/Layers/CreateConv1DLayer.tsx';
+import { createMaxPooling1DLayer } from './Features/Layers/CreateMaxPooling1DLayer.tsx';
 
 
 
@@ -103,8 +105,10 @@ export const ModelConfig: React.FC = () => {
     { id: 6, name: 'MaxPooling2D' },
     { id: 7, name: "Flatten" },
     { id: 8, name: "LSTM" },
-    { id: 9, name: "BatchNormalization" }
-  ];
+    { id: 9, name: "BatchNormalization" },
+    { id: 10, name: "Conv1D" },
+    { id: 11, name: "MaxPooling1D" }
+  ].sort((a, b) => a.name.localeCompare(b.name));
   const addLayer = () => {
     let newLayer: LayerParams;
 
@@ -136,6 +140,12 @@ export const ModelConfig: React.FC = () => {
         break;
       case "BatchNormalization":
         newLayer = createBatchNormLayer();
+        break;
+      case "Conv1D":
+        newLayer = createConv1DLayer();
+        break;
+      case "MaxPooling1D":
+        newLayer = createMaxPooling1DLayer();
         break;
       default:
         return;

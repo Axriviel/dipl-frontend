@@ -31,7 +31,7 @@ const replaceRandomValues = (layers: any[], layers_params: any) => {
 };
 
 
-const replaceGeneratorWithLayers = (i: number, generatorConf: any, prevId: string) => {
+const replaceGeneratorWithLayers = (i: number, generatorConf: any, prevId: string, generatorId: number) => {
     const relevantConf = generatorConf[i]
     const usedParams = relevantConf["used_parameters"]
     const layerSequence = relevantConf["layers_sequence"]
@@ -39,6 +39,7 @@ const replaceGeneratorWithLayers = (i: number, generatorConf: any, prevId: strin
 
     var genLayers: any[] = []
     var prevId = prevId;
+    var layer_id = 0;
 
 
     layerSequence.forEach((layer: any) => {
@@ -46,8 +47,10 @@ const replaceGeneratorWithLayers = (i: number, generatorConf: any, prevId: strin
         console.log("l1 ", layer1);
         layer1.id = crypto.randomUUID();
         layer1.inputs = [prevId]
+        layer1.name = "gen-" + generatorId + "_" + layer1.type.toLowerCase() + "_" + layer_id
         prevId = layer1.id
         genLayers.push(layer1)
+        layer_id += 1;
     });
     const mergedDict = usedParams.reduce((acc: any, obj: any, index: any) => {
         const key = Object.keys(obj)[0];
@@ -87,6 +90,7 @@ export const loadWithReplace = (file: File,
             const layersFinal: LayerParams[] = [];
 
             var lastGeneratorId: null | string = null;
+            var generatorId = 0;
             var i = 0;
 
             layers.forEach((layer, index) => {
@@ -104,11 +108,12 @@ export const loadWithReplace = (file: File,
                 if (layer.type.toLowerCase() === "generator") {
                     const prevId = layersFinal.length > 0 ? layersFinal[layersFinal.length - 1].id : null;
 
-                    const generatedLayers = replaceGeneratorWithLayers(i, generator_conf, prevId!);
+                    const generatedLayers = replaceGeneratorWithLayers(i, generator_conf, prevId!, generatorId);
                     layersFinal.push(...generatedLayers);
 
                     lastGeneratorId = generatedLayers[generatedLayers.length - 1].id;
                     i++;
+                    generatorId += 1;
                 }
                 else {
                     layersFinal.push(layer)
