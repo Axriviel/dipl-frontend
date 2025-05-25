@@ -21,6 +21,10 @@ import { ILSTM } from './Models/LSTM';
 import { IMaxPooling2D } from './Models/MaxPooling2D';
 import { IModelSettings } from './Models/ModelSettings';
 import { HelpfulTip } from '../../features/Tooltip';
+import { Conv1DLayerForm } from './Features/FormLayers/Conv1DLayerForm';
+import { IConv1DLayer } from './Models/Conv1DLayer';
+import { IMaxPooling1DLayer } from './Models/MaxPooling1D';
+import { MaxPooling1DLayerForm } from './Features/FormLayers/MaxPooling1DLayerForm';
 
 
 
@@ -241,6 +245,25 @@ export const LayerConfig: React.FC<LayerConfigProps> = ({ layer, isGenerator, up
             handleChange={handleChange}
             handleRandomToggle={handleRandomToggle}
             // renderRandomConfig={renderRandomConfig}
+            InputsConst={InputsConst}
+          />
+        );
+      case 'Conv1D':
+        return (
+          <Conv1DLayerForm
+            currentLayer={currentLayer as IConv1DLayer}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
+            handleActivationChange={handleActivationChange}
+            InputsConst={InputsConst}
+          />
+        );
+      case 'MaxPooling1D':
+        return (
+          <MaxPooling1DLayerForm
+            currentLayer={currentLayer as IMaxPooling1DLayer}
+            handleChange={handleChange}
+            handleRandomToggle={handleRandomToggle}
             InputsConst={InputsConst}
           />
         );
