@@ -4,6 +4,7 @@ import "./ListNotifications.css";
 import { useNotification } from '../../features/Notifications/NotificationsContext';
 import { markNotificationAsRead } from '../../features/Notifications/markNotificationAsRead';
 import { useAlert } from '../../components/Alerts/AlertContext';
+import { Button } from 'react-bootstrap';
 
 export const ListNotifications: React.FC = () => {
     const { notifications, setHasNewNotification, currentPage, setCurrentPage, totalPages, setLimit, fetchNotifications } = useNotification();
@@ -16,19 +17,19 @@ export const ListNotifications: React.FC = () => {
 
     const nextPage = () => {
         if (currentPage < totalPages) {
-            setCurrentPage(prevPage => prevPage + 1); 
+            setCurrentPage(prevPage => prevPage + 1);
         }
     };
 
     const prevPage = () => {
         if (currentPage > 1) {
-            setCurrentPage(prevPage => prevPage - 1); 
+            setCurrentPage(prevPage => prevPage - 1);
         }
     };
 
     const handleLimitChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setLimit(Number(event.target.value)); 
-        setCurrentPage(1); 
+        setLimit(Number(event.target.value));
+        setCurrentPage(1);
     };
 
     const handleMarkAsRead = async (notificationId: number, notificationWasRead: boolean) => {
@@ -42,7 +43,7 @@ export const ListNotifications: React.FC = () => {
                 addAlert(result.message, "error");
             }
         }
-        else{
+        else {
             addAlert("Already marked as read", 'warning')
         }
     };
@@ -53,7 +54,7 @@ export const ListNotifications: React.FC = () => {
         <div className='m-2'>
             {/* Volba počtu notifikací na stránku */}
             <label htmlFor="limit-select">Notifications per page:</label>
-            <select id="limit-select" onChange={handleLimitChange} defaultValue={"5"}>
+            <select className='mx-1' id="limit-select" onChange={handleLimitChange} defaultValue={"5"}>
                 <option value="2">2</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -76,14 +77,32 @@ export const ListNotifications: React.FC = () => {
 
                         ))}
                 </ul>
-                <div className="my-1">
-                    <button onClick={prevPage} disabled={currentPage === 1}>
+                <div className="my-1 d-flex align-items-baseline">
+                    {/* <button onClick={prevPage} disabled={currentPage === 1}>
                         Previous
-                    </button>
+                    </button> */}
+                    <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={prevPage}
+                        disabled={currentPage === 1}
+                        className="pagination-btn"
+                    >
+                        ←
+                    </Button>
                     <span className='mx-1'>Page {currentPage} of {totalPages}</span>
-                    <button onClick={nextPage} disabled={currentPage === totalPages}>
+                    {/* <button onClick={nextPage} disabled={currentPage === totalPages}>
                         Next
-                    </button>
+                    </button> */}
+                    <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={nextPage}
+                        disabled={currentPage === totalPages}
+                        className="pagination-btn"
+                    >
+                        →
+                    </Button>
                 </div>
             </div>
 

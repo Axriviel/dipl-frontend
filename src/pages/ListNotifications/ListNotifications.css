@@ -45,6 +45,14 @@
     border-bottom: solid black 1px;
 }
 
+
+.pagination-btn:disabled {
+    color: #a0a0a0;
+    border-color: #d0d0d0;
+    cursor: not-allowed;
+    transform: none;
+}
+
 @media (max-width:1100px) {
     .notification{
         width: 75vw;
