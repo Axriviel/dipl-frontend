@@ -31,6 +31,15 @@ export const ModelsPage = () => {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [showProtocolModal, setShowProtocolModal] = useState(false);
 
+    // TODO create a component for paginated content
+    const [currentPage, setCurrentPage] = useState(1);
+    const modelsPerPage = 9;
+    const indexOfLastModel = currentPage * modelsPerPage;
+    const indexOfFirstModel = indexOfLastModel - modelsPerPage;
+    const currentModels = models.slice(indexOfFirstModel, indexOfLastModel);
+    const totalPages = Math.ceil(models.length / modelsPerPage);
+    // 
+
     const handleClose = () => setShowDetailsModal(false);
     const handleCloseParams = () => {
         setShowParamsModal(false);
@@ -148,7 +157,7 @@ export const ModelsPage = () => {
             const result = await GetModels();
 
             if (result.success) {
-                setModels(result.data);
+                setModels(result.data.reverse());
             } else {
                 addAlert("" + result.message, "error");
                 console.error(result.message);
@@ -185,19 +194,55 @@ export const ModelsPage = () => {
                     {/* Postranní panel vlevo */}
                     <div className="col-md-3 p-3 px-5 models-panel overflow-auto">
                         <h4 className="text-center">Models</h4>
+                        <div className="d-flex justify-content-center align-items-center mt-3 gap-3">
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                className="pagination-btn"
+                            >
+                                ←
+                            </Button>
+
+                            <span className="fw-semibold fs-6 text-muted">
+                                Page {currentPage} of {totalPages}
+                            </span>
+
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className="pagination-btn"
+                            >
+                                →
+                            </Button>
+                        </div>
                         <div className="list-group">
                             <ul className="px-2">
-                                {models.map(model => (
+                                {currentModels.map(model => (
                                     <li
                                         key={"model_" + model.id}
-                                        className={`list-group-item ${model.id === selectedModel!.id ? 'active' : ''}`}
-                                        // onClick={() => setSelectedModel(model)}
-                                        onClick={() => { setSelectedModel(model); console.log(model) }}
+                                        className={`list-group-item ${model.id === selectedModel?.id ? 'active' : ''}`}
+                                        onClick={() => setSelectedModel(model)}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         {model.name}
                                     </li>
                                 ))}
+
+                                {/* {models.map(model => (
+                                    <li
+                                        key={"model_" + model.id}
+                                        className={`list-group-item ${model.id === selectedModel!.id ? 'active' : ''}`}
+                                        // onClick={() => setSelectedModel(model)}
+                                        onClick={() => { setSelectedModel(model) }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {model.name}
+                                    </li>
+                                ))} */}
                             </ul>
                         </div>
                         {/* Přidání tlačítka pro stažení modelu */}
