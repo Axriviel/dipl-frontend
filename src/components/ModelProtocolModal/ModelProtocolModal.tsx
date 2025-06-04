@@ -202,7 +202,7 @@ export const ModelProtocolModal: React.FC<Props> = ({ modelName, data, show, onC
                         <td>
                           {model.parameters && Object.keys(model.parameters).length > 0 ? (
                             <details>
-                              <summary>{Object.keys(model.parameters).length} parameters</summary>
+                              <summary>Parameters</summary>
                               <ul className="mb-0">
                                 {Array.isArray(model.parameters) ? (
                                   <>
